@@ -10,6 +10,7 @@ import {
   ChevronRight,
   Newspaper,
   Radio,
+  Tv,
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { ArrowRight } from "lucide-react";
@@ -19,6 +20,7 @@ import jacobImg from "@/assets/jacob.png";
 import leaImg from "@/assets/lea.png";
 import lenkaImg from "@/assets/lenka.png";
 import lukasImg from "@/assets/lukas.png";
+import lauraImg from "@/assets/laura.png";
 
 // --- TEAM PHOTOS IMPORTS ---
 import team1Img from "@/assets/team1.jpg";
@@ -94,6 +96,30 @@ const About = () => {
   const teamTouchStartRef = useRef(0);
   const teamTouchStartTimeRef = useRef(0);
 
+  // --- TEAM MEMBERS (PORTRAITS) CAROUSEL STATE ---
+  type TeamMember = { name: string; role: string; img: string };
+
+  // Mobile (Values-like): one member card per swipe
+  const [memberStep, setMemberStep] = useState(0);
+  const memberScrollRef = useRef<HTMLDivElement>(null);
+  const memberCardWidthRef = useRef(0);
+  const memberVisualWidthRef = useRef(0);
+  const memberPaddingRef = useRef(0);
+  const memberAnimatingRef = useRef(false);
+  const memberRafRef = useRef<number | null>(null);
+  const memberTouchStartRef = useRef(0);
+  const memberTouchStartTimeRef = useRef(0);
+
+  // Desktop (md+): slides of 3 portraits, one slide per view (arrows like big team photos)
+  const memberGroupScrollRef = useRef<HTMLDivElement>(null);
+  const memberGroupCardWidthRef = useRef(0);
+  const memberGroupVisualWidthRef = useRef(0);
+  const memberGroupPaddingRef = useRef(0);
+  const memberGroupAnimatingRef = useRef(false);
+  const memberGroupRafRef = useRef<number | null>(null);
+  const memberGroupTouchStartRef = useRef(0);
+  const memberGroupTouchStartTimeRef = useRef(0);
+
   useEffect(() => {
     const handleResize = () => {
       // 1. Update Hearts
@@ -132,6 +158,25 @@ const About = () => {
         // Each slide is exactly the viewport width of the scroller
         teamVisualWidthRef.current = c.clientWidth;
         teamCardWidthRef.current = c.clientWidth;
+      }
+
+      // 5. Update Dimensions (TEAM MEMBERS - mobile cards like Values)
+      if (memberScrollRef.current && memberScrollRef.current.firstElementChild) {
+        const firstCard = memberScrollRef.current.firstElementChild as HTMLElement;
+        const styleM = window.getComputedStyle(memberScrollRef.current);
+        const gapM = parseFloat(styleM.gap) || 16;
+        memberVisualWidthRef.current = firstCard.offsetWidth;
+        memberCardWidthRef.current = firstCard.offsetWidth + gapM;
+        memberPaddingRef.current = parseFloat(styleM.paddingLeft) || 0;
+      }
+
+      // 6. Update Dimensions (TEAM MEMBERS GROUPS - desktop, one slide per view)
+      if (memberGroupScrollRef.current) {
+        const c = memberGroupScrollRef.current;
+        const styleG = window.getComputedStyle(c);
+        memberGroupPaddingRef.current = parseFloat(styleG.paddingLeft) || 0;
+        memberGroupVisualWidthRef.current = c.clientWidth;
+        memberGroupCardWidthRef.current = c.clientWidth;
       }
     };
 
@@ -189,6 +234,26 @@ const About = () => {
     { name: "Lea Poewe", role: "Secretary & Head of Marketing", img: leaImg },
   ];
 
+  const teamMembers: TeamMember[] = [
+    ...boardMembers,
+    { name: "Lenka Benková", role: "Founding Member", img: lenkaImg },
+    { name: "Lukas Idman", role: "Founding Member", img: lukasImg },
+    { name: "Laura Fuertes", role: "Donation and Staff Management", img: lauraImg },
+  ];
+
+  const chunkInto = <T,>(arr: T[], size: number) => {
+    const out: T[][] = [];
+    for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
+    return out;
+  };
+
+  // Each desktop slide is exactly 3 cards (pad with nulls to keep layout stable)
+  const memberGroups = chunkInto(teamMembers, 3).map((g) => {
+    const padded: (TeamMember | null)[] = [...g];
+    while (padded.length < 3) padded.push(null);
+    return padded;
+  });
+
   // --- TEAM PHOTOS DATA ---
   const teamPhotos = [
     { src: team1Img, alt: "Rackis for Barn volunteers (1)" },
@@ -205,12 +270,12 @@ const About = () => {
   const partnersScrollData = isPartnerSingle
     ? partners
     : [
-        partners[(partners.length - 2 + partners.length) % partners.length],
-        partners[(partners.length - 1 + partners.length) % partners.length],
-        ...partners,
-        partners[0],
-        partners[1 % partners.length],
-      ];
+      partners[(partners.length - 2 + partners.length) % partners.length],
+      partners[(partners.length - 1 + partners.length) % partners.length],
+      ...partners,
+      partners[0],
+      partners[1 % partners.length],
+    ];
   const PARTNER_START = isPartnerSingle ? 0 : 2;
 
   // --- TEAM BUFFER (for infinite loop like Values/Partners) ---
@@ -218,13 +283,38 @@ const About = () => {
   const teamScrollData = isTeamSingle
     ? teamPhotos
     : [
-        teamPhotos[(teamPhotos.length - 2 + teamPhotos.length) % teamPhotos.length],
-        teamPhotos[(teamPhotos.length - 1 + teamPhotos.length) % teamPhotos.length],
-        ...teamPhotos,
-        teamPhotos[0],
-        teamPhotos[1 % teamPhotos.length],
-      ];
+      teamPhotos[(teamPhotos.length - 2 + teamPhotos.length) % teamPhotos.length],
+      teamPhotos[(teamPhotos.length - 1 + teamPhotos.length) % teamPhotos.length],
+      ...teamPhotos,
+      teamPhotos[0],
+      teamPhotos[1 % teamPhotos.length],
+    ];
   const TEAM_START = isTeamSingle ? 0 : 2;
+
+  // --- TEAM MEMBERS (PORTRAITS) BUFFERS ---
+  const isMemberSingle = teamMembers.length === 1;
+  const memberScrollData = isMemberSingle
+    ? teamMembers
+    : [
+      teamMembers[(teamMembers.length - 2 + teamMembers.length) % teamMembers.length],
+      teamMembers[(teamMembers.length - 1 + teamMembers.length) % teamMembers.length],
+      ...teamMembers,
+      teamMembers[0],
+      teamMembers[1 % teamMembers.length],
+    ];
+  const MEMBER_START = isMemberSingle ? 0 : 2;
+
+  const isMemberGroupSingle = memberGroups.length === 1;
+  const memberGroupScrollData = isMemberGroupSingle
+    ? memberGroups
+    : [
+      memberGroups[(memberGroups.length - 2 + memberGroups.length) % memberGroups.length],
+      memberGroups[(memberGroups.length - 1 + memberGroups.length) % memberGroups.length],
+      ...memberGroups,
+      memberGroups[0],
+      memberGroups[1 % memberGroups.length],
+    ];
+  const MEMBER_GROUP_START = isMemberGroupSingle ? 0 : 2;
 
   // --- CENTER OFFSET HELPER ---
   const getCenterOffset = (container: HTMLElement, visualWidth: number) => {
@@ -267,10 +357,31 @@ const About = () => {
         c.scrollLeft = teamPaddingRef.current + teamCardWidthRef.current * TEAM_START - off;
         setTeamStep(0);
       }
+
+      // Init Team Members (mobile portraits)
+      if (memberScrollRef.current && memberScrollRef.current.firstElementChild) {
+        const c = memberScrollRef.current;
+        const fc = c.firstElementChild as HTMLElement;
+        const s = window.getComputedStyle(c);
+        memberVisualWidthRef.current = fc.offsetWidth;
+        memberCardWidthRef.current = fc.offsetWidth + (parseFloat(s.gap) || 16);
+        memberPaddingRef.current = parseFloat(s.paddingLeft) || 0;
+        const off = getCenterOffset(c, memberVisualWidthRef.current);
+        c.scrollLeft = memberPaddingRef.current + memberCardWidthRef.current * MEMBER_START - off;
+        setMemberStep(0);
+      }
+
+      // Init Team Members Groups (desktop 3-up)
+      if (memberGroupScrollRef.current) {
+        const c = memberGroupScrollRef.current;
+        const off = getCenterOffset(c, memberGroupVisualWidthRef.current);
+        c.scrollLeft =
+          memberGroupPaddingRef.current + memberGroupCardWidthRef.current * MEMBER_GROUP_START - off;
+      }
     }, 50);
 
     return () => clearTimeout(timer);
-  }, [partners.length, isPartnerSingle, isTeamSingle]);
+  }, [partners.length, isPartnerSingle, isTeamSingle, isMemberSingle, isMemberGroupSingle]);
 
   // --- GENERIC ANIMATION HELPERS ---
   const checkLoop = (
@@ -365,7 +476,7 @@ const About = () => {
     }
 
     targetIndex = Math.max(0, Math.min(targetIndex, dataLen - 1));
-    glide(container, paddingLeft + targetIndex * totalWidth - offset, animRef, localRafRef, () => {});
+    glide(container, paddingLeft + targetIndex * totalWidth - offset, animRef, localRafRef, () => { });
   };
 
   // --- VALUES CAROUSEL HANDLERS ---
@@ -439,7 +550,7 @@ const About = () => {
     const offset = getCenterOffset(partnerScrollRef.current, partnerVisualWidthRef.current);
     const rawIndex = Math.round(
       (partnerScrollRef.current.scrollLeft + offset - partnerPaddingRef.current) /
-        partnerCardWidthRef.current
+      partnerCardWidthRef.current
     );
 
     let visualStep = rawIndex - PARTNER_START;
@@ -586,6 +697,150 @@ const About = () => {
     scrollTeamToRaw(raw + delta);
   };
 
+  // --- TEAM MEMBERS (PORTRAITS) HANDLERS ---
+  const handleMembersScroll = () => {
+    if (!memberScrollRef.current) return;
+
+    if (!memberAnimatingRef.current) {
+      checkLoop(
+        memberScrollRef.current,
+        memberCardWidthRef.current,
+        memberVisualWidthRef.current,
+        memberPaddingRef.current,
+        memberScrollData.length,
+        teamMembers.length,
+        isMemberSingle
+      );
+    }
+
+    const offset = getCenterOffset(memberScrollRef.current, memberVisualWidthRef.current);
+    const rawIndex = Math.round(
+      (memberScrollRef.current.scrollLeft + offset - memberPaddingRef.current) /
+      memberCardWidthRef.current
+    );
+
+    let visualStep = rawIndex - MEMBER_START;
+    visualStep = ((visualStep % teamMembers.length) + teamMembers.length) % teamMembers.length;
+    if (visualStep !== memberStep) setMemberStep(visualStep);
+  };
+
+  const handleMembersTouchStart = (e: React.TouchEvent) => {
+    if (isMemberSingle) return;
+    if (memberRafRef.current) {
+      cancelAnimationFrame(memberRafRef.current);
+      memberRafRef.current = null;
+      memberAnimatingRef.current = false;
+    }
+    memberTouchStartRef.current = e.touches[0].clientX;
+    memberTouchStartTimeRef.current = performance.now();
+  };
+
+  const handleMembersTouchEnd = (e: React.TouchEvent) => {
+    if (isMemberSingle) return;
+    handleTouchEndGeneric(
+      e,
+      memberScrollRef.current!,
+      memberTouchStartRef.current,
+      memberTouchStartTimeRef.current,
+      memberCardWidthRef.current,
+      memberVisualWidthRef.current,
+      memberPaddingRef.current,
+      memberScrollData.length,
+      isMemberSingle,
+      memberAnimatingRef,
+      memberRafRef
+    );
+  };
+
+  const handleMemberGroupScroll = () => {
+    if (!memberGroupScrollRef.current) return;
+    const c = memberGroupScrollRef.current;
+
+    if (!memberGroupAnimatingRef.current) {
+      checkLoop(
+        c,
+        memberGroupCardWidthRef.current,
+        memberGroupVisualWidthRef.current,
+        memberGroupPaddingRef.current,
+        memberGroupScrollData.length,
+        memberGroups.length,
+        isMemberGroupSingle
+      );
+    }
+  };
+
+  const getMemberGroupRawIndex = () => {
+    const c = memberGroupScrollRef.current;
+    if (!c) return MEMBER_GROUP_START;
+
+    const offset = getCenterOffset(c, memberGroupVisualWidthRef.current);
+    return Math.round(
+      (c.scrollLeft + offset - memberGroupPaddingRef.current) / memberGroupCardWidthRef.current
+    );
+  };
+
+  const scrollMemberGroupToRaw = (rawIdx: number) => {
+    const c = memberGroupScrollRef.current;
+    if (!c) return;
+
+    const offset = getCenterOffset(c, memberGroupVisualWidthRef.current);
+    glide(
+      c,
+      memberGroupPaddingRef.current + rawIdx * memberGroupCardWidthRef.current - offset,
+      memberGroupAnimatingRef,
+      memberGroupRafRef,
+      () => {
+        checkLoop(
+          c,
+          memberGroupCardWidthRef.current,
+          memberGroupVisualWidthRef.current,
+          memberGroupPaddingRef.current,
+          memberGroupScrollData.length,
+          memberGroups.length,
+          isMemberGroupSingle
+        );
+      }
+    );
+  };
+
+  const goMemberGroupPrev = () => {
+    if (isMemberGroupSingle) return;
+    scrollMemberGroupToRaw(getMemberGroupRawIndex() - 1);
+  };
+
+  const goMemberGroupNext = () => {
+    if (isMemberGroupSingle) return;
+    scrollMemberGroupToRaw(getMemberGroupRawIndex() + 1);
+  };
+
+  const handleMemberGroupTouchStart = (e: React.TouchEvent) => {
+    if (isMemberGroupSingle) return;
+    if (memberGroupRafRef.current) {
+      cancelAnimationFrame(memberGroupRafRef.current);
+      memberGroupRafRef.current = null;
+      memberGroupAnimatingRef.current = false;
+    }
+    memberGroupTouchStartRef.current = e.touches[0].clientX;
+    memberGroupTouchStartTimeRef.current = performance.now();
+  };
+
+  const handleMemberGroupTouchEnd = (e: React.TouchEvent) => {
+    if (isMemberGroupSingle) return;
+    handleTouchEndGeneric(
+      e,
+      memberGroupScrollRef.current!,
+      memberGroupTouchStartRef.current,
+      memberGroupTouchStartTimeRef.current,
+      memberGroupCardWidthRef.current,
+      memberGroupVisualWidthRef.current,
+      memberGroupPaddingRef.current,
+      memberGroupScrollData.length,
+      isMemberGroupSingle,
+      memberGroupAnimatingRef,
+      memberGroupRafRef
+    );
+  };
+
   return (
     <Layout>
       {/* Hero */}
@@ -657,7 +912,7 @@ const About = () => {
       {/* Press Mention - Integrated into About */}
       <section className="py-8 md:py-12 bg-gradient-to-b from-stone-50 to-white relative overflow-hidden">
         <div className="absolute top-0 right-[10%] w-32 h-32 bg-primary/5 blob" />
-        
+
         <div className="container-narrow relative z-10">
           <div className="text-center mb-6">
             <span className="inline-block text-sm font-bold text-primary uppercase tracking-wider mb-2">
@@ -667,12 +922,40 @@ const About = () => {
               Recent media coverage
             </h2>
           </div>
-          
-          <div className="grid md:grid-cols-2 gap-4 max-w-3xl mx-auto">
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto">
+            {/* SVT Card (NEW - first slot) */}
+            <a
+              href="https://www.svt.se/nyheter/lokalt/uppsala/sa-loste-studenterna-flyttsvinnet"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group card-warm flex items-start gap-4 hover:shadow-lg hover:border-primary/20 transition-all duration-300"
+            >
+              <div className="shrink-0 w-12 h-12 rounded-xl bg-[#E13241]/10 flex items-center justify-center group-hover:bg-[#E13241]/20 transition-colors">
+                <Tv className="h-6 w-6 text-[#E13241]" />
+              </div>
+
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-semibold text-muted-foreground mb-1">
+                  February 2026
+                </p>
+                <h3 className="font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
+                  SVT Nyheter Uppsala
+                </h3>
+                <p className="text-sm text-muted-foreground line-clamp-2">
+                  Här säljer de vidare studenternas gamla lakan
+                </p>
+                <span className="inline-flex items-center text-sm font-semibold text-primary mt-2 group-hover:gap-2 transition-all">
+                  Watch video
+                  <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </span>
+              </div>
+            </a>
+
             {/* UNT Card */}
-            <a 
-              href="https://www.unt.se/nyheter/uppsala/artikel/rackis-for-barn-oppnar-second-hand-butik-i-uppsala/jn11gonl" 
-              target="_blank" 
+            <a
+              href="https://www.unt.se/nyheter/uppsala/artikel/rackis-for-barn-oppnar-second-hand-butik-i-uppsala/jn11gonl"
+              target="_blank"
               rel="noopener noreferrer"
               className="group card-warm flex items-start gap-4 hover:shadow-lg hover:border-primary/20 transition-all duration-300"
             >
@@ -690,16 +973,16 @@ const About = () => {
                   Räckis för barn öppnar second hand-butik i Uppsala
                 </p>
                 <span className="inline-flex items-center text-sm font-semibold text-primary mt-2 group-hover:gap-2 transition-all">
-                  Read article 
+                  Read article
                   <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 </span>
               </div>
             </a>
 
             {/* Sveriges Radio Card */}
-            <a 
+            <a
               href="https://www.sverigesradio.se/artikel/utbytesstudenter-skanker-pengar-till-barncancerfonden"
-              target="_blank" 
+              target="_blank"
               rel="noopener noreferrer"
               className="group card-warm flex items-start gap-4 hover:shadow-lg hover:border-primary/20 transition-all duration-300"
             >
@@ -717,7 +1000,7 @@ const About = () => {
                   Utbytesstudenter säljer prylar – och skänker pengarna till barn
                 </p>
                 <span className="inline-flex items-center text-sm font-semibold text-warm mt-2 group-hover:gap-2 transition-all">
-                  Listen now 
+                  Listen now
                   <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 </span>
               </div>
@@ -760,43 +1043,121 @@ const About = () => {
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-3 gap-4 mb-4">
-            {boardMembers.map((member) => (
-              <div key={member.name} className="card-warm text-center">
-                <img
-                  src={member.img}
-                  alt={member.name}
-                  className="mx-auto w-24 h-24 object-cover rounded-full mb-3"
-                />
-                <h3 className="text-base font-bold text-foreground">{member.name}</h3>
-                <p className="text-sm text-muted-foreground">{member.role}</p>
+          {/* Portraits - Desktop: groups of 3 with arrows */}
+          <div className="hidden md:block">
+            <div className="relative max-w-4xl mx-auto">
+              <button
+                type="button"
+                onClick={goMemberGroupPrev}
+                className="flex items-center justify-center absolute left-0 top-1/2 -translate-y-1/2 -translate-x-14 w-11 h-11 rounded-full bg-white shadow hover:shadow-md transition z-10"
+                aria-label="Previous team members"
+              >
+                <ChevronLeft className="h-6 w-6 text-foreground" />
+              </button>
+
+              <div className="overflow-hidden">
+                <div
+                  ref={memberGroupScrollRef}
+                  onScroll={handleMemberGroupScroll}
+                  onTouchStart={handleMemberGroupTouchStart}
+                  onTouchEnd={handleMemberGroupTouchEnd}
+                  className="flex gap-0 px-0 overflow-x-auto md:overflow-x-hidden scrollbar-hide select-none"
+                  style={{
+                    scrollSnapType: "none",
+                    scrollbarWidth: "none",
+                    msOverflowStyle: "none",
+                    overscrollBehaviorX: "contain",
+                    WebkitTapHighlightColor: "transparent",
+                  }}
+                >
+                  {memberGroupScrollData.map((group, gi) => (
+                    <div key={`member-group-${gi}`} className="shrink-0 w-full">
+                      <div className="grid grid-cols-3 gap-4">
+                        {group.map((m, mi) =>
+                          m ? (
+                            <div key={`${m.name}-${mi}`} className="card-warm text-center">
+                              <img
+                                src={m.img}
+                                alt={m.name}
+                                className="mx-auto w-24 h-24 object-cover rounded-full mb-3"
+                                draggable={false}
+                              />
+                              <h3 className="text-base font-bold text-foreground">{m.name}</h3>
+                              <p className="text-sm text-muted-foreground">{m.role}</p>
+                            </div>
+                          ) : (
+                            <div
+                              key={`empty-${mi}`}
+                              className="opacity-0 pointer-events-none card-warm"
+                            />
+                          )
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            ))}
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 justify-center gap-4 mb-4 max-w-xl mx-auto">
-            <div className="card-warm text-center">
-              <img
-                src={lenkaImg}
-                alt="Lenka Benková"
-                className="mx-auto w-24 h-24 object-cover rounded-full mb-3"
-              />
-              <h3 className="text-base font-bold text-foreground">Lenka Benková</h3>
-              <p className="text-sm text-muted-foreground">Founding Member</p>
-            </div>
-
-            <div className="card-warm text-center">
-              <img
-                src={lukasImg}
-                alt="Lukas Idman"
-                className="mx-auto w-24 h-24 object-cover rounded-full mb-3"
-              />
-              <h3 className="text-base font-bold text-foreground">Lukas Idman</h3>
-              <p className="text-sm text-muted-foreground">Founding Member</p>
+              <button
+                type="button"
+                onClick={goMemberGroupNext}
+                className="flex items-center justify-center absolute right-0 top-1/2 -translate-y-1/2 translate-x-14 w-11 h-11 rounded-full bg-white shadow hover:shadow-md transition z-10"
+                aria-label="Next team members"
+              >
+                <ChevronRight className="h-6 w-6 text-foreground" />
+              </button>
             </div>
           </div>
 
-          <p className="text-center text-base text-muted-foreground max-w-2xl mx-auto">
+          {/* Portraits - Mobile: Values-like swipe + dots */}
+          <div className="md:hidden relative">
+            <div
+              ref={memberScrollRef}
+              onScroll={handleMembersScroll}
+              onTouchStart={handleMembersTouchStart}
+              onTouchEnd={handleMembersTouchEnd}
+              className="flex overflow-x-auto pb-6 gap-4 px-4 scrollbar-hide select-none"
+              style={{
+                scrollSnapType: "none",
+                scrollbarWidth: "none",
+                msOverflowStyle: "none",
+                overscrollBehaviorX: "contain",
+                WebkitTapHighlightColor: "transparent",
+              }}
+            >
+              {memberScrollData.map((m, i) => (
+                <div
+                  key={`${m.name}-${i}`}
+                  className="shrink-0 w-[75vw] max-w-[300px] transform-gpu"
+                  style={{ WebkitTapHighlightColor: "transparent" }}
+                >
+                  <div className="card-warm text-center">
+                    <img
+                      src={m.img}
+                      alt={m.name}
+                      className="mx-auto w-24 h-24 object-cover rounded-full mb-3"
+                      draggable={false}
+                    />
+                    <h3 className="text-base font-bold text-foreground">{m.name}</h3>
+                    <p className="text-sm text-muted-foreground">{m.role}</p>
+                  </div>
+                </div>
+              ))}
+              <div className="w-4 shrink-0" />
+            </div>
+
+            <div className="flex justify-center gap-2 mt-2">
+              {teamMembers.map((_, i) => (
+                <div
+                  key={i}
+                  className={`h-2 rounded-full transition-all duration-300 ${memberStep === i ? "w-8 bg-primary" : "w-2 bg-primary/20"
+                    }`}
+                />
+              ))}
+            </div>
+          </div>
+
+          <p className="mt-8 text-center text-base text-muted-foreground max-w-2xl mx-auto">
             We have many amazing volunteers who contribute their time
             and effort to make Rackis for Barn possible.
           </p>
@@ -856,9 +1217,8 @@ const About = () => {
                     key={i}
                     type="button"
                     onClick={() => scrollTeamTo(i)}
-                    className={`h-2 rounded-full transition-all duration-300 ${
-                      teamStep === i ? "w-8 bg-primary" : "w-2 bg-primary/20"
-                    }`}
+                    className={`h-2 rounded-full transition-all duration-300 ${teamStep === i ? "w-8 bg-primary" : "w-2 bg-primary/20"
+                      }`}
                     aria-label={`Go to photo ${i + 1}`}
                   />
                 ))}
@@ -997,9 +1357,8 @@ const About = () => {
               {values.map((_, i) => (
                 <div
                   key={i}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    currentStep === i ? "w-8 bg-primary" : "w-2 bg-primary/20"
-                  }`}
+                  className={`h-2 rounded-full transition-all duration-300 ${currentStep === i ? "w-8 bg-primary" : "w-2 bg-primary/20"
+                    }`}
                 />
               ))}
             </div>
@@ -1026,9 +1385,8 @@ const About = () => {
               onScroll={handlePartnersScroll}
               onTouchStart={handlePartnersTouchStart}
               onTouchEnd={handlePartnersTouchEnd}
-              className={`flex pb-8 gap-4 px-4 scrollbar-hide select-none w-full ${
-                isPartnerSingle ? "justify-center overflow-hidden" : "overflow-x-auto justify-start"
-              }`}
+              className={`flex pb-8 gap-4 px-4 scrollbar-hide select-none w-full ${isPartnerSingle ? "justify-center overflow-hidden" : "overflow-x-auto justify-start"
+                }`}
               style={{
                 scrollSnapType: "none",
                 scrollbarWidth: "none",
@@ -1070,9 +1428,8 @@ const About = () => {
                 {partners.map((_, i) => (
                   <div
                     key={i}
-                    className={`h-2 rounded-full transition-all duration-300 ${
-                      partnerStep === i ? "w-8 bg-primary" : "w-2 bg-primary/20"
-                    }`}
+                    className={`h-2 rounded-full transition-all duration-300 ${partnerStep === i ? "w-8 bg-primary" : "w-2 bg-primary/20"
+                      }`}
                   />
                 ))}
               </div>

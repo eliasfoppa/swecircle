@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Heart, Recycle, ShoppingBag, MapPin, Instagram, Bike, Home, Users, Gift, X, ChevronLeft, ChevronRight, Newspaper, Radio } from "lucide-react";
+import { ArrowRight, Heart, Recycle, ShoppingBag, MapPin, Instagram, Bike, Home, Users, Gift, X, ChevronLeft, ChevronRight, Newspaper, Radio, Tv } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState, useEffect, useRef, useCallback } from "react";
 import Logo from "@/assets/logo.png";
@@ -43,7 +43,9 @@ function generateJitteredHearts(
 }
 
 export function HeroSection() {
-  const [hearts, setHearts] = useState<{ x: number; y: number; size: number; delay: number }[]>([]);
+  const [hearts, setHearts] = useState<
+    { x: number; y: number; size: number; delay: number }[]
+  >([]);
 
   useEffect(() => {
     const updateHearts = () => {
@@ -92,27 +94,36 @@ export function HeroSection() {
 
             <h1 className="font-display text-5xl sm:text-6xl md:text-7xl font-bold text-foreground leading-[1.1] mb-8 animate-fade-up delay-100">
               Give items a{" "}
-              <span className="hand-drawn-underline text-primary">second life</span>
-              {" "}and help children in need
+              <span className="hand-drawn-underline text-primary">second life</span>{" "}
+              and help children in need
             </h1>
 
             <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-fade-up delay-200 leading-relaxed">
               Donated items become affordable finds for fellow students
               <br />
               all profit goes directly to{" "}
-              <span className="font-semibold text-foreground">Barncancerfonden</span> and{" "}
-              <span className="font-semibold text-foreground">RBU</span>
+              <span className="font-semibold text-foreground">Barncancerfonden</span>{" "}
+              and <span className="font-semibold text-foreground">RBU</span>
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up delay-300">
               <Button variant="hero" size="lg" asChild className="text-lg px-8">
-                <a href="https://instagram.com/rackis_for_barn" target="_blank" rel="noopener noreferrer">
+                <a
+                  href="https://instagram.com/rackis_for_barn"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <Instagram className="mr-2 h-5 w-5" />
                   Follow us
                 </a>
               </Button>
 
-              <Button variant="hero-outline" size="lg" asChild className="text-lg px-8">
+              <Button
+                variant="hero-outline"
+                size="lg"
+                asChild
+                className="text-lg px-8"
+              >
                 <Link to="/about">
                   Learn more
                   <ArrowRight className="ml-2 h-5 w-5" />
@@ -122,7 +133,9 @@ export function HeroSection() {
 
             <div className="mt-12 flex items-center justify-center gap-2 text-muted-foreground animate-fade-up delay-400">
               <MapPin className="h-5 w-5 text-primary" />
-              <span className="font-medium">Find us at Rackarbergsgatan 32, Uppsala</span>
+              <span className="font-medium">
+                Find us at Rackarbergsgatan 32, Uppsala
+              </span>
             </div>
           </div>
         </div>
@@ -143,13 +156,43 @@ export function HeroSection() {
             </h2>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-4 md:gap-6 max-w-4xl mx-auto">
+          {/* 3-in-a-row on desktop + a bit more room */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto">
+            {/* SVT Card (first slot) */}
+            <a
+              href="https://www.svt.se/nyheter/lokalt/uppsala/sa-loste-studenterna-flyttsvinnet"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group card-warm flex items-start gap-4 hover:shadow-lg hover:border-primary/20 transition-all duration-300 animate-fade-up"
+            >
+              {/* Make the icon + badge “SVT red” */}
+              <div className="shrink-0 w-12 h-12 rounded-xl bg-[#E13241]/10 flex items-center justify-center group-hover:bg-[#E13241]/20 transition-colors">
+                <Tv className="h-6 w-6 text-[#E13241]" />
+              </div>
+
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-semibold text-muted-foreground mb-1">
+                  February 2026
+                </p>
+                <h3 className="font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
+                  SVT Nyheter Uppsala
+                </h3>
+                <p className="text-sm text-muted-foreground line-clamp-2">
+                  Här säljer de vidare studenternas gamla lakan
+                </p>
+                <span className="inline-flex items-center text-sm font-semibold text-primary mt-2 group-hover:gap-2 transition-all">
+                  Watch video
+                  <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </span>
+              </div>
+            </a>
+
             {/* UNT Card */}
             <a
               href="https://www.unt.se/nyheter/uppsala/artikel/rackis-for-barn-oppnar-second-hand-butik-i-uppsala/jn11gonl"
               target="_blank"
               rel="noopener noreferrer"
-              className="group card-warm flex items-start gap-4 hover:shadow-lg hover:border-primary/20 transition-all duration-300 animate-fade-up"
+              className="group card-warm flex items-start gap-4 hover:shadow-lg hover:border-primary/20 transition-all duration-300 animate-fade-up delay-100"
             >
               <div className="shrink-0 w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                 <Newspaper className="h-6 w-6 text-primary" />
@@ -176,7 +219,7 @@ export function HeroSection() {
               href="https://www.sverigesradio.se/artikel/utbytesstudenter-skanker-pengar-till-barncancerfonden"
               target="_blank"
               rel="noopener noreferrer"
-              className="group card-warm flex items-start gap-4 hover:shadow-lg hover:border-primary/20 transition-all duration-300 animate-fade-up delay-100"
+              className="group card-warm flex items-start gap-4 hover:shadow-lg hover:border-primary/20 transition-all duration-300 animate-fade-up delay-200"
             >
               <div className="shrink-0 w-12 h-12 rounded-xl bg-warm/10 flex items-center justify-center group-hover:bg-warm/20 transition-colors">
                 <Radio className="h-6 w-6 text-warm" />
