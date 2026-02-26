@@ -1,8 +1,10 @@
 import { Layout } from "@/components/layout/Layout";
 import { 
   HeroSection, 
+  StatsCounterSection,
   HowItWorksSection,
   CommunitySection,
+  RecentMediaSection,
   WhyChooseUsSection, 
   AboutCharitiesSection,
   PartnersSection,
@@ -15,6 +17,8 @@ const Index = () => {
       <HeroSection />
       <HowItWorksSection />
       <CommunitySection />
+      <StatsCounterSection />
+      <RecentMediaSection />
       <WhyChooseUsSection />
       <AboutCharitiesSection />
       <PartnersSection />

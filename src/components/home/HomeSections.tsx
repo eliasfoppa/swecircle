@@ -62,7 +62,6 @@ export function HeroSection() {
   }, []);
 
   return (
-    <>
       <section className="relative overflow-hidden bg-hero-gradient min-h-[85vh] flex items-center">
         {/* BLOBS */}
         <div className="absolute top-20 left-[10%] w-64 h-64 bg-primary/10 blob animate-float" />
@@ -140,112 +139,85 @@ export function HeroSection() {
           </div>
         </div>
       </section>
-
-      {/* FEATURED IN SECTION */}
-      <div className="py-12 md:py-16 bg-gradient-to-b from-stone-50 to-white relative overflow-hidden">
-        {/* Decorative blob */}
-        <div className="absolute top-0 right-[10%] w-32 h-32 bg-primary/5 blob" />
-
-        <div className="container px-4 relative z-10">
-          <div className="text-center mb-8">
-            <span className="inline-block text-sm font-bold text-primary uppercase tracking-wider mb-2">
-              In the news
-            </span>
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-              Recent media coverage
-            </h2>
-          </div>
-
-          {/* 3-in-a-row on desktop + a bit more room */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto">
-            {/* SVT Card (first slot) */}
-            <a
-              href="https://www.svt.se/nyheter/lokalt/uppsala/sa-loste-studenterna-flyttsvinnet"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group card-warm flex items-start gap-4 hover:shadow-lg hover:border-primary/20 transition-all duration-300 animate-fade-up"
-            >
-              {/* Make the icon + badge “SVT red” */}
-              <div className="shrink-0 w-12 h-12 rounded-xl bg-[#E13241]/10 flex items-center justify-center group-hover:bg-[#E13241]/20 transition-colors">
-                <Tv className="h-6 w-6 text-[#E13241]" />
-              </div>
-
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-semibold text-muted-foreground mb-1">
-                  February 2026
-                </p>
-                <h3 className="font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
-                  SVT Nyheter Uppsala
-                </h3>
-                <p className="text-sm text-muted-foreground line-clamp-2">
-                  Här säljer de vidare studenternas gamla lakan
-                </p>
-                <span className="inline-flex items-center text-sm font-semibold text-primary mt-2 group-hover:gap-2 transition-all">
-                  Watch video
-                  <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                </span>
-              </div>
-            </a>
-
-            {/* UNT Card */}
-            <a
-              href="https://www.unt.se/nyheter/uppsala/artikel/rackis-for-barn-oppnar-second-hand-butik-i-uppsala/jn11gonl"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group card-warm flex items-start gap-4 hover:shadow-lg hover:border-primary/20 transition-all duration-300 animate-fade-up delay-100"
-            >
-              <div className="shrink-0 w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                <Newspaper className="h-6 w-6 text-primary" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-semibold text-muted-foreground mb-1">
-                  January 2026
-                </p>
-                <h3 className="font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
-                  Uppsala Nya Tidning
-                </h3>
-                <p className="text-sm text-muted-foreground line-clamp-2">
-                  Räckis för barn öppnar second hand-butik i Uppsala
-                </p>
-                <span className="inline-flex items-center text-sm font-semibold text-primary mt-2 group-hover:gap-2 transition-all">
-                  Read article
-                  <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                </span>
-              </div>
-            </a>
-
-            {/* Sveriges Radio Card */}
-            <a
-              href="https://www.sverigesradio.se/artikel/utbytesstudenter-skanker-pengar-till-barncancerfonden"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group card-warm flex items-start gap-4 hover:shadow-lg hover:border-primary/20 transition-all duration-300 animate-fade-up delay-200"
-            >
-              <div className="shrink-0 w-12 h-12 rounded-xl bg-warm/10 flex items-center justify-center group-hover:bg-warm/20 transition-colors">
-                <Radio className="h-6 w-6 text-warm" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-semibold text-muted-foreground mb-1">
-                  January 2026
-                </p>
-                <h3 className="font-bold text-foreground mb-1 group-hover:text-warm transition-colors">
-                  Sveriges Radio P4 Uppland
-                </h3>
-                <p className="text-sm text-muted-foreground line-clamp-2">
-                  Utbytesstudenter säljer prylar – och skänker pengarna till barn
-                </p>
-                <span className="inline-flex items-center text-sm font-semibold text-warm mt-2 group-hover:gap-2 transition-all">
-                  Listen now
-                  <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                </span>
-              </div>
-            </a>
-          </div>
-        </div>
-      </div>
-    </>
   );
 }
+
+export function StatsCounterSection() {
+  const [customers, setCustomers] = useState(0);
+  const [donated, setDonated] = useState(0);
+  const [isFinished, setIsFinished] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const hasAnimated = useRef(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Only start if intersecting AND hasn't animated yet
+        if (entries[0].isIntersecting && !hasAnimated.current) {
+          hasAnimated.current = true;
+
+          const duration = 5000; // 5 seconds
+          const startTime = performance.now();
+
+          const animateCounters = (currentTime: number) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+
+            // easeOutExpo for fast start, slow end
+            const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+
+            setCustomers(Math.floor(ease * 500));
+            setDonated(Math.floor(ease * 90000));
+
+            if (progress < 1) {
+              requestAnimationFrame(animateCounters);
+            } else {
+              setIsFinished(true);
+            }
+          };
+
+          requestAnimationFrame(animateCounters);
+        }
+      },
+      { threshold: 0.5 } // Wait until 50% visible
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <section ref={sectionRef} className="py-16 md:py-24 bg-gradient-to-b from-stone-50 to-white border-y border-stone-100">
+      <div className="container px-4">
+        <div className="grid md:grid-cols-2 gap-12 md:gap-16 max-w-4xl mx-auto text-center">
+
+          <div className="flex flex-col items-center justify-center space-y-4">
+            <h3 className="font-display text-6xl md:text-7xl font-bold text-primary tracking-tight">
+              {customers}{isFinished ? '+' : ''}
+            </h3>
+            <p className="text-lg md:text-xl font-bold text-muted-foreground uppercase tracking-widest">
+              Customers Served
+            </p>
+          </div>
+
+          <div className="flex flex-col items-center justify-center space-y-4">
+            <h3 className="font-display text-6xl md:text-7xl font-bold text-primary tracking-tight">
+              {donated.toLocaleString('sv-SE')} SEK{isFinished ? '+' : ''}
+            </h3>
+            <p className="text-lg md:text-xl font-bold text-muted-foreground uppercase tracking-widest">
+              Donated to Charity
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  );
+}
+
 
 export function HowItWorksSection() {
   const [currentStep, setCurrentStep] = useState(0);
@@ -795,6 +767,115 @@ export function CommunitySection() {
     </section>
   );
 }
+
+export function RecentMediaSection() {
+  return (
+    <section className="py-12 md:py-16 bg-gradient-to-b from-stone-50 to-white relative overflow-hidden">
+
+        {/* Decorative blob */}
+        <div className="absolute top-0 right-[10%] w-32 h-32 bg-primary/5 blob" />
+
+        <div className="container px-4 relative z-10">
+          <div className="text-center mb-8">
+            <span className="inline-block text-sm font-bold text-primary uppercase tracking-wider mb-2">
+              In the news
+            </span>
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+              Recent media coverage
+            </h2>
+          </div>
+
+          {/* 3-in-a-row on desktop + a bit more room */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto">
+            {/* SVT Card (first slot) */}
+            <a
+              href="https://www.svt.se/nyheter/lokalt/uppsala/sa-loste-studenterna-flyttsvinnet"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group card-warm flex items-start gap-4 hover:shadow-lg hover:border-primary/20 transition-all duration-300 animate-fade-up"
+            >
+              {/* Make the icon + badge “SVT red” */}
+              <div className="shrink-0 w-12 h-12 rounded-xl bg-[#E13241]/10 flex items-center justify-center group-hover:bg-[#E13241]/20 transition-colors">
+                <Tv className="h-6 w-6 text-[#E13241]" />
+              </div>
+
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-semibold text-muted-foreground mb-1">
+                  February 2026
+                </p>
+                <h3 className="font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
+                  SVT Nyheter Uppsala
+                </h3>
+                <p className="text-sm text-muted-foreground line-clamp-2">
+                  Här säljer de vidare studenternas gamla lakan
+                </p>
+                <span className="inline-flex items-center text-sm font-semibold text-primary mt-2 group-hover:gap-2 transition-all">
+                  Watch video
+                  <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </span>
+              </div>
+            </a>
+
+            {/* UNT Card */}
+            <a
+              href="https://www.unt.se/nyheter/uppsala/artikel/rackis-for-barn-oppnar-second-hand-butik-i-uppsala/jn11gonl"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group card-warm flex items-start gap-4 hover:shadow-lg hover:border-primary/20 transition-all duration-300 animate-fade-up delay-100"
+            >
+              <div className="shrink-0 w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                <Newspaper className="h-6 w-6 text-primary" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-semibold text-muted-foreground mb-1">
+                  January 2026
+                </p>
+                <h3 className="font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
+                  Uppsala Nya Tidning
+                </h3>
+                <p className="text-sm text-muted-foreground line-clamp-2">
+                  Räckis för barn öppnar second hand-butik i Uppsala
+                </p>
+                <span className="inline-flex items-center text-sm font-semibold text-primary mt-2 group-hover:gap-2 transition-all">
+                  Read article
+                  <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </span>
+              </div>
+            </a>
+
+            {/* Sveriges Radio Card */}
+            <a
+              href="https://www.sverigesradio.se/artikel/utbytesstudenter-skanker-pengar-till-barncancerfonden"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group card-warm flex items-start gap-4 hover:shadow-lg hover:border-primary/20 transition-all duration-300 animate-fade-up delay-200"
+            >
+              <div className="shrink-0 w-12 h-12 rounded-xl bg-warm/10 flex items-center justify-center group-hover:bg-warm/20 transition-colors">
+                <Radio className="h-6 w-6 text-warm" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-semibold text-muted-foreground mb-1">
+                  January 2026
+                </p>
+                <h3 className="font-bold text-foreground mb-1 group-hover:text-warm transition-colors">
+                  Sveriges Radio P4 Uppland
+                </h3>
+                <p className="text-sm text-muted-foreground line-clamp-2">
+                  Utbytesstudenter säljer prylar – och skänker pengarna till barn
+                </p>
+                <span className="inline-flex items-center text-sm font-semibold text-warm mt-2 group-hover:gap-2 transition-all">
+                  Listen now
+                  <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </span>
+              </div>
+            </a>
+          </div>
+        </div>
+      
+    </section>
+  );
+}
+
 
 export function WhyChooseUsSection() {
   const [currentStep, setCurrentStep] = useState(0);
