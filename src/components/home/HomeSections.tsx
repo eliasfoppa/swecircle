@@ -10,6 +10,8 @@ import pic2 from '@/assets/pic2.jpg';
 import pic3 from '@/assets/pic3.jpg';
 import pic4 from '@/assets/pic4.jpg';
 import pic5 from '@/assets/pic5.jpg';
+import rbuLogo from "@/assets/rbu.png";
+// import barncancerfondenLogo from "@/assets/barncancerfonden.png";
 
 // --- PHYSICS: Ease-Out-Quart (Stable, Smooth) ---
 const easeOutQuart = (t: number) => 1 - Math.pow(1 - t, 4);
@@ -62,83 +64,83 @@ export function HeroSection() {
   }, []);
 
   return (
-      <section className="relative overflow-hidden bg-hero-gradient min-h-[85vh] flex items-center">
-        {/* BLOBS */}
-        <div className="absolute top-20 left-[10%] w-64 h-64 bg-primary/10 blob animate-float" />
-        <div className="absolute bottom-32 right-[5%] w-48 h-48 bg-warm/10 blob animate-float delay-200" />
+    <section className="relative overflow-hidden bg-hero-gradient min-h-[85vh] flex items-center">
+      {/* BLOBS */}
+      <div className="absolute top-20 left-[10%] w-64 h-64 bg-primary/10 blob animate-float" />
+      <div className="absolute bottom-32 right-[5%] w-48 h-48 bg-warm/10 blob animate-float delay-200" />
 
-        {/* HEARTS */}
-        {hearts.map((h, i) => (
-          <Heart
-            key={i}
-            className="absolute text-warm/30 animate-float"
-            style={{
-              left: `${h.x}%`,
-              top: `${h.y}%`,
-              width: `${h.size}px`,
-              height: `${h.size}px`,
-              animationDelay: `${h.delay}ms`,
-            }}
-            fill="currentColor"
-          />
-        ))}
+      {/* HEARTS */}
+      {hearts.map((h, i) => (
+        <Heart
+          key={i}
+          className="absolute text-warm/30 animate-float"
+          style={{
+            left: `${h.x}%`,
+            top: `${h.y}%`,
+            width: `${h.size}px`,
+            height: `${h.size}px`,
+            animationDelay: `${h.delay}ms`,
+          }}
+          fill="currentColor"
+        />
+      ))}
 
-        {/* MAIN CONTENT */}
-        <div className="container section-padding relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-secondary text-secondary-foreground text-sm font-semibold mb-8 animate-fade-up">
-              <Heart className="h-4 w-4 text-accent" fill="currentColor" />
-              <span>By students, for students in Uppsala</span>
-            </div>
+      {/* MAIN CONTENT */}
+      <div className="container section-padding relative z-10">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-secondary text-secondary-foreground text-sm font-semibold mb-8 animate-fade-up">
+            <Heart className="h-4 w-4 text-accent" fill="currentColor" />
+            <span>By students, for students in Uppsala</span>
+          </div>
 
-            <h1 className="font-display text-5xl sm:text-6xl md:text-7xl font-bold text-foreground leading-[1.1] mb-8 animate-fade-up delay-100">
-              Give items a{" "}
-              <span className="hand-drawn-underline text-primary">second life</span>{" "}
-              and help children in need
-            </h1>
+          <h1 className="font-display text-5xl sm:text-6xl md:text-7xl font-bold text-foreground leading-[1.1] mb-8 animate-fade-up delay-100">
+            Give items a{" "}
+            <span className="hand-drawn-underline text-primary">second life</span>{" "}
+            and help children in need
+          </h1>
 
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-fade-up delay-200 leading-relaxed">
-              Donated items become affordable finds for fellow students
-              <br />
-              all profit goes directly to{" "}
-              <span className="font-semibold text-foreground">Barncancerfonden</span>{" "}
-              and <span className="font-semibold text-foreground">RBU</span>
-            </p>
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-fade-up delay-200 leading-relaxed">
+            Donated items become affordable finds for fellow students
+            <br />
+            all profit goes directly to{" "}
+            <span className="font-semibold text-foreground">Barncancerfonden</span>{" "}
+            and <span className="font-semibold text-foreground">RBU</span>
+          </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up delay-300">
-              <Button variant="hero" size="lg" asChild className="text-lg px-8">
-                <a
-                  href="https://instagram.com/rackis_for_barn"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Instagram className="mr-2 h-5 w-5" />
-                  Follow us
-                </a>
-              </Button>
-
-              <Button
-                variant="hero-outline"
-                size="lg"
-                asChild
-                className="text-lg px-8"
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up delay-300">
+            <Button variant="hero" size="lg" asChild className="text-lg px-8">
+              <a
+                href="https://instagram.com/rackis_for_barn"
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                <Link to="/about">
-                  Learn more
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
-            </div>
+                <Instagram className="mr-2 h-5 w-5" />
+                Follow us
+              </a>
+            </Button>
 
-            <div className="mt-12 flex items-center justify-center gap-2 text-muted-foreground animate-fade-up delay-400">
-              <MapPin className="h-5 w-5 text-primary" />
-              <span className="font-medium">
-                Find us at Rackarbergsgatan 32, Uppsala
-              </span>
-            </div>
+            <Button
+              variant="hero-outline"
+              size="lg"
+              asChild
+              className="text-lg px-8"
+            >
+              <Link to="/about">
+                Learn more
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+          </div>
+
+          <div className="mt-12 flex items-center justify-center gap-2 text-muted-foreground animate-fade-up delay-400">
+            <MapPin className="h-5 w-5 text-primary" />
+            <span className="font-medium">
+              Find us at Rackarbergsgatan 32, Uppsala
+            </span>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
   );
 }
 
@@ -772,106 +774,106 @@ export function RecentMediaSection() {
   return (
     <section className="py-12 md:py-16 bg-gradient-to-b from-stone-50 to-white relative overflow-hidden">
 
-        {/* Decorative blob */}
-        <div className="absolute top-0 right-[10%] w-32 h-32 bg-primary/5 blob" />
+      {/* Decorative blob */}
+      <div className="absolute top-0 right-[10%] w-32 h-32 bg-primary/5 blob" />
 
-        <div className="container px-4 relative z-10">
-          <div className="text-center mb-8">
-            <span className="inline-block text-sm font-bold text-primary uppercase tracking-wider mb-2">
-              In the news
-            </span>
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-              Recent media coverage
-            </h2>
-          </div>
-
-          {/* 3-in-a-row on desktop + a bit more room */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto">
-            {/* SVT Card (first slot) */}
-            <a
-              href="https://www.svt.se/nyheter/lokalt/uppsala/sa-loste-studenterna-flyttsvinnet"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group card-warm flex items-start gap-4 hover:shadow-lg hover:border-primary/20 transition-all duration-300 animate-fade-up"
-            >
-              {/* Make the icon + badge “SVT red” */}
-              <div className="shrink-0 w-12 h-12 rounded-xl bg-[#E13241]/10 flex items-center justify-center group-hover:bg-[#E13241]/20 transition-colors">
-                <Tv className="h-6 w-6 text-[#E13241]" />
-              </div>
-
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-semibold text-muted-foreground mb-1">
-                  February 2026
-                </p>
-                <h3 className="font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
-                  SVT Nyheter Uppsala
-                </h3>
-                <p className="text-sm text-muted-foreground line-clamp-2">
-                  Här säljer de vidare studenternas gamla lakan
-                </p>
-                <span className="inline-flex items-center text-sm font-semibold text-primary mt-2 group-hover:gap-2 transition-all">
-                  Watch video
-                  <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                </span>
-              </div>
-            </a>
-
-            {/* UNT Card */}
-            <a
-              href="https://www.unt.se/nyheter/uppsala/artikel/rackis-for-barn-oppnar-second-hand-butik-i-uppsala/jn11gonl"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group card-warm flex items-start gap-4 hover:shadow-lg hover:border-primary/20 transition-all duration-300 animate-fade-up delay-100"
-            >
-              <div className="shrink-0 w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                <Newspaper className="h-6 w-6 text-primary" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-semibold text-muted-foreground mb-1">
-                  January 2026
-                </p>
-                <h3 className="font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
-                  Uppsala Nya Tidning
-                </h3>
-                <p className="text-sm text-muted-foreground line-clamp-2">
-                  Räckis för barn öppnar second hand-butik i Uppsala
-                </p>
-                <span className="inline-flex items-center text-sm font-semibold text-primary mt-2 group-hover:gap-2 transition-all">
-                  Read article
-                  <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                </span>
-              </div>
-            </a>
-
-            {/* Sveriges Radio Card */}
-            <a
-              href="https://www.sverigesradio.se/artikel/utbytesstudenter-skanker-pengar-till-barncancerfonden"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group card-warm flex items-start gap-4 hover:shadow-lg hover:border-primary/20 transition-all duration-300 animate-fade-up delay-200"
-            >
-              <div className="shrink-0 w-12 h-12 rounded-xl bg-warm/10 flex items-center justify-center group-hover:bg-warm/20 transition-colors">
-                <Radio className="h-6 w-6 text-warm" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-semibold text-muted-foreground mb-1">
-                  January 2026
-                </p>
-                <h3 className="font-bold text-foreground mb-1 group-hover:text-warm transition-colors">
-                  Sveriges Radio P4 Uppland
-                </h3>
-                <p className="text-sm text-muted-foreground line-clamp-2">
-                  Utbytesstudenter säljer prylar – och skänker pengarna till barn
-                </p>
-                <span className="inline-flex items-center text-sm font-semibold text-warm mt-2 group-hover:gap-2 transition-all">
-                  Listen now
-                  <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                </span>
-              </div>
-            </a>
-          </div>
+      <div className="container px-4 relative z-10">
+        <div className="text-center mb-8">
+          <span className="inline-block text-sm font-bold text-primary uppercase tracking-wider mb-2">
+            In the news
+          </span>
+          <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+            Recent media coverage
+          </h2>
         </div>
-      
+
+        {/* 3-in-a-row on desktop + a bit more room */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto">
+          {/* SVT Card (first slot) */}
+          <a
+            href="https://www.svt.se/nyheter/lokalt/uppsala/sa-loste-studenterna-flyttsvinnet"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group card-warm flex items-start gap-4 hover:shadow-lg hover:border-primary/20 transition-all duration-300 animate-fade-up"
+          >
+            {/* Make the icon + badge “SVT red” */}
+            <div className="shrink-0 w-12 h-12 rounded-xl bg-[#E13241]/10 flex items-center justify-center group-hover:bg-[#E13241]/20 transition-colors">
+              <Tv className="h-6 w-6 text-[#E13241]" />
+            </div>
+
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-semibold text-muted-foreground mb-1">
+                February 2026
+              </p>
+              <h3 className="font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
+                SVT Nyheter Uppsala
+              </h3>
+              <p className="text-sm text-muted-foreground line-clamp-2">
+                Här säljer de vidare studenternas gamla lakan
+              </p>
+              <span className="inline-flex items-center text-sm font-semibold text-primary mt-2 group-hover:gap-2 transition-all">
+                Watch video
+                <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </span>
+            </div>
+          </a>
+
+          {/* UNT Card */}
+          <a
+            href="https://www.unt.se/nyheter/uppsala/artikel/rackis-for-barn-oppnar-second-hand-butik-i-uppsala/jn11gonl"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group card-warm flex items-start gap-4 hover:shadow-lg hover:border-primary/20 transition-all duration-300 animate-fade-up delay-100"
+          >
+            <div className="shrink-0 w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+              <Newspaper className="h-6 w-6 text-primary" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-semibold text-muted-foreground mb-1">
+                January 2026
+              </p>
+              <h3 className="font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
+                Uppsala Nya Tidning
+              </h3>
+              <p className="text-sm text-muted-foreground line-clamp-2">
+                Räckis för barn öppnar second hand-butik i Uppsala
+              </p>
+              <span className="inline-flex items-center text-sm font-semibold text-primary mt-2 group-hover:gap-2 transition-all">
+                Read article
+                <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </span>
+            </div>
+          </a>
+
+          {/* Sveriges Radio Card */}
+          <a
+            href="https://www.sverigesradio.se/artikel/utbytesstudenter-skanker-pengar-till-barncancerfonden"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group card-warm flex items-start gap-4 hover:shadow-lg hover:border-primary/20 transition-all duration-300 animate-fade-up delay-200"
+          >
+            <div className="shrink-0 w-12 h-12 rounded-xl bg-warm/10 flex items-center justify-center group-hover:bg-warm/20 transition-colors">
+              <Radio className="h-6 w-6 text-warm" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-semibold text-muted-foreground mb-1">
+                January 2026
+              </p>
+              <h3 className="font-bold text-foreground mb-1 group-hover:text-warm transition-colors">
+                Sveriges Radio P4 Uppland
+              </h3>
+              <p className="text-sm text-muted-foreground line-clamp-2">
+                Utbytesstudenter säljer prylar – och skänker pengarna till barn
+              </p>
+              <span className="inline-flex items-center text-sm font-semibold text-warm mt-2 group-hover:gap-2 transition-all">
+                Listen now
+                <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </span>
+            </div>
+          </a>
+        </div>
+      </div>
+
     </section>
   );
 }
@@ -1151,39 +1153,77 @@ export function WhyChooseUsSection() {
   );
 }
 
+const charities = [
+  {
+    name: "Barncancerfonden",
+    logo: undefined, // swap to barncancerfondenLogo when available
+    description:
+      "Sweden's leading organization dedicated to supporting children with cancer and their families. Through research funding and family support programs, they work to improve outcomes for young cancer patients.",
+    url: "https://www.barncancerfonden.se",
+    linkLabel: "barncancerfonden.se",
+  },
+  {
+    name: "RBU",
+    logo: rbuLogo,
+    description:
+      "Riksförbundet för Rörelsehindrade Barn och Ungdomar works to improve the lives of children and young people with mobility impairments in Sweden through advocacy and support programs.",
+    url: "https://www.uppsala.rbu.se",
+    linkLabel: "rbu.se",
+  },
+];
+
 export function AboutCharitiesSection() {
   return (
     <section id="charities" className="pt-20 pb-0 md:pt-20 md:pb-4">
       <div className="container">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <span className="inline-block text-sm font-bold text-accent uppercase tracking-wider mb-4">Our cause</span>
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-6">Supporting children in need</h2>
+            <span className="inline-block text-sm font-bold text-accent uppercase tracking-wider mb-4">
+              Our cause
+            </span>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-6">
+              Supporting children in need
+            </h2>
           </div>
+
           <div className="grid md:grid-cols-2 gap-8">
-            <div className="card-warm">
-              <h3 className="text-xl font-bold text-foreground mb-4">Barncancerfonden</h3>
-              <p className="text-muted-foreground leading-relaxed mb-4">
-                Sweden's leading organization dedicated to supporting children with cancer and their families. Through research funding and family support programs, they work to improve outcomes for young cancer patients.
-              </p>
-              <a href="https://www.barncancerfonden.se" target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-primary font-semibold hover:underline">
-                Learn more at barncancerfonden.se
-              </a>
-            </div>
-            <div className="card-warm">
-              <h3 className="text-xl font-bold text-foreground mb-4">RBU</h3>
-              <p className="text-muted-foreground leading-relaxed mb-4">
-                Riksförbundet för Rörelsehindrade Barn och Ungdomar works to improve the lives of children and young people with mobility impairments in Sweden through advocacy and support programs.
-              </p>
-              <a href="https://www.rbu.se" target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-primary font-semibold hover:underline">
-                Learn more at rbu.se
-              </a>
-            </div>
+            {charities.map((charity) => (
+              <div key={charity.name} className="card-warm flex flex-col relative overflow-hidden">
+                {/* Watermark */}
+                {charity.logo && (
+                  <img
+                    src={charity.logo}
+                    alt=""
+                    aria-hidden="true"
+                    className="absolute -bottom-2.5 -right-2.5 w-36 md:w-40 object-contain opacity-[0.09] pointer-events-none select-none"
+                  />
+                )}
+
+                {/* Content */}
+                <h3 className="text-xl font-bold text-foreground mb-4 relative">
+                  {charity.name}
+                </h3>
+                <p className="text-muted-foreground leading-relaxed mb-4 flex-1 relative">
+                  {charity.description}
+                </p>
+                <a
+                  href={charity.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center text-primary font-semibold hover:underline relative"
+                >
+                  Learn more at {charity.linkLabel}
+                </a>
+              </div>
+            ))}
           </div>
+
           <div className="mt-12 text-center">
             <div className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-primary/10">
               <Heart className="h-8 w-8 text-warm" fill="currentColor" />
-              <p className="font-display text-xl font-bold text-foreground">100% of profits go to these charities</p>
+              <p className="font-display text-xl font-bold text-foreground">
+                100% of profits go to these charities
+              </p>
             </div>
           </div>
         </div>

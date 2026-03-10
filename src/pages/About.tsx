@@ -31,6 +31,9 @@ import team3Img from "@/assets/team3.jpg";
 import uuInnovationLogo from "@/assets/uu-innovation.png";
 import uppsalahemLogo from "@/assets/uppsalahem.png";
 
+import rbuLogo from "@/assets/rbu.png";
+// import barncancerfondenLogo from "@/assets/barncancerfonden.svg"; // ← uncomment when ready
+
 // --- PHYSICS: Ease-Out-Quart (Smooth Glide) ---
 const easeOutQuart = (t: number) => 1 - Math.pow(1 - t, 4);
 
@@ -119,6 +122,26 @@ const About = () => {
   const memberGroupRafRef = useRef<number | null>(null);
   const memberGroupTouchStartRef = useRef(0);
   const memberGroupTouchStartTimeRef = useRef(0);
+
+  const charities = [
+    {
+      name: "Barncancerfonden",
+      logo: undefined, // swap to barncancerfondenLogo when available
+      description:
+        "Sweden's leading organization dedicated to supporting children with cancer and their families. Through research funding and family support programs, they work to improve outcomes for young cancer patients.",
+      url: "https://www.barncancerfonden.se",
+      linkLabel: "barncancerfonden.se",
+    },
+    {
+      name: "RBU",
+      logo: rbuLogo,
+      description:
+        "Riksförbundet för Rörelsehindrade Barn och Ungdomar works to improve the lives of children and young people with mobility impairments in Sweden through advocacy and support programs.",
+      url: "https://www.uppsala.rbu.se",
+      linkLabel: "rbu.se",
+    },
+  ];
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -1240,41 +1263,38 @@ const About = () => {
                 Supporting children in need
               </h2>
             </div>
+
             <div className="grid md:grid-cols-2 gap-6">
-              <div className="card-warm hover:shadow-lg transition-shadow">
-                <h3 className="text-xl font-bold text-foreground mb-3">Barncancerfonden</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed mb-4">
-                  Sweden&apos;s leading organization dedicated to supporting children
-                  with cancer and their families. Through research funding and family
-                  support programs, they work to improve outcomes for young cancer
-                  patients.
-                </p>
-                <a
-                  href="https://www.barncancerfonden.se"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center text-primary text-sm font-semibold hover:underline"
-                >
-                  Learn more at barncancerfonden.se
-                </a>
-              </div>
-              <div className="card-warm hover:shadow-lg transition-shadow">
-                <h3 className="text-xl font-bold text-foreground mb-3">RBU</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed mb-4">
-                  Riksförbundet för Rörelsehindrade Barn och Ungdomar works to improve
-                  the lives of children and young people with mobility impairments in
-                  Sweden through advocacy and support programs.
-                </p>
-                <a
-                  href="https://www.rbu.se"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center text-primary text-sm font-semibold hover:underline"
-                >
-                  Learn more at rbu.se
-                </a>
-              </div>
+              {charities.map((charity) => (
+                <div key={charity.name} className="card-warm hover:shadow-lg transition-shadow flex flex-col relative overflow-hidden">
+                  {/* Watermark */}
+                  {charity.logo && (
+                  <img
+                    src={charity.logo}
+                    alt=""
+                    aria-hidden="true"
+                    className="absolute -bottom-2.5 -right-2.5 w-36 md:w-40 object-contain opacity-[0.09] pointer-events-none select-none"
+                  />
+                )}
+
+                  <h3 className="text-xl font-bold text-foreground mb-3 relative">
+                    {charity.name}
+                  </h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed mb-4 flex-1 relative">
+                    {charity.description}
+                  </p>
+                  <a
+                    href={charity.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center text-primary text-sm font-semibold hover:underline relative"
+                  >
+                    Learn more at {charity.linkLabel}
+                  </a>
+                </div>
+              ))}
             </div>
+
             <div className="mt-8 text-center">
               <div className="inline-flex items-center gap-3 px-6 py-3 rounded-2xl bg-primary/10">
                 <Heart className="h-6 w-6 text-warm" fill="currentColor" />
