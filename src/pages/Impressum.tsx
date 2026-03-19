@@ -27,7 +27,7 @@ const Impressum = () => {
                 Contact Information
               </h2>
               <p>
-                Email: info@rackisforbarn.com
+                Email: <a href="mailto:info@rackisforbarn.com" className="text-foreground hover:underline font-medium">info@rackisforbarn.com</a>
               </p>
             </section>
 
@@ -53,6 +53,26 @@ const Impressum = () => {
               <p>
                 Organisationsnummer: 802554-2773
               </p>
+            </section>
+
+            {/* New Section for Stadgar */}
+            <section>
+              <h2 className="text-xl font-semibold text-foreground mb-3">
+                Stadgar (Bylaws)
+              </h2>
+              <p>
+                Our association statutes (stadgar) outline the rules, purpose, and governance of Rackis för Barn. You can view or download the complete official document below.
+              </p>
+              <div className="mt-4 not-prose">
+                <a 
+                  href="/stadgar.pdf" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md text-primary-foreground bg-primary hover:bg-primary/90 transition-colors"
+                >
+                  View Official Stadgar (PDF)
+                </a>
+              </div>
             </section>
           </div>
         </div>

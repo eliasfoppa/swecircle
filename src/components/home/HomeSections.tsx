@@ -169,7 +169,7 @@ export function StatsCounterSection() {
             const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
 
             setCustomers(Math.floor(ease * 500));
-            setDonated(Math.floor(ease * 90000));
+            setDonated(Math.floor(ease * 95000));
 
             if (progress < 1) {
               requestAnimationFrame(animateCounters);
