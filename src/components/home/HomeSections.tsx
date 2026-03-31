@@ -608,7 +608,7 @@ export function CommunitySection() {
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
-    const onKeyDown = (e: KeyboardEvent) => {
+    const onKeyDown = (e) => {
       if (e.key === "Escape") setIsOpen(false);
       if (e.key === "ArrowLeft") setActiveIndex((i) => (i - 1 + posts.length) % posts.length);
       if (e.key === "ArrowRight") setActiveIndex((i) => (i + 1) % posts.length);
@@ -621,7 +621,7 @@ export function CommunitySection() {
     };
   }, [isOpen]);
 
-  const openAt = (idx: number) => {
+  const openAt = (idx) => {
     if (!isDesktop) return; // desktop-only
     setActiveIndex(idx);
     setIsOpen(true);
@@ -683,13 +683,27 @@ export function CommunitySection() {
                 isDesktop ? "cursor-zoom-in" : "cursor-default",
               ].join(" ")}
             >
-              <img
-                src={post.img}
-                alt="Community photo"
-                className="w-full h-full object-cover transition-transform duration-700 lg:group-hover:scale-105"
-              />
+              {/* UPDATED IMAGE TAG */}
+              {idx === 3 ? (
+                <>
+                  {/* The blurred grey background matching your lightbox */}
+                  <div className="absolute inset-0 bg-black/20 backdrop-blur-md z-0" />
 
-              {/* Desktop-only gray hover wash */}
+                  {/* The uncropped image */}
+                  <img
+                    src={post.img}
+                    alt="Community photo"
+                    className="relative z-10 w-full h-full object-contain transition-transform duration-700 lg:group-hover:scale-105"
+                  />
+                </>
+              ) : (
+                <img
+                  src={post.img}
+                  alt="Community photo"
+                  className="w-full h-full object-cover transition-transform duration-700 lg:group-hover:scale-105"
+                />
+              )}
+
               <div className="absolute inset-0 bg-black/0 transition-colors duration-300 lg:group-hover:bg-black/10" />
 
               {/* Caption Tag (kept) */}
