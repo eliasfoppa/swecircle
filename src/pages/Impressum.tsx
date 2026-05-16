@@ -27,7 +27,7 @@ const Impressum = () => {
                 Contact Information
               </h2>
               <p>
-                Email: <a href="mailto:info@rackisforbarn.com" className="text-foreground hover:underline font-medium">info@rackisforbarn.com</a>
+                Email: <a href="mailto:uppsala@swecircle.com" className="text-foreground hover:underline font-medium">uppsala@swecircle.com</a>
               </p>
             </section>
 

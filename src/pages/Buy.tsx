@@ -12,6 +12,7 @@ import {
   PackageOpen,
 } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 // Generate hearts on a jittered grid
 function generateJitteredHearts(
@@ -42,6 +43,7 @@ function generateJitteredHearts(
 }
 
 export function Buy() {
+  const { location } = useParams();
   const [hearts, setHearts] = useState<
     { x: number; y: number; size: number; delay: number }[]
   >([]);
@@ -58,6 +60,11 @@ export function Buy() {
     window.addEventListener("resize", updateHearts);
     return () => window.removeEventListener("resize", updateHearts);
   }, []);
+
+  // Dynamically set Instagram links based on location
+  const targetInstaLink = location === "lund" 
+    ? "https://instagram.com/swecirclelund" 
+    : "https://instagram.com/rackis_for_barn";
 
   return (
     <Layout>
@@ -115,11 +122,19 @@ export function Buy() {
                     Where to find us
                   </p>
                   <div className="space-y-0.5">
-                    <p className="text-muted-foreground text-base">
-                      <span className="font-semibold text-slate-900">
-                        Rackarbergsgatan 32
-                      </span>
-                    </p>
+                    {location === "lund" ? (
+                      <p className="text-muted-foreground text-base">
+                        <span className="font-semibold text-slate-900">
+                          Check our Instagram for the exact sale location!
+                        </span>
+                      </p>
+                    ) : (
+                      <p className="text-muted-foreground text-base">
+                        <span className="font-semibold text-slate-900">
+                          Rackarbergsgatan 32
+                        </span>
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -136,7 +151,7 @@ export function Buy() {
                   <p className="text-muted-foreground text-base">
                     Opening times vary. Please check our{" "}
                     <a
-                      href="https://instagram.com/rackis_for_barn"
+                      href={targetInstaLink}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="font-semibold text-slate-900 underline underline-offset-4 hover:text-primary transition-colors"
@@ -147,7 +162,6 @@ export function Buy() {
                   </p>
                 </div>
               </div>
-
 
               <div className="h-px bg-slate-100 w-full"></div>
 
@@ -177,7 +191,7 @@ export function Buy() {
             className="bg-primary hover:bg-primary/90 text-white rounded-full px-8 h-12 shadow-lg hover:shadow-xl transition-all animate-fade-up delay-400"
           >
             <a
-              href="https://instagram.com/rackis_for_barn"
+              href={targetInstaLink}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 font-semibold"
@@ -316,7 +330,7 @@ export function Buy() {
           <div className="text-center mt-12">
             {/* CLICKABLE BOTTOM BANNER */}
             <a
-              href="https://instagram.com/rackis_for_barn"
+              href={targetInstaLink}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-6 py-3 bg-white rounded-full border border-slate-200 shadow-sm text-sm text-slate-600 hover:shadow-md hover:border-primary/50 transition-all group"

@@ -12,6 +12,7 @@ import {
   PackageOpen
 } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 // Generate hearts on a jittered grid
 function generateJitteredHearts(
@@ -41,6 +42,7 @@ function generateJitteredHearts(
 }
 
 export function Donate() {
+    const { location } = useParams();
     const [hearts, setHearts] = useState<{ x: number; y: number; size: number; delay: number }[]>([]);
 
     useEffect(() => {
@@ -55,6 +57,11 @@ export function Donate() {
         window.addEventListener("resize", updateHearts);
         return () => window.removeEventListener("resize", updateHearts);
     }, []);
+
+    // Set Instagram link based on location
+    const targetInstaLink = location === "lund" 
+      ? "https://instagram.com/swecirclelund" 
+      : "https://instagram.com/rackis_for_barn";
 
     return (
         <Layout>
@@ -111,8 +118,14 @@ export function Donate() {
                                 <div>
                                     <p className="font-bold text-foreground text-lg mb-1">Where to drop off</p>
                                     <div className="space-y-0.5">
-                                        <p className="text-muted-foreground text-base">Rackarbergsgatan 32 (Rackis)</p>
-                                        <p className="text-muted-foreground text-base"><span className="text-primary font-medium">Or:</span> Building Nr. 1 (Flogsta)</p>
+                                        {location === "lund" ? (
+                                            <p className="text-muted-foreground text-base">Check our Instagram for exact drop-off locations!</p>
+                                        ) : (
+                                            <>
+                                                <p className="text-muted-foreground text-base">Rackarbergsgatan 32 (Rackis)</p>
+                                                <p className="text-muted-foreground text-base"><span className="text-primary font-medium">Or:</span> Building Nr. 1 (Flogsta)</p>
+                                            </>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -127,7 +140,6 @@ export function Donate() {
                                 <div>
                                     <p className="font-bold text-foreground text-lg mb-1">When to come</p>
                                     <p className="text-muted-foreground text-base">At the end of every semester when moving out</p>
-                                    {/* <p className="text-xs text-muted-foreground mt-0.5 italic opacity-70">(Closed on Christmas)</p> */}
                                 </div>
                             </div>
 
@@ -178,18 +190,20 @@ export function Donate() {
                                 </p>
                             </div>
 
-                             {/* Rule 4 */}
-                             <div className="flex gap-4">
-                                <span className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-red-50 text-red-600 font-bold text-sm">4</span>
-                                <p className="text-lg text-slate-700 pt-1">
-                                    No large furniture (beds, sofas, wardrobes).
-                                </p>
-                            </div>
+                             {/* Rule 4: Only show in Lund */}
+                             {location === "lund" && (
+                                <div className="flex gap-4">
+                                    <span className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-red-50 text-red-600 font-bold text-sm">4</span>
+                                    <p className="text-lg text-slate-700 pt-1">
+                                        No large furniture (beds, sofas, wardrobes).
+                                    </p>
+                                </div>
+                             )}
                         </div>
                     </div>
 
                     <Button size="lg" asChild className="bg-primary hover:bg-primary/90 text-white rounded-full px-8 h-12 shadow-lg hover:shadow-xl transition-all animate-fade-up delay-500">
-                        <a href="https://instagram.com/rackis_for_barn" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 font-semibold">
+                        <a href={targetInstaLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 font-semibold">
                             <Instagram className="h-5 w-5" />
                             Message us on Instagram
                         </a>
@@ -308,7 +322,7 @@ export function Donate() {
                     <div className="text-center mt-12">
                         <div className="inline-flex items-center gap-2 px-6 py-3 bg-white rounded-full border border-slate-200 shadow-sm text-sm text-slate-600">
                             <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
-                            Not sure about an item? <a href="https://instagram.com/rackis_for_barn" target="_blank" className="font-semibold text-primary hover:underline">Send us a photo on Instagram!</a>
+                            Not sure about an item? <a href={targetInstaLink} target="_blank" rel="noopener noreferrer" className="font-semibold text-primary hover:underline">Send us a photo on Instagram!</a>
                         </div>
                     </div>
                 </div>

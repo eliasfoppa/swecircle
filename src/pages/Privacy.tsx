@@ -64,7 +64,7 @@ const Privacy = () => {
                 6. Contact
               </h2>
               <p>
-                For questions about this privacy policy or to exercise your rights, contact us at <a href="mailto:info@rackisforbarn.com" className="text-primary hover:underline">info@rackisforbarn.com</a>.
+                For questions about this privacy policy or to exercise your rights, contact us at <a href="mailto:uppsala@swecircle.com" className="text-primary hover:underline">uppsala@swecircle.com</a>.
               </p>
             </section>
           </div>

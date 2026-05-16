@@ -2,21 +2,36 @@ import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Mail, MapPin, Instagram } from "lucide-react";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 
 const Contact = () => {
+  const { location } = useParams();
   const [form, setForm] = useState({ name: "", email: "", message: "" });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  // Dynamically set contact details based on the current location
+  const targetEmail = location === "lund" ? "lund@swecircle.com" : "uppsala@swecircle.com";
+  
+  // Set Instagram handle and link (Update the Lund one if your handle is different!)
+  const targetInstaHandle = location === "lund" ? "@swecirclelund" : "@rackis_for_barn";
+  const targetInstaLink = location === "lund" 
+    ? "https://instagram.com/swecirclelund" 
+    : "https://instagram.com/rackis_for_barn";
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const subject = encodeURIComponent("Contact Form Submission – Rackis for Barn");
+    
+    // Dynamically set the subject line so you know which city they are contacting
+    const city = location ? location.charAt(0).toUpperCase() + location.slice(1) : "Uppsala";
+    const subject = encodeURIComponent(`Contact Form Submission – Swecircle ${city}`);
+    
     const body = encodeURIComponent(
       `Name: ${form.name}\nEmail: ${form.email}\n\nMessage:\n${form.message}`
     );
-    window.location.href = `mailto:info@rackisforbarn.com?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:${targetEmail}?subject=${subject}&body=${body}`;
   };
 
   return (
@@ -26,7 +41,7 @@ const Contact = () => {
         <div className="container">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 animate-fade-up">
-              Contact Rackis for Barn
+              Contact Swecircle
             </h1>
             <p className="text-lg text-muted-foreground animate-fade-up delay-100">
               We welcome inquiries regarding donations, volunteering, or general questions about our work. Please get in touch using the form below or via the provided contact details.
@@ -46,7 +61,7 @@ const Contact = () => {
                   Get in Touch
                 </h2>
                 <p className="text-muted-foreground">
-                  Whether you want to volunteer, collaborate with us, or learn more about our initiatives – we would be delighted to hear from you.
+                  Whether you want to volunteer, collaborate with us, or learn more about our initiatives. We would love to hear from you!
                 </p>
               </div>
 
@@ -58,10 +73,10 @@ const Contact = () => {
                   <div>
                     <h3 className="font-medium text-foreground">Email</h3>
                     <a
-                      href="mailto:info@rackisforbarn.com"
+                      href={`mailto:${targetEmail}`}
                       className="text-muted-foreground hover:text-primary transition-colors"
                     >
-                      info@rackisforbarn.com
+                      <p>{targetEmail}</p>
                     </a>
                   </div>
                 </div>
@@ -73,30 +88,33 @@ const Contact = () => {
                   <div>
                     <h3 className="font-medium text-foreground">Instagram</h3>
                     <a
-                      href="https://instagram.com/rackis_for_barn"
+                      href={targetInstaLink}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-muted-foreground hover:text-primary transition-colors"
                     >
-                      @rackis_for_barn
+                      {targetInstaHandle}
                     </a>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <MapPin className="h-5 w-5 text-primary" />
+                {/* Only display physical location if the parameter is 'uppsala' (or default) */}
+                {(!location || location === "uppsala") && (
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <MapPin className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-foreground">Location</h3>
+                      <p className="text-muted-foreground">
+                        Rackis för Barn<br />
+                        Rackarbergsgatan 32<br />
+                        752 32 Uppsala<br />
+                        Sweden
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-medium text-foreground">Location</h3>
-                    <p className="text-muted-foreground">
-                      Rackis för Barn<br />
-                      Rackarbergsgatan 32<br />
-                      752 32 Uppsala<br />
-                      Sweden
-                    </p>
-                  </div>
-                </div>
+                )}
               </div>
             </div>
 

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Heart, Recycle, ShoppingBag, MapPin, Instagram, Bike, Home, Users, Gift, X, ChevronLeft, ChevronRight, Newspaper, Radio, Tv } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useState, useEffect, useRef, useCallback } from "react";
 import Logo from "@/assets/logo.png";
 import uuInnovationLogo from "@/assets/uu-innovation.png";
@@ -45,29 +45,34 @@ function generateJitteredHearts(
 }
 
 export function HeroSection() {
-  const [hearts, setHearts] = useState<
-    { x: number; y: number; size: number; delay: number }[]
-  >([]);
+  const { location } = useParams()
+  const currentCity = location || "uppsala"
+  const isLund = currentCity.toLowerCase() === "lund"
+
+  const instaUrl = isLund
+    ? "https://www.instagram.com/swecirclelund/"
+    : "https://instagram.com/rackis_for_barn"
+
+  const [hearts, setHearts] = useState<{ x: number; y: number; size: number; delay: number }[]>([])
 
   useEffect(() => {
     const updateHearts = () => {
       if (window.innerWidth < 768) {
-        setHearts(generateJitteredHearts(3, 5, 100, 100, [12, 20]));
+        setHearts(generateJitteredHearts(3, 5, 100, 100, [12, 20]))
       } else {
-        setHearts(generateJitteredHearts(4, 7, 100, 100, [16, 30]));
+        setHearts(generateJitteredHearts(4, 7, 100, 100, [16, 30]))
       }
-    };
-
-    updateHearts();
-    window.addEventListener("resize", updateHearts);
-    return () => window.removeEventListener("resize", updateHearts);
-  }, []);
+    }
+    updateHearts()
+    window.addEventListener("resize", updateHearts)
+    return () => window.removeEventListener("resize", updateHearts)
+  }, [])
 
   return (
     <section className="relative overflow-hidden bg-hero-gradient min-h-[85vh] flex items-center">
       {/* BLOBS */}
-      <div className="absolute top-20 left-[10%] w-64 h-64 bg-primary/10 blob animate-float" />
-      <div className="absolute bottom-32 right-[5%] w-48 h-48 bg-warm/10 blob animate-float delay-200" />
+      <div className="absolute top-20 left-10 w-64 h-64 bg-primary/10 blob animate-float"></div>
+      <div className="absolute bottom-32 right-5 w-48 h-48 bg-warm/10 blob animate-float delay-200"></div>
 
       {/* HEARTS */}
       {hearts.map((h, i) => (
@@ -89,59 +94,43 @@ export function HeroSection() {
       <div className="container section-padding relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-secondary text-secondary-foreground text-sm font-semibold mb-8 animate-fade-up">
-            <Heart className="h-4 w-4 text-accent" fill="currentColor" />
-            <span>By students, for students in Uppsala</span>
+            <Heart className="h-4 w-4 text-accent fill-current" />
+            <span>By students, for students in {isLund ? "Lund" : "Uppsala"}</span>
           </div>
 
           <h1 className="font-display text-5xl sm:text-6xl md:text-7xl font-bold text-foreground leading-[1.1] mb-8 animate-fade-up delay-100">
-            Give items a{" "}
-            <span className="hand-drawn-underline text-primary">second life</span>{" "}
+            Give items a <span className="hand-drawn-underline text-primary">second life</span><br />
             and help children in need
           </h1>
 
           <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-fade-up delay-200 leading-relaxed">
-            Donated items become affordable finds for fellow students
-            <br />
-            all profit goes directly to{" "}
-            <span className="font-semibold text-foreground">Barncancerfonden</span>{" "}
-            and <span className="font-semibold text-foreground">RBU</span>
+            Donated items become affordable finds for fellow students <br />
+            all profit goes directly to <span className="font-semibold text-foreground">Barncancerfonden</span> and <span className="font-semibold text-foreground">RBU</span>.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up delay-300">
             <Button variant="hero" size="lg" asChild className="text-lg px-8">
-              <a
-                href="https://instagram.com/rackis_for_barn"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Instagram className="mr-2 h-5 w-5" />
-                Follow us
+              <a href={instaUrl} target="_blank" rel="noopener noreferrer">
+                <Instagram className="mr-2 h-5 w-5" /> Follow us
               </a>
             </Button>
-
-            <Button
-              variant="hero-outline"
-              size="lg"
-              asChild
-              className="text-lg px-8"
-            >
-              <Link to="/about">
-                Learn more
-                <ArrowRight className="ml-2 h-5 w-5" />
+            <Button variant="hero-outline" size="lg" asChild className="text-lg px-8">
+              <Link to={`/${currentCity}/about`}>
+                Learn more <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
           </div>
 
-          <div className="mt-12 flex items-center justify-center gap-2 text-muted-foreground animate-fade-up delay-400">
-            <MapPin className="h-5 w-5 text-primary" />
-            <span className="font-medium">
-              Find us at Rackarbergsgatan 32, Uppsala
-            </span>
-          </div>
+          {!isLund && (
+            <div className="mt-12 flex items-center justify-center gap-2 text-muted-foreground animate-fade-up delay-400">
+              <MapPin className="h-5 w-5 text-primary" />
+              <span className="font-medium">Find us at Rackarbergsgatan 32, Uppsala</span>
+            </div>
+          )}
         </div>
       </div>
     </section>
-  );
+  )
 }
 
 export function StatsCounterSection() {
@@ -231,14 +220,18 @@ export function HowItWorksSection() {
   const rafRef = useRef<number | null>(null);
   const touchStartRef = useRef(0);
   const touchStartTimeRef = useRef(0);
+  const { location } = useParams();
+  const currentCity = location || "uppsala";
+  const isLund = currentCity.toLowerCase() === "lund";
 
   const steps = [
     {
       icon: ShoppingBag,
       title: "Moving In?",
-      description: "We've got you covered with affordable essentials for your first days in Uppsala (and beyond).",
+      // Dynamic description
+      description: `We've got you covered with affordable essentials for your first days in ${isLund ? "Lund" : "Uppsala"} and beyond.`,
       color: "bg-green-100",
-      action: { type: "link", to: "/buy" },
+      action: { type: "link", to: `/${currentCity}/buy` },
     },
     {
       icon: Heart,
@@ -252,7 +245,7 @@ export function HowItWorksSection() {
       title: "Moving Out?",
       description: "Give items a second life instead of throwing them away. We accept everything from bedding to bikes.",
       color: "bg-primary/10 text-primary",
-      action: { type: "link", to: "/donate" },
+      action: { type: "link", to: `/${location}/donate` },
     },
   ];
 
@@ -588,47 +581,49 @@ const posts = [
 
 
 export function CommunitySection() {
-  const [isDesktop, setIsDesktop] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const { location } = useParams()
+  const isLund = (location || "uppsala").toLowerCase() === "lund"
+  const instaUrl = isLund ? "https://www.instagram.com/swecirclelund/" : "https://www.instagram.com/rackis_for_barn"
+  const instaHandle = isLund ? "@swecirclelund" : "@rackis_for_barn"
+
+  const [isDesktop, setIsDesktop] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
+  const [activeIndex, setActiveIndex] = useState(0)
 
   useEffect(() => {
     // Match your breakpoint: you switch to grid at lg.
-    const mql = window.matchMedia("(min-width: 1024px)");
-    const update = () => setIsDesktop(mql.matches);
-
-    update();
-    mql.addEventListener("change", update);
-    return () => mql.removeEventListener("change", update);
-  }, []);
+    const mql = window.matchMedia("(min-width: 1024px)")
+    const update = () => setIsDesktop(mql.matches)
+    update()
+    mql.addEventListener("change", update)
+    return () => mql.removeEventListener("change", update)
+  }, [])
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) return
+    const prevOverflow = document.body.style.overflow
+    document.body.style.overflow = "hidden"
 
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-
-    const onKeyDown = (e) => {
-      if (e.key === "Escape") setIsOpen(false);
-      if (e.key === "ArrowLeft") setActiveIndex((i) => (i - 1 + posts.length) % posts.length);
-      if (e.key === "ArrowRight") setActiveIndex((i) => (i + 1) % posts.length);
-    };
-
-    window.addEventListener("keydown", onKeyDown);
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsOpen(false)
+      if (e.key === "ArrowLeft") setActiveIndex((i) => (i - 1 + posts.length) % posts.length)
+      if (e.key === "ArrowRight") setActiveIndex((i) => (i + 1) % posts.length)
+    }
+    window.addEventListener("keydown", onKeyDown)
     return () => {
-      window.removeEventListener("keydown", onKeyDown);
-      document.body.style.overflow = prevOverflow;
-    };
-  }, [isOpen]);
+      window.removeEventListener("keydown", onKeyDown)
+      document.body.style.overflow = prevOverflow
+    }
+  }, [isOpen])
 
-  const openAt = (idx) => {
-    if (!isDesktop) return; // desktop-only
-    setActiveIndex(idx);
-    setIsOpen(true);
-  };
+  const openAt = (idx: number) => {
+    if (!isDesktop) return // desktop-only
+    setActiveIndex(idx)
+    setIsOpen(true)
+  }
 
-  const prev = () => setActiveIndex((i) => (i - 1 + posts.length) % posts.length);
-  const next = () => setActiveIndex((i) => (i + 1) % posts.length);
+  const prev = () => setActiveIndex((i) => (i - 1 + posts.length) % posts.length)
+  const next = () => setActiveIndex((i) => (i + 1) % posts.length)
 
   return (
     <section className="py-16 md:py-24 bg-white overflow-hidden">
@@ -640,33 +635,30 @@ export function CommunitySection() {
               Community
             </span>
             <h2 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-4">
-              Rackis in Action
+              Swecircle in Action
             </h2>
             <p className="text-lg text-muted-foreground">
               See what we're up to behind the scenes from our busy sales to collecting donations.
             </p>
           </div>
-
-          {/* Keep your Insta button (you only wanted picture links removed) */}
+          {/* Keep your Insta button: you only wanted picture links removed */}
           <a
-            href="https://www.instagram.com/rackis_for_barn"
+            href={instaUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="hidden md:inline-flex items-center gap-2 px-6 py-3 rounded-full bg-stone-100 text-foreground font-semibold hover:bg-stone-200 transition-colors group"
           >
             <Instagram className="w-5 h-5" />
-            <span>@rackisforbarn</span>
+            <span>{instaHandle}</span>
             <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
           </a>
         </div>
 
-        {/* FEED: mobile scroll, desktop grid */}
-        <div
-          className="
-            flex gap-4 overflow-x-auto pb-8 -mx-4 px-4 scrollbar-hide
-            lg:grid lg:grid-cols-5 lg:gap-6 lg:overflow-visible lg:pb-0 lg:mx-0 lg:px-0
-          "
-        >
+        {/* FEED (mobile scroll, desktop grid) */}
+        <div className="
+          flex gap-4 overflow-x-auto pb-8 -mx-4 px-4 scrollbar-hide
+          lg:grid lg:grid-cols-5 lg:gap-6 lg:overflow-visible lg:pb-0 lg:mx-0 lg:px-0
+        ">
           {posts.map((post, idx) => (
             <div
               key={post.id}
@@ -674,8 +666,8 @@ export function CommunitySection() {
               tabIndex={isDesktop ? 0 : -1}
               onClick={() => openAt(idx)}
               onKeyDown={(e) => {
-                if (!isDesktop) return;
-                if (e.key === "Enter" || e.key === " ") openAt(idx);
+                if (!isDesktop) return
+                if (e.key === "Enter" || e.key === " ") openAt(idx)
               }}
               className={[
                 "relative group block aspect-square rounded-3xl overflow-hidden bg-stone-100",
@@ -688,7 +680,6 @@ export function CommunitySection() {
                 <>
                   {/* The blurred grey background matching your lightbox */}
                   <div className="absolute inset-0 bg-black/20 backdrop-blur-md z-0" />
-
                   {/* The uncropped image */}
                   <img
                     src={post.img}
@@ -706,7 +697,7 @@ export function CommunitySection() {
 
               <div className="absolute inset-0 bg-black/0 transition-colors duration-300 lg:group-hover:bg-black/10" />
 
-              {/* Caption Tag (kept) */}
+              {/* Caption Tag kept */}
               {post.caption && (
                 <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
                   <div className="bg-white/95 backdrop-blur-sm p-3 rounded-xl text-sm font-medium text-foreground shadow-lg">
@@ -718,16 +709,16 @@ export function CommunitySection() {
           ))}
         </div>
 
-        {/* Mobile Button (unchanged) */}
+        {/* Mobile Button unchanged */}
         <div className="mt-4 md:hidden">
           <a
-            href="https://www.instagram.com/rackisforbarn"
+            href={instaUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-2 w-full px-6 py-3 rounded-xl bg-stone-100 text-foreground font-semibold hover:bg-stone-200 transition-colors"
           >
             <Instagram className="w-5 h-5" />
-            <span>Follow @rackisforbarn</span>
+            <span>Follow {instaHandle}</span>
           </a>
         </div>
       </div>
@@ -741,12 +732,14 @@ export function CommunitySection() {
           role="dialog"
           style={{ backdropFilter: "blur(12px)" }}
         >
-          <div className="relative w-full max-w-5xl" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="relative w-full max-w-5xl"
+            onClick={(e) => e.stopPropagation()}
+          >
             <button
               type="button"
               onClick={() => setIsOpen(false)}
-              className="absolute -top-3 -right-3 bg-white/90 hover:bg-white text-foreground rounded-full p-2 shadow"
-              aria-label="Close"
+              className="absolute -top-3 -right-3 bg-white/90 hover:bg-white text-foreground rounded-full p-2 shadow aria-label='Close'"
             >
               <X className="w-5 h-5" />
             </button>
@@ -754,17 +747,14 @@ export function CommunitySection() {
             <button
               type="button"
               onClick={prev}
-              className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-foreground rounded-full p-2 shadow"
-              aria-label="Previous"
+              className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-foreground rounded-full p-2 shadow aria-label='Previous'"
             >
               <ChevronLeft className="w-6 h-6" />
             </button>
-
             <button
               type="button"
               onClick={next}
-              className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-foreground rounded-full p-2 shadow"
-              aria-label="Next"
+              className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-foreground rounded-full p-2 shadow aria-label='Next'"
             >
               <ChevronRight className="w-6 h-6" />
             </button>
@@ -781,15 +771,254 @@ export function CommunitySection() {
         </div>
       )}
     </section>
-  );
+  )
 }
 
 export function RecentMediaSection() {
+  const [currentStep, setCurrentStep] = useState(0)
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const cardWidthRef = useRef(0)
+  const visualCardWidthRef = useRef(0)
+  const paddingLeftRef = useRef(0)
+
+  const isAnimatingRef = useRef(false)
+  const rafRef = useRef<number | null>(null)
+  const touchStartRef = useRef(0)
+  const touchStartTimeRef = useRef(0)
+
+  const mediaItems = [
+    {
+      publisher: "Uppsala University",
+      date: "March 2026",
+      title: "Where student life meets sustainability and social impact",
+      url: "https://www.uu.se/en/news/2026/2026-03-24-where-student-life-meets-sustainability-and-social-impact",
+      icon: Newspaper,
+      iconColor: "text-[#990000]",
+      iconBg: "bg-[#990000]/10",
+      iconHoverBg: "group-hover:bg-[#990000]/20",
+      action: "Read article"
+    },
+    {
+      publisher: "Ergo",
+      date: "March 2026",
+      title: "Students turn abandoned items into charity",
+      url: "https://ergo.nu/reportage/20260320-students-turn-abandoned-items-into-charity",
+      icon: Newspaper,
+      iconColor: "text-primary",
+      iconBg: "bg-primary/10",
+      iconHoverBg: "group-hover:bg-primary/20",
+      action: "Read article"
+    },
+    {
+      publisher: "RBU Uppsala",
+      date: "March 2026",
+      title: "Årsmöte 2026 avklarat, nygammal styrelse och donation från Rackis för barn!",
+      url: "https://uppsala.rbu.se/2026/03/20/arsmote-2026-avklarat-nygammal-styrelse-och-donation-fran-rackis-for-barn/",
+      icon: Heart,
+      iconColor: "text-warm",
+      iconBg: "bg-warm/10",
+      iconHoverBg: "group-hover:bg-warm/20",
+      action: "Read article"
+    },
+    {
+      publisher: "SVT Nyheter Uppsala",
+      date: "February 2026",
+      title: "Här säljer de vidare studenternas gamla lakan",
+      url: "https://www.svt.se/nyheter/lokalt/uppsala/sa-loste-studenterna-flyttsvinnet",
+      icon: Tv,
+      iconColor: "text-[#E13241]",
+      iconBg: "bg-[#E13241]/10",
+      iconHoverBg: "group-hover:bg-[#E13241]/20",
+      action: "Watch video"
+    },
+    {
+      publisher: "Uppsala Nya Tidning",
+      date: "January 2026",
+      title: "Räckis för barn öppnar second hand-butik i Uppsala",
+      url: "https://www.unt.se/nyheter/uppsala/artikel/rackis-for-barn-oppnar-second-hand-butik-i-uppsala/jn11gonl",
+      icon: Newspaper,
+      iconColor: "text-primary",
+      iconBg: "bg-primary/10",
+      iconHoverBg: "group-hover:bg-primary/20",
+      action: "Read article"
+    },
+    {
+      publisher: "Sveriges Radio P4 Uppland",
+      date: "January 2026",
+      title: "Utbytesstudenter säljer prylar och skänker pengarna till barn",
+      url: "https://www.sverigesradio.se/artikel/utbytesstudenter-skanker-pengar-till-barncancerfonden",
+      icon: Radio,
+      iconColor: "text-warm",
+      iconBg: "bg-warm/10",
+      iconHoverBg: "group-hover:bg-warm/20",
+      action: "Listen now"
+    }
+  ]
+
+  const scrollData = [
+    mediaItems[mediaItems.length - 2],
+    mediaItems[mediaItems.length - 1],
+    ...mediaItems,
+    mediaItems[0],
+    mediaItems[1]
+  ]
+
+  const START_INDEX = 2
+
+  const getCenterOffset = (container: HTMLElement, visualWidth: number) => {
+    const containerWidth = container.clientWidth
+    return (containerWidth - visualWidth) / 2
+  }
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const container = scrollContainerRef.current
+      if (container && container.firstElementChild) {
+        const firstCard = container.firstElementChild as HTMLElement
+        const style = window.getComputedStyle(container)
+        const gap = parseFloat(style.gap) || 16
+
+        visualCardWidthRef.current = firstCard.offsetWidth
+        cardWidthRef.current = firstCard.offsetWidth + gap
+        paddingLeftRef.current = parseFloat(style.paddingLeft) || 0
+
+        const offset = getCenterOffset(container, visualCardWidthRef.current)
+        container.scrollLeft = paddingLeftRef.current + (cardWidthRef.current * START_INDEX) - offset
+      }
+    }, 50)
+    return () => clearTimeout(timer)
+  }, [])
+
+  const checkInfiniteLoop = (container: HTMLElement) => {
+    const totalWidth = cardWidthRef.current
+    const visualWidth = visualCardWidthRef.current
+    const paddingLeft = paddingLeftRef.current
+
+    if (!totalWidth) return
+
+    const offset = getCenterOffset(container, visualWidth)
+    const rawIndex = Math.round((container.scrollLeft + offset - paddingLeft) / totalWidth)
+
+    if (rawIndex >= scrollData.length - 2) {
+      container.scrollLeft = paddingLeft + (totalWidth * (rawIndex - mediaItems.length)) - offset
+    } else if (rawIndex <= 1) {
+      container.scrollLeft = paddingLeft + (totalWidth * (rawIndex + mediaItems.length)) - offset
+    }
+  }
+
+  const glideTo = (targetX: number) => {
+    const container = scrollContainerRef.current
+    if (!container) return
+
+    if (rafRef.current) cancelAnimationFrame(rafRef.current)
+
+    const startX = container.scrollLeft
+    const distance = targetX - startX
+    const duration = 300
+    const startTime = performance.now()
+
+    isAnimatingRef.current = true
+    container.style.overflowX = "hidden"
+    container.style.scrollSnapType = "none"
+
+    const animate = (currentTime: number) => {
+      const elapsed = currentTime - startTime
+      const progress = Math.min(elapsed / duration, 1)
+      const ease = easeOutQuart(progress)
+
+      container.scrollLeft = startX + distance * ease
+
+      if (progress < 1) {
+        rafRef.current = requestAnimationFrame(animate)
+      } else {
+        container.style.overflowX = "auto"
+        isAnimatingRef.current = false
+        rafRef.current = null
+        checkInfiniteLoop(container)
+      }
+    }
+
+    rafRef.current = requestAnimationFrame(animate)
+  }
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current)
+      rafRef.current = null
+      isAnimatingRef.current = false
+    }
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.style.overflowX = "auto"
+      scrollContainerRef.current.style.scrollSnapType = "none"
+      checkInfiniteLoop(scrollContainerRef.current)
+    }
+    touchStartRef.current = e.touches[0].clientX
+    touchStartTimeRef.current = performance.now()
+  }
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const container = scrollContainerRef.current
+    if (!container) return
+
+    const touchEnd = e.changedTouches[0].clientX
+    const touchTime = performance.now() - touchStartTimeRef.current
+    const diff = touchStartRef.current - touchEnd
+
+    if (container.firstElementChild) {
+      const firstCard = container.firstElementChild as HTMLElement
+      const style = window.getComputedStyle(container)
+      const gap = parseFloat(style.gap) || 16
+      visualCardWidthRef.current = firstCard.offsetWidth
+      cardWidthRef.current = firstCard.offsetWidth + gap
+      paddingLeftRef.current = parseFloat(style.paddingLeft) || 0
+    }
+
+    const totalWidth = cardWidthRef.current
+    const visualWidth = visualCardWidthRef.current
+    const paddingLeft = paddingLeftRef.current
+    const offset = getCenterOffset(container, visualWidth)
+
+    const exactIndex = (container.scrollLeft + offset - paddingLeft) / totalWidth
+    const rawIndex = Math.round(exactIndex)
+    const isFlick = touchTime < 250 && Math.abs(diff) > 20
+
+    let targetIndex = rawIndex
+
+    if (isFlick) {
+      if (diff > 0) targetIndex = Math.floor(exactIndex) + 1
+      else targetIndex = Math.ceil(exactIndex) - 1
+    } else {
+      if (diff > 0 && exactIndex > rawIndex) targetIndex = rawIndex + 1
+      else if (diff < 0 && exactIndex < rawIndex) targetIndex = rawIndex - 1
+    }
+
+    targetIndex = Math.max(0, Math.min(targetIndex, scrollData.length - 1))
+    glideTo(paddingLeft + (targetIndex * totalWidth) - offset)
+  }
+
+  const handleScroll = () => {
+    if (!scrollContainerRef.current) return
+    if (!isAnimatingRef.current) checkInfiniteLoop(scrollContainerRef.current)
+
+    const totalWidth = cardWidthRef.current || 1
+    const visualWidth = visualCardWidthRef.current || totalWidth
+    const paddingLeft = paddingLeftRef.current
+    const offset = getCenterOffset(scrollContainerRef.current, visualWidth)
+
+    const rawIndex = Math.round((scrollContainerRef.current.scrollLeft + offset - paddingLeft) / totalWidth)
+
+    let visualStep = rawIndex - START_INDEX
+    visualStep = ((visualStep % mediaItems.length) + mediaItems.length) % mediaItems.length
+
+    if (visualStep !== currentStep) {
+      setCurrentStep(visualStep)
+    }
+  }
+
   return (
     <section className="py-12 md:py-16 bg-gradient-to-b from-stone-50 to-white relative overflow-hidden">
-
       {/* Decorative blob */}
-      <div className="absolute top-0 right-[10%] w-32 h-32 bg-primary/5 blob" />
+      <div className="absolute top-0 right-10 w-32 h-32 bg-primary/5 blob"></div>
 
       <div className="container px-4 relative z-10">
         <div className="text-center mb-8">
@@ -801,95 +1030,103 @@ export function RecentMediaSection() {
           </h2>
         </div>
 
-        {/* 3-in-a-row on desktop + a bit more room */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto">
-          {/* SVT Card (first slot) */}
-          <a
-            href="https://www.svt.se/nyheter/lokalt/uppsala/sa-loste-studenterna-flyttsvinnet"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group card-warm flex items-start gap-4 hover:shadow-lg hover:border-primary/20 transition-all duration-300 animate-fade-up"
+        {/* MOBILE SLIDER */}
+        <div className="md:hidden relative">
+          <div
+            ref={scrollContainerRef}
+            onScroll={handleScroll}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+            className="flex overflow-x-auto pb-4 gap-4 px-4 scrollbar-hide select-none"
+            style={{
+              scrollSnapType: "none",
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+              overscrollBehaviorX: "contain",
+              WebkitTapHighlightColor: "transparent",
+            }}
           >
-            {/* Make the icon + badge “SVT red” */}
-            <div className="shrink-0 w-12 h-12 rounded-xl bg-[#E13241]/10 flex items-center justify-center group-hover:bg-[#E13241]/20 transition-colors">
-              <Tv className="h-6 w-6 text-[#E13241]" />
-            </div>
+            {scrollData.map((media, i) => {
+              const Icon = media.icon
+              return (
+                <div
+                  key={`${media.title}-${i}`}
+                  className="shrink-0 w-[85vw] max-w-[320px] transform-gpu"
+                  style={{ WebkitTapHighlightColor: "transparent" }}
+                >
+                  <a
+                    href={media.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group card-warm flex flex-col sm:flex-row items-start gap-4 hover:shadow-lg hover:border-primary/20 transition-all duration-300 h-full p-5"
+                  >
+                    <div className={`shrink-0 w-12 h-12 rounded-xl ${media.iconBg} flex items-center justify-center ${media.iconHoverBg} transition-colors`}>
+                      <Icon className={`h-6 w-6 ${media.iconColor}`} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-semibold text-muted-foreground mb-1">{media.date}</p>
+                      <h3 className="font-bold text-foreground mb-1 group-hover:text-primary transition-colors leading-tight">
+                        {media.publisher}
+                      </h3>
+                      <p className="text-sm text-muted-foreground line-clamp-2 mb-2">{media.title}</p>
+                      <span className="inline-flex items-center text-sm font-semibold text-primary group-hover:gap-1 transition-all">
+                        {media.action}
+                        <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                      </span>
+                    </div>
+                  </a>
+                </div>
+              )
+            })}
+          </div>
 
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold text-muted-foreground mb-1">
-                February 2026
-              </p>
-              <h3 className="font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
-                SVT Nyheter Uppsala
-              </h3>
-              <p className="text-sm text-muted-foreground line-clamp-2">
-                Här säljer de vidare studenternas gamla lakan
-              </p>
-              <span className="inline-flex items-center text-sm font-semibold text-primary mt-2 group-hover:gap-2 transition-all">
-                Watch video
-                <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </span>
-            </div>
-          </a>
-
-          {/* UNT Card */}
-          <a
-            href="https://www.unt.se/nyheter/uppsala/artikel/rackis-for-barn-oppnar-second-hand-butik-i-uppsala/jn11gonl"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group card-warm flex items-start gap-4 hover:shadow-lg hover:border-primary/20 transition-all duration-300 animate-fade-up delay-100"
-          >
-            <div className="shrink-0 w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-              <Newspaper className="h-6 w-6 text-primary" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold text-muted-foreground mb-1">
-                January 2026
-              </p>
-              <h3 className="font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
-                Uppsala Nya Tidning
-              </h3>
-              <p className="text-sm text-muted-foreground line-clamp-2">
-                Räckis för barn öppnar second hand-butik i Uppsala
-              </p>
-              <span className="inline-flex items-center text-sm font-semibold text-primary mt-2 group-hover:gap-2 transition-all">
-                Read article
-                <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </span>
-            </div>
-          </a>
-
-          {/* Sveriges Radio Card */}
-          <a
-            href="https://www.sverigesradio.se/artikel/utbytesstudenter-skanker-pengar-till-barncancerfonden"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group card-warm flex items-start gap-4 hover:shadow-lg hover:border-primary/20 transition-all duration-300 animate-fade-up delay-200"
-          >
-            <div className="shrink-0 w-12 h-12 rounded-xl bg-warm/10 flex items-center justify-center group-hover:bg-warm/20 transition-colors">
-              <Radio className="h-6 w-6 text-warm" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold text-muted-foreground mb-1">
-                January 2026
-              </p>
-              <h3 className="font-bold text-foreground mb-1 group-hover:text-warm transition-colors">
-                Sveriges Radio P4 Uppland
-              </h3>
-              <p className="text-sm text-muted-foreground line-clamp-2">
-                Utbytesstudenter säljer prylar – och skänker pengarna till barn
-              </p>
-              <span className="inline-flex items-center text-sm font-semibold text-warm mt-2 group-hover:gap-2 transition-all">
-                Listen now
-                <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </span>
-            </div>
-          </a>
+          {/* Dots Indicator */}
+          <div className="flex justify-center gap-2 mt-4">
+            {mediaItems.map((_, i) => (
+              <div
+                key={i}
+                className={`h-2 rounded-full transition-all duration-300 ${currentStep === i ? "w-8 bg-primary" : "w-2 bg-primary/20"
+                  }`}
+              />
+            ))}
+          </div>
         </div>
-      </div>
 
+        {/* DESKTOP GRID */}
+        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto">
+          {mediaItems.map((media, i) => {
+            const Icon = media.icon
+            return (
+              <a
+                key={i}
+                href={media.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group card-warm flex items-start gap-4 hover:shadow-lg hover:border-primary/20 transition-all duration-300 animate-fade-up p-5"
+                style={{ animationDelay: `${i * 100}ms` }}
+              >
+                <div className={`shrink-0 w-12 h-12 rounded-xl ${media.iconBg} flex items-center justify-center ${media.iconHoverBg} transition-colors`}>
+                  <Icon className={`h-6 w-6 ${media.iconColor}`} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-semibold text-muted-foreground mb-1">{media.date}</p>
+                  <h3 className="font-bold text-foreground mb-1 group-hover:text-primary transition-colors leading-tight">
+                    {media.publisher}
+                  </h3>
+                  <p className="text-sm text-muted-foreground line-clamp-2 mb-2">{media.title}</p>
+                  <span className="inline-flex items-center text-sm font-semibold text-primary group-hover:gap-1 transition-all">
+                    {media.action}
+                    <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  </span>
+                </div>
+              </a>
+            )
+          })}
+        </div>
+
+      </div>
     </section>
-  );
+  )
 }
 
 
@@ -1100,7 +1337,7 @@ export function WhyChooseUsSection() {
       <div className="container">
         <div className="text-center max-w-2xl mx-auto mb-10 lg:mb-16">
           <h2 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-6">
-            What makes Rackis for Barn unique?
+            What makes Swecircle unique?
           </h2>
           <p className="text-lg text-muted-foreground">
             More than just a second-hand store.
@@ -1267,7 +1504,7 @@ export function PartnersSection() {
       logo: uuInnovationLogo,
       // Added a custom scale for the square logo
       customClass: "h-32 md:h-36 scale-125",
-      description: "Uppsala University Innovation provides guidance and resources to help Rackis for Barn expand its reach and positive impact.",
+      description: "Uppsala University Innovation provides guidance and resources to help Swecircle expand its reach and positive impact.",
       url: "https://www.uuinnovation.uu.se",
     },
     {
@@ -1487,21 +1724,36 @@ export function PartnersSection() {
 }
 
 export function CTASection() {
+  const { location } = useParams();
+  const currentCity = location || "uppsala";
+  const isLund = currentCity.toLowerCase() === "lund";
+
+  const instaUrl = isLund ? "https://www.instagram.com/swecirclelund/" : "https://instagram.com/rackis_for_barn";
+  const instaHandle = isLund ? "@swecirclelund" : "@rackis_for_barn";
+
   return (
     <section className="section-padding bg-gradient-to-br from-primary via-primary to-primary/90 relative overflow-hidden">
       <div className="container relative z-10">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="font-display text-3xl md:text-5xl font-bold text-primary-foreground mb-6">Ready to find your next treasure?</h2>
-          <p className="text-xl text-primary-foreground/80 mb-10 leading-relaxed">Visit us at Rackarbergsgatan 32 in Uppsala. Check our Instagram for opening times!</p>
+          <h2 className="font-display text-3xl md:text-5xl font-bold text-primary-foreground mb-6">
+            Ready to find your next treasure?
+          </h2>
+
+          {/* Only show address for Uppsala, hide for Lund */}
+          <p className="text-xl text-primary-foreground/80 mb-10 leading-relaxed">
+            {!isLund && "Visit us at Rackarbergsgatan 32 in Uppsala. "}
+            Check our Instagram for opening times!
+          </p>
+
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button size="lg" asChild className="bg-white text-primary hover:bg-white/70 text-lg px-8">
-              <a href="https://instagram.com/rackis_for_barn" target="_blank" rel="noopener noreferrer">
+              <a href={instaUrl} target="_blank" rel="noopener noreferrer">
                 <Instagram className="mr-2 h-5 w-5" />
-                Follow @rackis_for_barn
+                Follow {instaHandle}
               </a>
             </Button>
             <Button variant="outline" size="lg" asChild className="border-white/30 text-primary hover:bg-white/70 text-lg px-8">
-              <Link to="/contact">Get in touch</Link>
+              <Link to={`/${currentCity}/contact`}>Get in touch</Link>
             </Button>
           </div>
         </div>

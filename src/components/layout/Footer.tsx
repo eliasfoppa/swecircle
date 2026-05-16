@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom"; // Added useParams
 import { Heart, Instagram } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -15,7 +15,22 @@ const footerLinks = {
 };
 
 export function Footer() {
-  const currentYear = new Date().getFullYear();
+  const currentYear = new Date().getFullYear()
+  
+  // Grab the current city from the URL to fix the links
+  const { location: cityParam } = useParams()
+  const currentCity = cityParam || ""
+
+  // Automatically capitalize the city name for the text description
+  const displayCity = currentCity 
+    ? currentCity.charAt(0).toUpperCase() + currentCity.slice(1) 
+    : "Sweden"
+
+  const isLund = currentCity.toLowerCase() === "lund"
+  const instaUrl = isLund 
+    ? "https://www.instagram.com/swecirclelund/" 
+    : "https://instagram.com/rackis_for_barn"
+  const instaHandle = isLund ? "@swecirclelund" : "@rackis_for_barn"
 
   return (
     <footer className="bg-section-alt border-t border-border">
@@ -23,16 +38,18 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12">
           {/* Brand */}
           <div className="space-y-4 md:col-span-2">
-            <Link to="/" className="inline-block">
-              <span className="text-xl font-bold text-primary">Rackis for Barn</span>
+            {/* Logo link now routes safely back to the city's home page */}
+            <Link to={`/${currentCity}`} className="inline-block">
+              <span className="text-xl font-bold text-primary">Swecircle</span>
             </Link>
+            {/* The description automatically updates based on the city */}
             <p className="text-sm text-muted-foreground max-w-xs">
-              A student-run second-hand store in Uppsala. All proceeds go to helping children in need.
+              A student-run second-hand store in {displayCity}. All proceeds go to helping children in need.
             </p>
             <Button variant="outline" size="sm" asChild>
-              <a href="https://instagram.com/rackis_for_barn" target="_blank" rel="noopener noreferrer">
+              <a href={instaUrl} target="_blank" rel="noopener noreferrer">
                 <Instagram className="h-4 w-4 mr-2" />
-                Follow @rackis_for_barn
+                Follow {instaHandle}
               </a>
             </Button>
           </div>
@@ -43,8 +60,9 @@ export function Footer() {
             <ul className="space-y-3">
               {footerLinks.organization.map((link) => (
                 <li key={link.href}>
+                  {/* Injected the city into the URL path */}
                   <Link
-                    to={link.href}
+                    to={`/${currentCity}${link.href}`}
                     className="text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
                     {link.label}
@@ -60,8 +78,9 @@ export function Footer() {
             <ul className="space-y-3">
               {footerLinks.legal.map((link) => (
                 <li key={link.href}>
+                  {/* Injected the city into the URL path */}
                   <Link
-                    to={link.href}
+                    to={`/${currentCity}${link.href}`}
                     className="text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
                     {link.label}
@@ -76,7 +95,7 @@ export function Footer() {
         <div className="mt-12 pt-8 border-t border-border">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-sm text-muted-foreground">
-              © {currentYear} Rackis för Barn. All rights reserved.
+              © {currentYear} Rackis för Barn / Swecircle. All rights reserved.
             </p>
             <p className="text-sm text-muted-foreground flex items-center gap-1">
               Made with <Heart className="h-4 w-4 text-accent fill-accent" /> by students
@@ -85,5 +104,5 @@ export function Footer() {
         </div>
       </div>
     </footer>
-  );
+  )
 }

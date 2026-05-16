@@ -1,12 +1,12 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useState } from "react";
 import { Menu, X, Instagram } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import Logo from "@/assets/logo.png"; // <-- import your bear logo
+import Logo from "@/assets/logo.png";
 
 const navLinks = [
-  { href: "/", label: "Home" },
+  { href: "", label: "Home" },
   { href: "/about", label: "About Us" },
   { href: "/contact", label: "Contact" },
 ];
@@ -14,55 +14,83 @@ const navLinks = [
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { location: cityParam } = useParams();
+
+  const currentCity = (cityParam || "").toLowerCase();
+
+  const instagramByCity: Record<string, { href: string; handle: string }> = {
+    uppsala: {
+      href: "https://instagram.com/rackis_for_barn",
+      handle: "@rackis_for_barn",
+    },
+    lund: {
+      href: "https://instagram.com/swecirclelund",
+      handle: "@swecirclelund",
+    },
+  };
+
+  const instagram = instagramByCity[currentCity] ?? instagramByCity.uppsala;
+  const cityLabel =
+    currentCity.charAt(0).toUpperCase() + currentCity.slice(1);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
       <div className="container flex h-16 items-center justify-between">
-        {/* Logo + Site Name */}
-        <Link to="/" className="flex items-center gap-2">
-          <img src={Logo} alt="Rackis for Barn Logo" className="h-10 w-auto" />
-          <span className="text-xl font-bold text-primary">Rackis for Barn</span>
+        <Link to={`/${currentCity}`} className="flex items-center gap-2">
+          <img src={Logo} alt="Swecircle Logo" className="h-10 w-auto" />
+          <span className="text-xl font-bold text-primary">
+            Swecircle {cityLabel}
+          </span>
         </Link>
 
-        {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-1">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              to={link.href}
-              className={cn(
-                "px-4 py-2 rounded-lg text-sm font-medium transition-colors",
-                location.pathname === link.href
-                  ? "bg-muted text-foreground"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-              )}
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const targetPath = `/${currentCity}${link.href}`;
+
+            return (
+              <Link
+                key={link.href}
+                to={targetPath}
+                className={cn(
+                  "px-4 py-2 rounded-lg text-sm font-medium transition-colors",
+                  location.pathname === targetPath ||
+                    location.pathname === targetPath + "/"
+                    ? "bg-muted text-foreground"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                )}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
 
           <Button variant="outline" size="sm" className="ml-2" asChild>
             <a
-              href="https://instagram.com/rackis_for_barn"
+              href={instagram.href}
               target="_blank"
               rel="noopener noreferrer"
             >
               <Instagram className="h-4 w-4 mr-2" />
-              Follow Us
+              {instagram.handle}
             </a>
           </Button>
 
-          {/* New Donate and Buy Buttons */}
           <Button size="sm" className="ml-2" asChild>
-            <Link to="/donate">Donate</Link>
+            <Link to={`/${currentCity}/donate`}>Donate</Link>
           </Button>
 
           <Button size="sm" className="ml-2" asChild>
-            <Link to="/buy">Buy</Link>
+            <Link to={`/${currentCity}/buy`}>Buy</Link>
           </Button>
+
+          <Link
+            to="/"
+            className="text-sm text-muted-foreground hover:text-foreground ml-4 pl-4 border-l border-border/50 transition-colors"
+          >
+            Change City
+          </Link>
         </nav>
 
-        {/* Mobile Menu Button */}
         <button
           className="md:hidden p-2 rounded-lg hover:bg-muted"
           onClick={() => setIsOpen(!isOpen)}
@@ -72,49 +100,60 @@ export function Header() {
         </button>
       </div>
 
-      {/* Mobile Navigation */}
       {isOpen && (
         <nav className="md:hidden border-t border-border bg-background p-4 animate-fade-in">
           <div className="flex flex-col gap-2">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                to={link.href}
-                onClick={() => setIsOpen(false)}
-                className={cn(
-                  "px-4 py-3 rounded-lg text-sm font-medium transition-colors",
-                  location.pathname === link.href
-                    ? "bg-muted text-foreground"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                )}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const targetPath = `/${currentCity}${link.href}`;
+
+              return (
+                <Link
+                  key={link.href}
+                  to={targetPath}
+                  onClick={() => setIsOpen(false)}
+                  className={cn(
+                    "px-4 py-3 rounded-lg text-sm font-medium transition-colors",
+                    location.pathname === targetPath ||
+                      location.pathname === targetPath + "/"
+                      ? "bg-muted text-foreground"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                  )}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
 
             <Button variant="outline" size="sm" className="mt-2" asChild>
               <a
-                href="https://instagram.com/rackis_for_barn"
+                href={instagram.href}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <Instagram className="h-4 w-4 mr-2" />
-                Follow Us on Instagram
+                Follow {instagram.handle}
               </a>
             </Button>
 
-            {/* New Donate and Buy Buttons for Mobile */}
             <Button size="sm" className="mt-2" asChild>
-              <Link to="/donate" onClick={() => setIsOpen(false)}>
+              <Link to={`/${currentCity}/donate`} onClick={() => setIsOpen(false)}>
                 Donate
               </Link>
             </Button>
 
             <Button size="sm" className="mt-2" asChild>
-              <Link to="/buy" onClick={() => setIsOpen(false)}>
+              <Link to={`/${currentCity}/buy`} onClick={() => setIsOpen(false)}>
                 Buy
               </Link>
             </Button>
+
+            <Link
+              to="/"
+              onClick={() => setIsOpen(false)}
+              className="text-sm font-medium text-muted-foreground hover:text-foreground text-center mt-4 pt-4 border-t border-border/50"
+            >
+              Change City
+            </Link>
           </div>
         </nav>
       )}

@@ -11,7 +11,7 @@ const Terms = () => {
 
           <div className="prose prose-lg max-w-none space-y-6 text-muted-foreground">
             <p className="text-lg">
-              Last updated: January 7, 2025
+              Last updated: May 16, 2026
             </p>
 
             <section>
@@ -97,7 +97,7 @@ const Terms = () => {
                 7. Contact
               </h2>
               <p>
-                For questions regarding these terms, please contact us at <a href="mailto:info@rackisforbarn.com" className="text-primary hover:underline">info@rackisforbarn.com</a>.
+                For questions regarding these terms, please contact us at <a href="mailto:uppsala@swecircle.com" className="text-primary hover:underline">uppsala@swecircle.com</a>.
               </p>
             </section>
           </div>
