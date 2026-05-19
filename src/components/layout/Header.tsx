@@ -20,8 +20,8 @@ export function Header() {
 
   const instagramByCity: Record<string, { href: string; handle: string }> = {
     uppsala: {
-      href: "https://instagram.com/rackis_for_barn",
-      handle: "@rackis_for_barn",
+      href: "https://instagram.com/swecircle",
+      handle: "@swecircle",
     },
     lund: {
       href: "https://instagram.com/swecirclelund",

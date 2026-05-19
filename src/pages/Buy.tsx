@@ -64,7 +64,7 @@ export function Buy() {
   // Dynamically set Instagram links based on location
   const targetInstaLink = location === "lund" 
     ? "https://instagram.com/swecirclelund" 
-    : "https://instagram.com/rackis_for_barn";
+    : "https://instagram.com/swecircle";
 
   return (
     <Layout>

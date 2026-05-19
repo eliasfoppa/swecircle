@@ -51,7 +51,7 @@ export function HeroSection() {
 
   const instaUrl = isLund
     ? "https://www.instagram.com/swecirclelund/"
-    : "https://instagram.com/rackis_for_barn"
+    : "https://instagram.com/swecircle"
 
   const [hearts, setHearts] = useState<{ x: number; y: number; size: number; delay: number }[]>([])
 
@@ -583,8 +583,8 @@ const posts = [
 export function CommunitySection() {
   const { location } = useParams()
   const isLund = (location || "uppsala").toLowerCase() === "lund"
-  const instaUrl = isLund ? "https://www.instagram.com/swecirclelund/" : "https://www.instagram.com/rackis_for_barn"
-  const instaHandle = isLund ? "@swecirclelund" : "@rackis_for_barn"
+  const instaUrl = isLund ? "https://www.instagram.com/swecirclelund/" : "https://www.instagram.com/swecircle"
+  const instaHandle = isLund ? "@swecirclelund" : "@swecircle"
 
   const [isDesktop, setIsDesktop] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
@@ -1728,8 +1728,8 @@ export function CTASection() {
   const currentCity = location || "uppsala";
   const isLund = currentCity.toLowerCase() === "lund";
 
-  const instaUrl = isLund ? "https://www.instagram.com/swecirclelund/" : "https://instagram.com/rackis_for_barn";
-  const instaHandle = isLund ? "@swecirclelund" : "@rackis_for_barn";
+  const instaUrl = isLund ? "https://www.instagram.com/swecirclelund/" : "https://instagram.com/swecircle";
+  const instaHandle = isLund ? "@swecirclelund" : "@swecircle";
 
   return (
     <section className="section-padding bg-gradient-to-br from-primary via-primary to-primary/90 relative overflow-hidden">

@@ -16,10 +16,10 @@ const Contact = () => {
   const targetEmail = location === "lund" ? "lund@swecircle.com" : "uppsala@swecircle.com";
   
   // Set Instagram handle and link (Update the Lund one if your handle is different!)
-  const targetInstaHandle = location === "lund" ? "@swecirclelund" : "@rackis_for_barn";
+  const targetInstaHandle = location === "lund" ? "@swecirclelund" : "@swecircle";
   const targetInstaLink = location === "lund" 
     ? "https://instagram.com/swecirclelund" 
-    : "https://instagram.com/rackis_for_barn";
+    : "https://instagram.com/swecircle";
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

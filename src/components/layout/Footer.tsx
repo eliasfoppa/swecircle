@@ -29,8 +29,8 @@ export function Footer() {
   const isLund = currentCity.toLowerCase() === "lund"
   const instaUrl = isLund 
     ? "https://www.instagram.com/swecirclelund/" 
-    : "https://instagram.com/rackis_for_barn"
-  const instaHandle = isLund ? "@swecirclelund" : "@rackis_for_barn"
+    : "https://instagram.com/swecircle"
+  const instaHandle = isLund ? "@swecirclelund" : "@swecircle"
 
   return (
     <footer className="bg-section-alt border-t border-border">
