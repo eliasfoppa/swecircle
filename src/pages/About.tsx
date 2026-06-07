@@ -32,6 +32,7 @@ import team3Img from "../assets/team3.jpg"
 import uuInnovationLogo from "../assets/uu-innovation.png"
 import uppsalahemLogo from "../assets/uppsalahem.png"
 import rbuLogo from "../assets/rbu.png"
+import världklassLogo from "@/assets/vku.png";
 
 /* --- PHYSICS: Ease-Out-Quart (Smooth Glide) --- */
 const easeOutQuart = (t: number) => 1 - Math.pow(1 - t, 4)
@@ -582,6 +583,14 @@ const About = () => {
       customClass: "h-32 md:h-36 scale-125",
       description: "Uppsala University Innovation provides guidance and resources to help Swecircle expand its reach and positive impact.",
       url: "https://www.uuinnovation.uu.se",
+    },
+    {
+      name: "Världsklass Uppsala",
+      logo: världklassLogo,
+      // Added a custom scale for the square logo
+      customClass: "h-32 md:h-36 scale-125",
+      description: "Världsklass Uppsala provides generous financial support to help Swecircle maximize its impact, scale operations, and accelerate sustainable growth.",
+      url: "https://varldsklassuppsala.se/",
     },
     {
       name: "Uppsalahem",

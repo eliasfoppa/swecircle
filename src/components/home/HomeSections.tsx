@@ -11,6 +11,7 @@ import pic3 from '@/assets/pic3.jpg';
 import pic4 from '@/assets/pic4.jpg';
 import pic5 from '@/assets/pic5.jpg';
 import rbuLogo from "@/assets/rbu.png";
+import världklassLogo from "@/assets/vku.png";
 // import barncancerfondenLogo from "@/assets/barncancerfonden.png";
 
 // --- PHYSICS: Ease-Out-Quart (Stable, Smooth) ---
@@ -1506,6 +1507,14 @@ export function PartnersSection() {
       customClass: "h-32 md:h-36 scale-125",
       description: "Uppsala University Innovation provides guidance and resources to help Swecircle expand its reach and positive impact.",
       url: "https://www.uuinnovation.uu.se",
+    },
+    {
+      name: "Världsklass Uppsala",
+      logo: världklassLogo,
+      // Added a custom scale for the square logo
+      customClass: "h-32 md:h-36 scale-125",
+      description: "Världsklass Uppsala provides generous financial support to help Swecircle maximize its impact, scale operations, and accelerate sustainable growth.",
+      url: "https://varldsklassuppsala.se/",
     },
     {
       name: "Uppsalahem",
