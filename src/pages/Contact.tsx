@@ -1,6 +1,6 @@
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
-import { Mail, MapPin, Instagram } from "lucide-react";
+import { Mail, MapPin, Instagram, Phone } from "lucide-react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -98,22 +98,47 @@ const Contact = () => {
                   </div>
                 </div>
 
-                {/* Only display physical location if the parameter is 'uppsala' (or default) */}
+                {/* Only display physical location and phones if the parameter is 'uppsala' (or default) */}
                 {(!location || location === "uppsala") && (
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                      <MapPin className="h-5 w-5 text-primary" />
+                  <>
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <MapPin className="h-5 w-5 text-primary" />
+                      </div>
+                      <div>
+                        <h3 className="font-medium text-foreground">Location</h3>
+                        <p className="text-muted-foreground">
+                          Rackis för Barn<br />
+                          Rackarbergsgatan 32<br />
+                          752 32 Uppsala<br />
+                          Sweden
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="font-medium text-foreground">Location</h3>
-                      <p className="text-muted-foreground">
-                        Rackis för Barn<br />
-                        Rackarbergsgatan 32<br />
-                        752 32 Uppsala<br />
-                        Sweden
-                      </p>
+                    
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <Phone className="h-5 w-5 text-primary" />
+                      </div>
+                      <div>
+                        <h3 className="font-medium text-foreground">Phone</h3>
+                        <div className="text-muted-foreground space-y-1 mt-1">
+                          <p>
+                            <span className="font-medium">Rackarbergsgatan:</span>{" "}
+                            <a href="tel:+46187013037" className="hover:text-primary transition-colors">
+                              +46 18 7013037
+                            </a>
+                          </p>
+                          <p>
+                            <span className="font-medium">Flogsta:</span>{" "}
+                            <a href="tel:+46850780682" className="hover:text-primary transition-colors">
+                              +46 8 50780682
+                            </a>
+                          </p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  </>
                 )}
               </div>
             </div>
