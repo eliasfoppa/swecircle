@@ -94,8 +94,8 @@ export function HeroSection() {
       {/* MAIN CONTENT */}
       <div className="container section-padding relative z-10">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-secondary text-secondary-foreground text-sm font-semibold mb-8 animate-fade-up">
-            <Heart className="h-4 w-4 text-accent fill-current" />
+          <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-card/70 backdrop-blur border border-primary/10 text-secondary-foreground text-sm font-semibold mb-8 animate-fade-up shadow-soft">
+            <Heart className="h-4 w-4 text-warm fill-current" />
             <span>By students, for students in {isLund ? "Lund" : "Uppsala"}</span>
           </div>
 
@@ -123,9 +123,9 @@ export function HeroSection() {
           </div>
 
           {!isLund && (
-            <div className="mt-12 flex items-center justify-center gap-2 text-muted-foreground animate-fade-up delay-400">
-              <MapPin className="h-5 w-5 text-primary" />
-              <span className="font-medium">Find us at Rackarbergsgatan 32, Uppsala</span>
+            <div className="mt-12 inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-card/60 backdrop-blur border border-border text-muted-foreground animate-fade-up delay-400">
+              <MapPin className="h-4 w-4 text-primary" />
+              <span className="text-sm font-medium">Find us at Rackarbergsgatan 32, Uppsala</span>
             </div>
           )}
         </div>
@@ -182,28 +182,36 @@ export function StatsCounterSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-16 md:py-24 bg-gradient-to-b from-stone-50 to-white border-y border-stone-100">
+    <section ref={sectionRef} className="py-16 md:py-24 bg-section-alt border-y border-border/60">
       <div className="container px-4">
-        <div className="grid md:grid-cols-2 gap-12 md:gap-16 max-w-4xl mx-auto text-center">
+        <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
+          <span className="eyebrow eyebrow-center mb-4">Our impact so far</span>
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">
+            Small items, real difference
+          </h2>
+        </div>
 
-          <div className="flex flex-col items-center justify-center space-y-4">
-            <h3 className="font-display text-6xl md:text-7xl font-bold text-primary tracking-tight">
-              {customers}{isFinished ? '+' : ''}
+        <div className="relative max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 surface-panel overflow-hidden">
+          {/* Center divider */}
+          <div className="hidden md:block absolute top-10 bottom-10 left-1/2 w-px -translate-x-1/2 bg-border" />
+
+          <div className="flex flex-col items-center justify-center text-center px-8 py-12 md:py-16 border-b md:border-b-0 border-border">
+            <h3 className="font-display text-5xl md:text-7xl font-bold text-primary tracking-tight tabular-nums whitespace-nowrap">
+              {customers}<span className={isFinished ? "" : "invisible"}>+</span>
             </h3>
-            <p className="text-lg md:text-xl font-bold text-muted-foreground uppercase tracking-widest">
+            <p className="mt-4 text-sm md:text-base font-bold text-muted-foreground uppercase tracking-[0.18em]">
               Customers Served
             </p>
           </div>
 
-          <div className="flex flex-col items-center justify-center space-y-4">
-            <h3 className="font-display text-6xl md:text-7xl font-bold text-primary tracking-tight">
-              {donated.toLocaleString('sv-SE')} SEK{isFinished ? '+' : ''}
+          <div className="flex flex-col items-center justify-center text-center px-8 py-12 md:py-16">
+            <h3 className="font-display text-4xl md:text-6xl font-bold text-primary tracking-tight tabular-nums whitespace-nowrap">
+              {donated.toLocaleString('sv-SE')} SEK<span className={isFinished ? "" : "invisible"}>+</span>
             </h3>
-            <p className="text-lg md:text-xl font-bold text-muted-foreground uppercase tracking-widest">
+            <p className="mt-4 text-sm md:text-base font-bold text-muted-foreground uppercase tracking-[0.18em]">
               Donated to Charity
             </p>
           </div>
-
         </div>
       </div>
     </section>
@@ -452,6 +460,7 @@ export function HowItWorksSection() {
     <section className="section-padding relative overflow-hidden">
       <div className="container relative z-10">
         <div className="text-center max-w-2xl mx-auto mb-8 lg:mb-12">
+          <span className="eyebrow eyebrow-center mb-4">The Swecircle loop</span>
           <h2 className="font-display text-3xl md:text-5xl font-bold mb-6">How it works</h2>
           <p className="text-lg text-muted-foreground">
             A simple cycle that helps students, reduces waste, and supports a great cause.
@@ -632,7 +641,7 @@ export function CommunitySection() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 md:mb-12 gap-6">
           <div className="max-w-2xl">
-            <span className="inline-block text-sm font-bold text-primary uppercase tracking-wider mb-3">
+            <span className="eyebrow mb-4">
               Community
             </span>
             <h2 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-4">
@@ -1023,10 +1032,10 @@ export function RecentMediaSection() {
 
       <div className="container px-4 relative z-10">
         <div className="text-center mb-8">
-          <span className="inline-block text-sm font-bold text-primary uppercase tracking-wider mb-2">
+          <span className="eyebrow eyebrow-center mb-3">
             In the news
           </span>
-          <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+          <h2 className="font-display text-2xl md:text-4xl font-bold text-foreground">
             Recent media coverage
           </h2>
         </div>
@@ -1337,6 +1346,7 @@ export function WhyChooseUsSection() {
     <section className="section-padding bg-section-warm overflow-hidden">
       <div className="container">
         <div className="text-center max-w-2xl mx-auto mb-10 lg:mb-16">
+          <span className="eyebrow eyebrow-center mb-4">Why Swecircle</span>
           <h2 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-6">
             What makes Swecircle unique?
           </h2>
@@ -1430,7 +1440,7 @@ export function AboutCharitiesSection() {
       <div className="container">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <span className="inline-block text-sm font-bold text-accent uppercase tracking-wider mb-4">
+            <span className="eyebrow eyebrow-center eyebrow-warm mb-4">
               Our cause
             </span>
             <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-6">
@@ -1680,8 +1690,8 @@ export function PartnersSection() {
     <section className="pt-20 pb-20 md:pt-32 md:pb-32 bg-section-light">
       <div className="container">
         <div className="text-center mb-12">
-          <span className="inline-block text-sm font-bold text-primary uppercase tracking-wider mb-3">In collaboration with</span>
-          <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">Our Supportive Partners</h2>
+          <span className="eyebrow eyebrow-center mb-4">In collaboration with</span>
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">Our supportive partners</h2>
         </div>
 
         {/* --- MOBILE (SCROLLING) --- */}
@@ -1741,12 +1751,35 @@ export function CTASection() {
   const instaHandle = isLund ? "@swecirclelund" : "@swecircle";
 
   return (
-    <section className="section-padding bg-gradient-to-br from-primary via-primary to-primary/90 relative overflow-hidden">
+    <section className="section-padding relative overflow-hidden bg-primary">
+      {/* Layered monochrome-blue depth: deepen edges + soft top glow */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(120% 120% at 50% -10%, hsl(227 100% 42%) 0%, hsl(227 100% 33%) 45%, hsl(227 100% 24%) 100%)",
+        }}
+      />
+      {/* Fine grid texture */}
+      <div
+        className="absolute inset-0 opacity-[0.07]"
+        style={{
+          backgroundImage:
+            "linear-gradient(hsl(0 0% 100%) 1px, transparent 1px), linear-gradient(90deg, hsl(0 0% 100%) 1px, transparent 1px)",
+          backgroundSize: "56px 56px",
+          maskImage: "radial-gradient(120% 80% at 50% 0%, black 30%, transparent 80%)",
+          WebkitMaskImage: "radial-gradient(120% 80% at 50% 0%, black 30%, transparent 80%)",
+        }}
+      />
+
       <div className="container relative z-10">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="font-display text-3xl md:text-5xl font-bold text-primary-foreground mb-6">
             Ready to find your next treasure?
           </h2>
+
+          {/* Single intentional brand accent */}
+          <div className="mx-auto mb-8 h-1 w-16 rounded-full bg-warm" />
 
           {/* Only show address for Uppsala, hide for Lund */}
           <p className="text-xl text-primary-foreground/80 mb-10 leading-relaxed">
@@ -1755,13 +1788,13 @@ export function CTASection() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button size="lg" asChild className="bg-white text-primary hover:bg-white/70 text-lg px-8">
+            <Button size="lg" asChild className="bg-white text-primary hover:bg-white/90 shadow-lg hover:-translate-y-0.5 text-lg px-8">
               <a href={instaUrl} target="_blank" rel="noopener noreferrer">
                 <Instagram className="mr-2 h-5 w-5" />
                 Follow {instaHandle}
               </a>
             </Button>
-            <Button variant="outline" size="lg" asChild className="border-white/30 text-primary hover:bg-white/70 text-lg px-8">
+            <Button variant="outline" size="lg" asChild className="bg-transparent border-2 border-white/40 text-white hover:bg-white hover:text-primary hover:border-white text-lg px-8">
               <Link to={`/${currentCity}/contact`}>Get in touch</Link>
             </Button>
           </div>

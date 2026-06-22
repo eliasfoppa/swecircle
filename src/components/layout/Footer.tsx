@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom"; // Added useParams
-import { Heart, Instagram } from "lucide-react";
+import { Heart, Instagram, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Logo from "@/assets/logo.png";
 
 const footerLinks = {
   organization: [
@@ -33,19 +34,30 @@ export function Footer() {
   const instaHandle = isLund ? "@swecirclelund" : "@swecircle"
 
   return (
-    <footer className="bg-section-alt border-t border-border">
+    <footer className="relative bg-section-alt border-t border-border">
+      {/* Brand accent hairline */}
+      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
       <div className="container py-12 md:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-12">
           {/* Brand */}
-          <div className="space-y-4 md:col-span-2">
+          <div className="space-y-5 md:col-span-2">
             {/* Logo link now routes safely back to the city's home page */}
-            <Link to={`/${currentCity}`} className="inline-block">
-              <span className="text-xl font-bold text-primary">Swecircle</span>
+            <Link to={`/${currentCity}`} className="inline-flex items-center gap-2.5 group">
+              <img src={Logo} alt="Swecircle Logo" className="h-9 w-auto" />
+              <span className="text-xl font-bold tracking-tight text-foreground">
+                Swecircle
+              </span>
             </Link>
             {/* The description automatically updates based on the city */}
-            <p className="text-sm text-muted-foreground max-w-xs">
+            <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
               A student-run second-hand store in {displayCity}. All proceeds go to helping children in need.
             </p>
+            {!isLund && (
+              <p className="flex items-center gap-2 text-sm text-muted-foreground">
+                <MapPin className="h-4 w-4 text-primary shrink-0" />
+                Rackarbergsgatan 32, Uppsala
+              </p>
+            )}
             <Button variant="outline" size="sm" asChild>
               <a href={instaUrl} target="_blank" rel="noopener noreferrer">
                 <Instagram className="h-4 w-4 mr-2" />
@@ -56,7 +68,7 @@ export function Footer() {
 
           {/* Organization Links */}
           <div>
-            <h4 className="font-semibold text-foreground mb-4">Organization</h4>
+            <h4 className="text-xs font-bold uppercase tracking-[0.16em] text-foreground/70 mb-4">Organization</h4>
             <ul className="space-y-3">
               {footerLinks.organization.map((link) => (
                 <li key={link.href}>
@@ -74,7 +86,7 @@ export function Footer() {
 
           {/* Legal Links */}
           <div>
-            <h4 className="font-semibold text-foreground mb-4">Legal</h4>
+            <h4 className="text-xs font-bold uppercase tracking-[0.16em] text-foreground/70 mb-4">Legal</h4>
             <ul className="space-y-3">
               {footerLinks.legal.map((link) => (
                 <li key={link.href}>

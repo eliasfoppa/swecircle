@@ -43,8 +43,9 @@
     --hero-gradient: linear-gradient(165deg, hsl(45 40% 97%) 0%, hsl(227 40% 95%) 50%, hsl(45 30% 98%) 100%);
     --section-alt: 45 25% 96%;
     --section-warm: 45 50% 96%;
+    --section-light: 45 30% 99%;
     --shadow-soft: 0 4px 24px -6px hsl(210 25% 15% / 0.1);
-    --shadow-elevated: 0 16px 48px -12px hsl(227 100% 33% / 0.18);
+    --shadow-elevated: 0 18px 50px -14px hsl(227 100% 33% / 0.22);
     --shadow-warm: 0 8px 32px -8px hsl(35 90% 55% / 0.2);
 
     --sidebar-background: 0 0% 98%;
@@ -91,6 +92,7 @@
 
     --section-alt: 220 18% 12%;
     --section-warm: 30 20% 12%;
+    --section-light: 220 20% 11%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -109,10 +111,27 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
 
   html {
     scroll-behavior: smooth;
+  }
+
+  /* Brand-colored text selection */
+  ::selection {
+    background: hsl(var(--primary) / 0.18);
+    color: hsl(var(--primary));
+  }
+
+  /* Consistent, accessible keyboard focus across interactive elements */
+  a:focus-visible,
+  button:focus-visible,
+  [role="button"]:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring) / 0.6);
+    border-radius: var(--radius);
   }
 }
 
@@ -127,6 +146,40 @@
 
   .text-balance {
     text-wrap: balance;
+  }
+
+  /* Refined section eyebrow label with a leading accent rule */
+  .eyebrow {
+    @apply inline-flex items-center gap-2.5 text-xs font-bold text-primary uppercase tracking-[0.18em];
+  }
+
+  .eyebrow::before {
+    content: '';
+    @apply h-px w-6 bg-current opacity-60;
+  }
+
+  .eyebrow-center {
+    @apply justify-center;
+  }
+
+  .eyebrow-center::after {
+    content: '';
+    @apply h-px w-6 bg-current opacity-60;
+  }
+
+  .eyebrow-warm {
+    @apply text-warm;
+  }
+
+  /* Tighter, more editorial display headings */
+  .font-display {
+    letter-spacing: -0.02em;
+  }
+
+  /* Subtle premium panel surface */
+  .surface-panel {
+    @apply bg-card border border-border rounded-3xl;
+    box-shadow: var(--shadow-soft);
   }
 
   .hand-drawn-underline {
@@ -152,13 +205,26 @@
   }
 
   .card-warm {
-    @apply bg-card border border-border rounded-2xl p-6 transition-all duration-300;
+    @apply bg-card border border-border rounded-2xl p-6;
     box-shadow: var(--shadow-soft);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease, border-color 0.3s ease;
   }
 
   .card-warm:hover {
     box-shadow: var(--shadow-elevated);
     transform: translateY(-4px);
+    @apply border-primary/20;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
