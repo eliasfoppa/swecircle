@@ -109,8 +109,8 @@ const Contact = () => {
                         <h3 className="font-medium text-foreground">Location</h3>
                         <p className="text-muted-foreground">
                           Rackis för Barn<br />
-                          Rackarbergsgatan 32<br />
-                          752 32 Uppsala<br />
+                          Djäknegatan 17<br />
+                          754 23 Uppsala<br />
                           Sweden
                         </p>
                       </div>
