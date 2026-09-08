@@ -41,7 +41,7 @@ const Terms = () => {
               </h2>
               <p>
                 All content on this website, including text, images, logos, and other materials, is the property of
-                Rackis för Barn or its licensors. You may not copy, reproduce, or distribute any content without
+                Swecircle or its licensors. You may not copy, reproduce, or distribute any content without
                 explicit permission.
               </p>
             </section>
@@ -51,7 +51,7 @@ const Terms = () => {
                 4. Limitation of Liability (Website)
               </h2>
               <p>
-                Rackis för Barn is not responsible for any direct, indirect, incidental, or consequential damages
+                Swecircle is not responsible for any direct, indirect, incidental, or consequential damages
                 arising from your use of this website or its content. The website is provided "as is" without warranties
                 of any kind.
               </p>
@@ -63,20 +63,20 @@ const Terms = () => {
               </h2>
               <div className="space-y-4">
                 <p>
-                  The following terms govern all physical transactions and transfers of goods conducted by Rackis för Barn:
+                  The following terms govern all physical transactions and transfers of goods conducted by Swecircle:
                 </p>
                 <ul className="list-disc pl-5 space-y-2">
                   <li>
                     <strong>Sale "As Is":</strong> All goods are sold in their current physical state and condition at the time of purchase. The buyer acknowledges that they have been granted the opportunity to inspect the goods prior to transaction.
                   </li>
                   <li>
-                    <strong>Disclaimer of Warranty:</strong> Rackis för Barn makes no warranties, express or implied, regarding the merchantability, fitness for a particular purpose, or condition of any items sold.
+                    <strong>Disclaimer of Warranty:</strong> Swecircle makes no warranties, express or implied, regarding the merchantability, fitness for a particular purpose, or condition of any items sold.
                   </li>
                   <li>
                     <strong>Finality of Sale:</strong> All sales are final. No refunds, returns, or exchanges will be permitted under any circumstances once the transaction is completed and the buyer has taken possession of the goods.
                   </li>
                   <li>
-                    <strong>Limitation of Liability:</strong> To the maximum extent permitted by law, Rackis för Barn shall not be held liable for any injury, loss, or damage arising from the use or condition of purchased items. The organization's total liability is strictly limited to the purchase price of the item.
+                    <strong>Limitation of Liability:</strong> To the maximum extent permitted by law, Swecircle shall not be held liable for any injury, loss, or damage arising from the use or condition of purchased items. The organization's total liability is strictly limited to the purchase price of the item.
                   </li>
                 </ul>
               </div>

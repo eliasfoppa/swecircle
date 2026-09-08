@@ -108,7 +108,7 @@ const Contact = () => {
                       <div>
                         <h3 className="font-medium text-foreground">Location</h3>
                         <p className="text-muted-foreground">
-                          Rackis för Barn<br />
+                          Swecircle<br />
                           c/o Jacob Lehmann<br />
                           Djäknegatan 17, Lgh 1302<br />
                           754 23 Uppsala<br />

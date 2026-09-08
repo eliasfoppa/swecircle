@@ -107,7 +107,7 @@ export function Footer() {
         <div className="mt-12 pt-8 border-t border-border">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-sm text-muted-foreground">
-              © {currentYear} Rackis för Barn / Swecircle. All rights reserved.
+              © {currentYear} Swecircle. All rights reserved.
             </p>
             <p className="text-sm text-muted-foreground flex items-center gap-1">
               Made with <Heart className="h-4 w-4 text-accent fill-accent" /> by students

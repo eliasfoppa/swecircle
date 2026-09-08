@@ -19,7 +19,7 @@ const Privacy = () => {
                 1. Introduction
               </h2>
               <p>
-                Rackis för Barn values your privacy. This privacy policy explains how we collect, use, and protect your personal data when you interact with our website or services.
+                Swecircle values your privacy. This privacy policy explains how we collect, use, and protect your personal data when you interact with our website or services.
               </p>
             </section>
 

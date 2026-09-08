@@ -15,7 +15,7 @@ const Impressum = () => {
                 Website Operator
               </h2>
               <p>
-                Rackis för Barn<br />
+                Swecircle<br />
                 c/o Jacob Lehmann<br />
                 Djäknegatan 17, Lgh 1302<br />
                 754 23 Uppsala<br />
@@ -48,7 +48,7 @@ const Impressum = () => {
                 Organization Type
               </h2>
               <p>
-                Rackis för Barn is a student-run nonprofit organization registered in Sweden. All proceeds go to Riksförbundet för Rörelsehindrade Barn och Ungdomar (RBU).
+                Swecircle is a student-run nonprofit organization registered in Sweden. All proceeds go to Riksförbundet för Rörelsehindrade Barn och Ungdomar (RBU).
               </p>
               <br />
               <p>
@@ -62,7 +62,7 @@ const Impressum = () => {
                 Stadgar (Bylaws)
               </h2>
               <p>
-                Our association statutes (stadgar) outline the rules, purpose, and governance of Rackis för Barn. You can view or download the complete official document below.
+                Our association statutes (stadgar) outline the rules, purpose, and governance of Swecircle. You can view or download the complete official document below.
               </p>
               <div className="mt-4 not-prose">
                 <a 
