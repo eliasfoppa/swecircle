@@ -12,7 +12,6 @@ import pic4 from '@/assets/pic4.jpg';
 import pic5 from '@/assets/pic5.jpg';
 import rbuLogo from "@/assets/rbu.png";
 import världklassLogo from "@/assets/vku.png";
-// import barncancerfondenLogo from "@/assets/barncancerfonden.png";
 
 // --- PHYSICS: Ease-Out-Quart (Stable, Smooth) ---
 const easeOutQuart = (t: number) => 1 - Math.pow(1 - t, 4);
@@ -106,7 +105,7 @@ export function HeroSection() {
 
           <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-fade-up delay-200 leading-relaxed">
             Donated items become affordable finds for fellow students <br />
-            all profit goes directly to <span className="font-semibold text-foreground">Barncancerfonden</span> and <span className="font-semibold text-foreground">RBU</span>.
+            all profit goes directly to <span className="font-semibold text-foreground">RBU</span>.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up delay-300">
@@ -245,7 +244,7 @@ export function HowItWorksSection() {
     {
       icon: Heart,
       title: "Give Back",
-      description: "Feel good knowing 100% of our profits go directly to the Barncancerfonden and RBU charities.",
+      description: "Feel good knowing 100% of our profits go directly to the RBU charity.",
       color: "bg-warm/10 text-warm",
       action: { type: "scroll", target: "charities" },
     },
@@ -1168,7 +1167,7 @@ export function WhyChooseUsSection() {
       icon: Heart,
       title: "Supports a good cause",
       description:
-        "All profits go to Barncancerfonden and RBU, so your essentials support children and families in need."
+        "All profits go to RBU, so your essentials support children and families in need."
     },
     {
       icon: ShoppingBag,
@@ -1417,14 +1416,6 @@ export function WhyChooseUsSection() {
 
 const charities = [
   {
-    name: "Barncancerfonden",
-    logo: undefined, // swap to barncancerfondenLogo when available
-    description:
-      "Sweden's leading organization dedicated to supporting children with cancer and their families. Through research funding and family support programs, they work to improve outcomes for young cancer patients.",
-    url: "https://www.barncancerfonden.se",
-    linkLabel: "barncancerfonden.se",
-  },
-  {
     name: "RBU",
     logo: rbuLogo,
     description:
@@ -1448,7 +1439,7 @@ export function AboutCharitiesSection() {
             </h2>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid gap-8 max-w-2xl mx-auto">
             {charities.map((charity) => (
               <div key={charity.name} className="card-warm flex flex-col relative overflow-hidden">
                 {/* Watermark */}
@@ -1484,7 +1475,7 @@ export function AboutCharitiesSection() {
             <div className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-primary/10">
               <Heart className="h-8 w-8 text-warm" fill="currentColor" />
               <p className="font-display text-xl font-bold text-foreground">
-                100% of profits go to these charities
+                100% of profits go to RBU
               </p>
             </div>
           </div>

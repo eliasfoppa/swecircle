@@ -481,13 +481,6 @@ const About = () => {
 
   const charities = [
     {
-      name: "Barncancerfonden",
-      logo: undefined,
-      description: "Sweden's leading organization dedicated to supporting children with cancer and their families. Through research funding and family support programs, they work to improve outcomes for young cancer patients.",
-      url: "https://www.barncancerfonden.se",
-      linkLabel: "barncancerfonden.se",
-    },
-    {
       name: "RBU",
       logo: rbuLogo,
       description: "Riksförbundet för Rörelsehindrade Barn och Ungdomar works to improve the lives of children and young people with mobility impairments in Sweden through advocacy and support programs.",
@@ -572,7 +565,7 @@ const About = () => {
     {
       icon: Award,
       title: "Transparency",
-      description: "100% of our profits go directly to Barncancerfonden and RBU.",
+      description: "100% of our profits go directly to RBU.",
     },
   ]
 
@@ -1254,7 +1247,7 @@ const About = () => {
                 When students move out, instead of throwing away items they donate them to us. We collect many items like bedding, curtains, bikes, kitchen equipment, lamps, small furniture, decoration, and much more. Then, students moving into new places can find everything they need at fair prices.
               </p>
               <p className="text-foreground font-semibold">
-                All profits from sales go directly to Barncancerfonden and RBU, supporting children and their families.
+                All profits from sales go directly to RBU, supporting children and their families.
               </p>
             </div>
           </div>
@@ -1485,7 +1478,7 @@ const About = () => {
               </h2>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid gap-6 max-w-2xl mx-auto">
               {charities.map((charity) => (
                 <div
                   key={charity.name}
@@ -1521,7 +1514,7 @@ const About = () => {
               <div className="inline-flex items-center gap-3 px-6 py-3 rounded-2xl bg-primary/10">
                 <Heart className="h-6 w-6 text-warm fill-current" />
                 <p className="font-display text-lg font-bold text-foreground">
-                  100% of profits go to these charities
+                  100% of profits go to RBU
                 </p>
               </div>
             </div>

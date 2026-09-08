@@ -16,7 +16,8 @@ const Impressum = () => {
               </h2>
               <p>
                 Rackis för Barn<br />
-                Djäknegatan 17<br />
+                c/o Jacob Lehmann<br />
+                Djäknegatan 17, Lgh 1302<br />
                 754 23 Uppsala<br />
                 Sweden
               </p>
@@ -47,7 +48,7 @@ const Impressum = () => {
                 Organization Type
               </h2>
               <p>
-                Rackis för Barn is a student-run nonprofit organization registered in Sweden. All proceeds go to Barncancerfonden and Riksförbundet för Rörelsehindrade Barn och Ungdomar (RBU).
+                Rackis för Barn is a student-run nonprofit organization registered in Sweden. All proceeds go to Riksförbundet för Rörelsehindrade Barn och Ungdomar (RBU).
               </p>
               <br />
               <p>
