@@ -1,71 +1,44 @@
-import { Link, useLocation, useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { useState } from "react";
 import { Menu, X, Instagram } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useCity } from "@/lib/city";
 import Logo from "@/assets/logo.png";
 
 const navLinks = [
   { href: "", label: "Home" },
-  { href: "/about", label: "About Us" },
+  { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ];
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
-  const { location: cityParam } = useParams();
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  const currentCity = (cityParam || "").toLowerCase();
-
-  const instagramByCity: Record<string, { href: string; handle: string }> = {
-    uppsala: {
-      href: "https://instagram.com/swecircle",
-      handle: "@swecircle",
-    },
-    lund: {
-      href: "https://instagram.com/swecirclelund",
-      handle: "@swecirclelund",
-    },
-  };
-
-  const instagram = instagramByCity[currentCity] ?? instagramByCity.uppsala;
-  const cityLabel =
-    currentCity.charAt(0).toUpperCase() + currentCity.slice(1);
+  const city = useCity();
 
   return (
-    <header
-      className={cn(
-        "sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/70 transition-all duration-300",
-        scrolled
-          ? "border-border/70 shadow-[0_1px_20px_-8px_hsl(227_100%_33%_/_0.25)]"
-          : "border-transparent"
-      )}
-    >
-      <div className="container flex h-16 items-center justify-between gap-4">
-        <Link to={`/${currentCity}`} className="flex items-center gap-2.5 group">
-          <img
-            src={Logo}
-            alt="Swecircle Logo"
-            className="h-9 w-auto transition-transform duration-300 group-hover:scale-105"
-          />
-          <span className="text-lg font-bold tracking-tight text-foreground">
-            Swecircle{" "}
-            <span className="text-primary">{cityLabel}</span>
-          </span>
-        </Link>
+    <header className="sticky top-0 z-50 w-full bg-background border-b border-foreground">
+      <div className="container flex h-[4.5rem] items-center justify-between gap-6">
+        <div className="flex items-center gap-3">
+          <Link to={`/${city.slug}`} className="flex items-center gap-3">
+            <img src={Logo} alt="" className="h-10 w-10" />
+            <span className="text-xl font-semibold tracking-tight">Swecircle</span>
+          </Link>
+          {city.hasCity && (
+            <Link
+              to="/"
+              className="hidden sm:inline text-xl tracking-tight text-muted-foreground hover:text-foreground transition-colors"
+              title="Change city"
+            >
+              {city.label}
+            </Link>
+          )}
+        </div>
 
-        <nav className="hidden md:flex items-center gap-1">
+        <nav className="hidden md:flex items-center gap-7">
           {navLinks.map((link) => {
-            const targetPath = `/${currentCity}${link.href}`;
+            const targetPath = `/${city.slug}${link.href}`;
             const isActive =
               location.pathname === targetPath ||
               location.pathname === targetPath + "/";
@@ -74,121 +47,90 @@ export function Header() {
               <Link
                 key={link.href}
                 to={targetPath}
+                aria-current={isActive ? "page" : undefined}
                 className={cn(
-                  "relative px-3.5 py-2 rounded-lg text-sm font-medium transition-colors",
-                  isActive
-                    ? "text-primary"
-                    : "text-muted-foreground hover:text-foreground"
+                  "text-base font-medium underline-offset-[0.4em] decoration-2 hover:underline",
+                  isActive && "underline"
                 )}
               >
                 {link.label}
-                <span
-                  className={cn(
-                    "absolute left-3.5 right-3.5 -bottom-0.5 h-0.5 rounded-full bg-primary transition-transform duration-300 origin-left",
-                    isActive ? "scale-x-100" : "scale-x-0"
-                  )}
-                />
               </Link>
             );
           })}
 
-          <span className="mx-2 h-5 w-px bg-border" />
-
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-muted-foreground hover:text-primary"
-            asChild
+          <a
+            href={city.instagramUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Follow us on Instagram ${city.instagramHandle}`}
+            className="hover:text-primary transition-colors"
           >
-            <a
-              href={instagram.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`Follow us on Instagram ${instagram.handle}`}
-            >
-              <Instagram className="h-5 w-5" />
-            </a>
-          </Button>
+            <Instagram className="h-5 w-5" />
+          </a>
 
-          <Button variant="outline" size="sm" className="ml-1" asChild>
-            <Link to={`/${currentCity}/donate`}>Donate</Link>
-          </Button>
-
-          <Button size="sm" className="ml-1.5 shadow-soft" asChild>
-            <Link to={`/${currentCity}/buy`}>Shop now</Link>
-          </Button>
-
-          <Link
-            to="/"
-            className="text-xs font-medium text-muted-foreground hover:text-foreground ml-4 pl-4 border-l border-border transition-colors"
-          >
-            Change city
-          </Link>
+          <div className="flex items-center gap-2 ml-1">
+            <Button variant="outline" size="sm" asChild>
+              <Link to={`/${city.slug}/donate`}>Donate</Link>
+            </Button>
+            <Button size="sm" asChild>
+              <Link to={`/${city.slug}/buy`}>Shop now</Link>
+            </Button>
+          </div>
         </nav>
 
         <button
-          className="md:hidden p-2 rounded-lg hover:bg-muted"
+          className="md:hidden -mr-2 p-2"
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Toggle menu"
+          aria-expanded={isOpen}
         >
-          {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
       </div>
 
       {isOpen && (
-        <nav className="md:hidden border-t border-border bg-background p-4 animate-fade-in">
-          <div className="flex flex-col gap-2">
-            {navLinks.map((link) => {
-              const targetPath = `/${currentCity}${link.href}`;
-
-              return (
+        <nav className="md:hidden border-t border-foreground bg-background animate-fade-in">
+          <div className="container pb-6">
+            <div className="divide-y divide-border">
+              {navLinks.map((link) => (
                 <Link
                   key={link.href}
-                  to={targetPath}
+                  to={`/${city.slug}${link.href}`}
                   onClick={() => setIsOpen(false)}
-                  className={cn(
-                    "px-4 py-3 rounded-lg text-sm font-medium transition-colors",
-                    location.pathname === targetPath ||
-                      location.pathname === targetPath + "/"
-                      ? "bg-muted text-foreground"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                  )}
+                  className="block py-4 text-2xl font-medium tracking-tight"
                 >
                   {link.label}
                 </Link>
-              );
-            })}
-
-            <Button variant="outline" size="sm" className="mt-2" asChild>
+              ))}
               <a
-                href={instagram.href}
+                href={city.instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                className="block py-4 text-2xl font-medium tracking-tight"
               >
-                <Instagram className="h-4 w-4 mr-2" />
-                Follow {instagram.handle}
+                Instagram
               </a>
-            </Button>
-
-            <Button variant="outline" size="sm" className="mt-2" asChild>
-              <Link to={`/${currentCity}/donate`} onClick={() => setIsOpen(false)}>
-                Donate
+              <Link
+                to="/"
+                onClick={() => setIsOpen(false)}
+                className="block py-4 text-2xl font-medium tracking-tight"
+              >
+                Change city
               </Link>
-            </Button>
+            </div>
 
-            <Button size="sm" className="mt-2" asChild>
-              <Link to={`/${currentCity}/buy`} onClick={() => setIsOpen(false)}>
-                Shop now
-              </Link>
-            </Button>
-
-            <Link
-              to="/"
-              onClick={() => setIsOpen(false)}
-              className="text-sm font-medium text-muted-foreground hover:text-foreground text-center mt-4 pt-4 border-t border-border/50"
-            >
-              Change City
-            </Link>
+            <div className="grid grid-cols-2 gap-2 mt-2">
+              <Button variant="outline" asChild>
+                <Link to={`/${city.slug}/donate`} onClick={() => setIsOpen(false)}>
+                  Donate
+                </Link>
+              </Button>
+              <Button asChild>
+                <Link to={`/${city.slug}/buy`} onClick={() => setIsOpen(false)}>
+                  Shop now
+                </Link>
+              </Button>
+            </div>
           </div>
         </nav>
       )}

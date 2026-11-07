@@ -1,21 +1,19 @@
 import { Layout } from "@/components/layout/Layout";
+import { PageHeader } from "@/components/PageHeader";
 
 const Terms = () => {
   return (
     <Layout>
+      <PageHeader title="Terms & Conditions" />
       <section className="section-padding">
-        <div className="container-narrow">
-          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-8">
-            Terms & Conditions
-          </h1>
-
-          <div className="prose prose-lg max-w-none space-y-6 text-muted-foreground">
+        <div className="container">
+          <div className="max-w-3xl space-y-10 text-foreground/80">
             <p className="text-lg">
               Last updated: May 16, 2026
             </p>
 
             <section>
-              <h2 className="text-xl font-semibold text-foreground mb-3">
+              <h2 className="text-2xl font-semibold tracking-tight text-foreground mb-3">
                 1. General
               </h2>
               <p>
@@ -25,7 +23,7 @@ const Terms = () => {
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold text-foreground mb-3">
+              <h2 className="text-2xl font-semibold tracking-tight text-foreground mb-3">
                 2. Use of Website
               </h2>
               <p>
@@ -36,7 +34,7 @@ const Terms = () => {
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold text-foreground mb-3">
+              <h2 className="text-2xl font-semibold tracking-tight text-foreground mb-3">
                 3. Intellectual Property
               </h2>
               <p>
@@ -47,7 +45,7 @@ const Terms = () => {
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold text-foreground mb-3">
+              <h2 className="text-2xl font-semibold tracking-tight text-foreground mb-3">
                 4. Limitation of Liability (Website)
               </h2>
               <p>
@@ -58,7 +56,7 @@ const Terms = () => {
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold text-foreground mb-3">
+              <h2 className="text-2xl font-semibold tracking-tight text-foreground mb-3">
                 5. Conditions of Sale (In-Person)
               </h2>
               <div className="space-y-4">
@@ -83,7 +81,7 @@ const Terms = () => {
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold text-foreground mb-3">
+              <h2 className="text-2xl font-semibold tracking-tight text-foreground mb-3">
                 6. Changes
               </h2>
               <p>
@@ -93,11 +91,11 @@ const Terms = () => {
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold text-foreground mb-3">
+              <h2 className="text-2xl font-semibold tracking-tight text-foreground mb-3">
                 7. Contact
               </h2>
               <p>
-                For questions regarding these terms, please contact us at <a href="mailto:uppsala@swecircle.com" className="text-primary hover:underline">uppsala@swecircle.com</a>.
+                For questions regarding these terms, please contact us at <a href="mailto:uppsala@swecircle.com" className="link-rule text-primary">uppsala@swecircle.com</a>.
               </p>
             </section>
           </div>

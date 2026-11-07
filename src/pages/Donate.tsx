@@ -1,334 +1,92 @@
 import { Layout } from "@/components/layout/Layout";
+import { Facts, PageHeader } from "@/components/PageHeader";
+import { ItemCategories } from "@/components/ItemCategories";
 import { Button } from "@/components/ui/button";
-import { 
-  Instagram, 
-  Heart, 
-  MapPin, 
-  MessageCircle, 
-  Clock, 
-  BedDouble, 
-  ChefHat, 
-  Zap, 
-  PackageOpen
-} from "lucide-react";
-import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-
-// Generate hearts on a jittered grid
-function generateJitteredHearts(
-    rows: number,
-    cols: number,
-    width = 100,
-    height = 100,
-    sizeRange: [number, number] = [16, 30]
-) {
-    const hearts: { x: number; y: number; size: number; delay: number }[] = [];
-
-    for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-            const baseX = (c + 0.5) / cols * width;
-            const baseY = (r + 0.5) / rows * height;
-            const jitterX = (Math.random() - 0.5) * (width / cols);
-            const jitterY = (Math.random() - 0.5) * (height / rows);
-            const x = baseX + jitterX;
-            const y = baseY + jitterY;
-            const size = sizeRange[0] + Math.random() * (sizeRange[1] - sizeRange[0]);
-            const delay = Math.random() * 600;
-            hearts.push({ x, y, size, delay });
-        }
-    }
-
-    return hearts;
-}
+import { useCity } from "@/lib/city";
+import { Instagram } from "lucide-react";
+import facadeImg from "@/assets/web/facade.jpg";
 
 export function Donate() {
-    const { location } = useParams();
-    const [hearts, setHearts] = useState<{ x: number; y: number; size: number; delay: number }[]>([]);
+  const city = useCity();
 
-    useEffect(() => {
-        const updateHearts = () => {
-            if (window.innerWidth < 768) {
-                setHearts(generateJitteredHearts(2, 4, 100, 100, [12, 20]));
-            } else {
-                setHearts(generateJitteredHearts(3, 5, 100, 100, [16, 30]));
-            }
-        };
-        updateHearts();
-        window.addEventListener("resize", updateHearts);
-        return () => window.removeEventListener("resize", updateHearts);
-    }, []);
+  const facts = [
+    {
+      label: "Where to drop off",
+      value: city.isLund ? (
+        "Check our Instagram for exact drop-off locations"
+      ) : (
+        <>
+          Rackarbergsgatan 32 (Rackis)
+          <br />
+          or Building Nr. 1 (Flogsta)
+        </>
+      ),
+    },
+    {
+      label: "When to come",
+      value: "At the end of every semester when moving out",
+    },
+    {
+      label: "How it works",
+      value: "Send us a DM on Instagram in advance to let us know you are coming",
+    },
+  ];
 
-    // Set Instagram link based on location
-    const targetInstaLink = location === "lund" 
-      ? "https://instagram.com/swecirclelund" 
-      : "https://instagram.com/swecircle";
+  const rules = [
+    <>All items must be <strong className="font-semibold">clean and in working condition</strong>.</>,
+    <>Textiles must be washed at <strong className="font-semibold">60°C</strong>. If not, please inform us when donating.</>,
+    <>We do <strong className="font-semibold">not</strong> accept clothing or toiletries.</>,
+    ...(city.isLund ? [<>No large furniture (beds, sofas, wardrobes).</>] : []),
+  ];
 
-    return (
-        <Layout>
-            {/* --- HERO SECTION --- */}
-            <section className="bg-hero-gradient py-12 md:pb-16 relative overflow-hidden min-h-[35vh] flex items-center">
-                {/* Background blobs */}
-                <div className="absolute top-10 right-[10%] w-32 h-32 bg-primary/10 blob animate-float" />
-                <div className="absolute bottom-5 left-[5%] w-24 h-24 bg-warm/10 blob animate-wiggle" />
+  return (
+    <Layout>
+      <PageHeader
+        title="Donate items"
+        intro="We are collecting donations from now until the end of the semester. Items can be dropped off at the locations below during our collection hours."
+        image={facadeImg}
+        imageAlt="Five volunteers outside a student housing block with donated items"
+        imagePosition="50% 75%"
+        action={
+          <Button variant="accent" size="lg" className="w-full sm:w-auto px-4 sm:px-7 text-base sm:text-lg" asChild>
+            <a href={city.instagramUrl} target="_blank" rel="noopener noreferrer">
+              <Instagram />
+              Message us on Instagram
+            </a>
+          </Button>
+        }
+      />
+      <Facts facts={facts} />
 
-                {/* Floating hearts */}
-                {hearts.map((h, i) => (
-                    <Heart
-                        key={i}
-                        className="absolute text-warm/30 animate-float"
-                        fill="currentColor"
-                        style={{
-                            top: `${h.y}%`,
-                            left: `${h.x}%`,
-                            width: `${h.size}px`,
-                            height: `${h.size}px`,
-                            animationDelay: `${h.delay}ms`,
-                        }}
-                    />
-                ))}
+      <section className="section-padding">
+        <div className="container grid lg:grid-cols-12 gap-x-8 gap-y-8">
+          <h2 className="display-2 lg:col-span-4">Important rules</h2>
+          <ol className="lg:col-span-8 border-b border-foreground">
+            {rules.map((rule, i) => (
+              <li key={i} className="grid grid-cols-[2.75rem_1fr] gap-x-5 md:gap-x-8 items-center border-t border-foreground py-5">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full border border-foreground text-lg font-medium">
+                  {i + 1}
+                </span>
+                <p className="text-xl md:text-2xl leading-snug tracking-tight">{rule}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
 
-                <div className="container relative z-10 text-center">
-                    <div className="max-w-3xl mx-auto">
-                        <span className="inline-block text-sm font-bold text-primary uppercase tracking-wider mb-3 animate-fade-up">
-                           Support Our Mission
-                        </span>
-                        <h1 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-6 animate-fade-up delay-100">
-                            Donate Items
-                        </h1>
-                        <p className="text-lg md:text-xl text-muted-foreground animate-fade-up delay-200 leading-relaxed">
-                            We are collecting donations from now until the end of the semester. Items can be dropped off at the locations below during our collection hours.
-                        </p>
-                    </div>
-                </div>
-            </section>
-
-            {/* --- LOGISTICS SECTION --- */}
-            <section className="py-12 relative z-10">
-                <div className="container max-w-4xl mx-auto text-center">
-
-                    {/* The Info Card - TIGHTER NOW */}
-                    <div className="bg-white border rounded-3xl p-6 max-w-2xl mx-auto mb-12 animate-fade-up delay-300 shadow-xl shadow-slate-100">
-                        <div className="space-y-5"> 
-
-                            {/* Where */}
-                            <div className="flex gap-4 text-left">
-                                <div className="p-2.5 bg-primary/10 rounded-full shrink-0 h-fit">
-                                    <MapPin className="h-5 w-5 text-primary" />
-                                </div>
-                                <div>
-                                    <p className="font-bold text-foreground text-lg mb-1">Where to drop off</p>
-                                    <div className="space-y-0.5">
-                                        {location === "lund" ? (
-                                            <p className="text-muted-foreground text-base">Check our Instagram for exact drop-off locations!</p>
-                                        ) : (
-                                            <>
-                                                <p className="text-muted-foreground text-base">Rackarbergsgatan 32 (Rackis)</p>
-                                                <p className="text-muted-foreground text-base"><span className="text-primary font-medium">Or:</span> Building Nr. 1 (Flogsta)</p>
-                                            </>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="h-px bg-slate-100 w-full"></div>
-
-                            {/* When */}
-                            <div className="flex gap-4 text-left">
-                                <div className="p-2.5 bg-orange-100 rounded-full shrink-0 h-fit">
-                                    <Clock className="h-5 w-5 text-orange-600" />
-                                </div>
-                                <div>
-                                    <p className="font-bold text-foreground text-lg mb-1">When to come</p>
-                                    <p className="text-muted-foreground text-base">At the end of every semester when moving out</p>
-                                </div>
-                            </div>
-
-                            <div className="h-px bg-slate-100 w-full"></div>
-
-                            {/* How */}
-                            <div className="flex gap-4 text-left">
-                                <div className="p-2.5 bg-blue-100 rounded-full shrink-0 h-fit">
-                                    <MessageCircle className="h-5 w-5 text-blue-600" />
-                                </div>
-                                <div>
-                                    <p className="font-bold text-foreground text-lg mb-1">How it works</p>
-                                    <p className="text-muted-foreground text-base">Send us a DM on Instagram in advance to let us know you are coming!</p>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    {/* Rules Block */}
-                    <div className="max-w-2xl mx-auto text-left mb-16 animate-fade-up delay-400">
-                        <h3 className="font-bold text-2xl mb-8 text-foreground text-center">
-                            Important Rules
-                        </h3>
-                        
-                        <div className="grid gap-6">
-                            {/* Rule 1 */}
-                            <div className="flex gap-4">
-                                <span className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 text-slate-600 font-bold text-sm">1</span>
-                                <p className="text-lg text-slate-700 pt-1">
-                                    All items must be <strong>clean and in working condition</strong>.
-                                </p>
-                            </div>
-
-                            {/* Rule 2 */}
-                            <div className="flex gap-4">
-                                <span className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 text-slate-600 font-bold text-sm">2</span>
-                                <p className="text-lg text-slate-700 pt-1">
-                                    Textiles must be washed at <strong>60°C</strong>. If not, please inform us when donating.
-                                </p>
-                            </div>
-
-                            {/* Rule 3 */}
-                            <div className="flex gap-4">
-                                <span className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-red-50 text-red-600 font-bold text-sm">3</span>
-                                <p className="text-lg text-slate-700 pt-1">
-                                    We do <span className="text-red-600 font-medium">not</span> accept clothing or toiletries.
-                                </p>
-                            </div>
-
-                             {/* Rule 4: Only show in Lund */}
-                             {location === "lund" && (
-                                <div className="flex gap-4">
-                                    <span className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-red-50 text-red-600 font-bold text-sm">4</span>
-                                    <p className="text-lg text-slate-700 pt-1">
-                                        No large furniture (beds, sofas, wardrobes).
-                                    </p>
-                                </div>
-                             )}
-                        </div>
-                    </div>
-
-                    <Button size="lg" asChild className="bg-primary hover:bg-primary/90 text-white rounded-full px-8 h-12 shadow-lg hover:shadow-xl transition-all animate-fade-up delay-500">
-                        <a href={targetInstaLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 font-semibold">
-                            <Instagram className="h-5 w-5" />
-                            Message us on Instagram
-                        </a>
-                    </Button>
-                </div>
-            </section>
-
-            {/* --- LIST OF ITEMS SECTION --- */}
-            <section className="py-16 md:py-24 bg-slate-50/80 border-t border-slate-100">
-                <div className="container max-w-5xl mx-auto">
-                    <div className="text-center max-w-2xl mx-auto mb-16">
-                        <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
-                            What You Can Donate
-                        </h2>
-                        <p className="text-lg text-muted-foreground leading-relaxed">
-                            If you have something that isn't listed below, feel free to ask!
-                        </p>
-                    </div>
-
-                    <div className="grid md:grid-cols-2 gap-6">
-
-                        {/* CATEGORY 1: Household & Bedding */}
-                        <div className="bg-white border border-slate-200/60 rounded-2xl p-8 hover:shadow-lg hover:border-blue-200 transition-all duration-300">
-                            <div className="flex items-center gap-4 mb-6">
-                                <div className="p-3.5 bg-blue-50 text-blue-600 rounded-xl">
-                                    <BedDouble className="h-7 w-7" />
-                                </div>
-                                <h3 className="text-xl font-bold text-slate-800">Household & Bedding</h3>
-                            </div>
-                            <ul className="space-y-3 pl-2">
-                                {[
-                                    "Duvets and pillows",
-                                    "Bed sheets and blankets",
-                                    "Curtains & Rugs",
-                                    "Small household textiles"
-                                ].map((item) => (
-                                    <li key={item} className="flex items-start gap-3 text-slate-600 text-base">
-                                        <span className="text-slate-300 mt-1.5 text-xs">●</span>
-                                        <span>{item}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-
-                        {/* CATEGORY 2: Kitchen */}
-                        <div className="bg-white border border-slate-200/60 rounded-2xl p-8 hover:shadow-lg hover:border-orange-200 transition-all duration-300">
-                            <div className="flex items-center gap-4 mb-6">
-                                <div className="p-3.5 bg-orange-50 text-orange-600 rounded-xl">
-                                    <ChefHat className="h-7 w-7" />
-                                </div>
-                                <h3 className="text-xl font-bold text-slate-800">Kitchen Equipment</h3>
-                            </div>
-                            <ul className="space-y-3 pl-2">
-                                {[
-                                    "Pots, pans & frying pans",
-                                    "Cutlery and cooking utensils",
-                                    "Plates, bowls, cups and glasses",
-                                    "Food storage containers"
-                                ].map((item) => (
-                                    <li key={item} className="flex items-start gap-3 text-slate-600 text-base">
-                                        <span className="text-slate-300 mt-1.5 text-xs">●</span>
-                                        <span>{item}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-
-                        {/* CATEGORY 3: Electronics */}
-                        <div className="bg-white border border-slate-200/60 rounded-2xl p-8 hover:shadow-lg hover:border-yellow-200 transition-all duration-300">
-                            <div className="flex items-center gap-4 mb-6">
-                                <div className="p-3.5 bg-yellow-50 text-yellow-600 rounded-xl">
-                                    <Zap className="h-7 w-7" />
-                                </div>
-                                <h3 className="text-xl font-bold text-slate-800">Electronics</h3>
-                            </div>
-                            <ul className="space-y-3 pl-2">
-                                {[
-                                    "Routers and Wi-Fi equipment",
-                                    "Extension cords & power strips",
-                                    "Desk lamps and floor lamps",
-                                    "Small appliances (kettles, toasters)"
-                                ].map((item) => (
-                                    <li key={item} className="flex items-start gap-3 text-slate-600 text-base">
-                                        <span className="text-slate-300 mt-1.5 text-xs">●</span>
-                                        <span>{item}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-
-                        {/* CATEGORY 4: Misc */}
-                        <div className="bg-white border border-slate-200/60 rounded-2xl p-8 hover:shadow-lg hover:border-purple-200 transition-all duration-300">
-                            <div className="flex items-center gap-4 mb-6">
-                                <div className="p-3.5 bg-purple-50 text-purple-600 rounded-xl">
-                                    <PackageOpen className="h-7 w-7" />
-                                </div>
-                                <h3 className="text-xl font-bold text-slate-800">And Much More...</h3>
-                            </div>
-                            <ul className="space-y-3 pl-2">
-                                {[
-                                    "Small shelves and storage boxes",
-                                    "Mirrors and decoration",
-                                    "Laundry racks and hangers",
-                                    "Bicycles in working condition"
-                                ].map((item) => (
-                                    <li key={item} className="flex items-start gap-3 text-slate-600 text-base">
-                                        <span className="text-slate-300 mt-1.5 text-xs">●</span>
-                                        <span>{item}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-
-                    </div>
-
-                    <div className="text-center mt-12">
-                        <div className="inline-flex items-center gap-2 px-6 py-3 bg-white rounded-full border border-slate-200 shadow-sm text-sm text-slate-600">
-                            <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
-                            Not sure about an item? <a href={targetInstaLink} target="_blank" rel="noopener noreferrer" className="font-semibold text-primary hover:underline">Send us a photo on Instagram!</a>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </Layout>
-    );
+      <ItemCategories
+        title="What you can donate"
+        intro="If you have something that isn't listed below, feel free to ask!"
+      >
+        <p className="text-xl">
+          Not sure about an item?{" "}
+          <a href={city.instagramUrl} target="_blank" rel="noopener noreferrer" className="link-rule font-semibold">
+            Send us a photo on Instagram
+          </a>
+        </p>
+      </ItemCategories>
+    </Layout>
+  );
 }
 
 export default Donate;

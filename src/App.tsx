@@ -2,10 +2,11 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { MapPin, ArrowRight } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 import { Routes, Route, Outlet, Link, useParams, Navigate } from "react-router-dom";
 
 import { ScrollManager } from "@/components/ScrollManager";
+import Logo from "@/assets/logo.png";
 
 import Index from "./pages/Index";
 import About from "./pages/About";
@@ -19,64 +20,50 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+const cities = [
+  {
+    slug: "uppsala",
+    name: "Uppsala",
+    note: "Original location",
+    panel: "bg-primary text-primary-foreground",
+  },
+  {
+    slug: "lund",
+    name: "Lund",
+    note: "New location",
+    panel: "bg-warm text-warm-foreground",
+  },
+];
+
 export function Gateway() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-stone-50 px-4">
-      {/* Increased max-width for desktop (max-w-md), stays compact on mobile (max-w-sm) */}
-      <div className="w-full max-w-sm sm:max-w-md flex flex-col items-center">
-        
-        {/* Minimal Blue Accent Line scales slightly on desktop */}
-        <div className="w-8 h-1 sm:w-10 sm:h-1.5 bg-primary rounded-full mb-6 sm:mb-8" />
+    <main className="relative min-h-svh grid md:grid-cols-2">
+      <h1 className="sr-only">Welcome to Swecircle. Select your city to continue.</h1>
 
-        {/* Refined Typography scales up smoothly */}
-        <div className="text-center mb-8 sm:mb-10">
-          <h1 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight mb-2 sm:mb-3">
-            Welcome to <span className="text-primary">Swecircle</span>
-          </h1>
-          <p className="text-sm sm:text-base text-muted-foreground">
-            Select your city to continue
-          </p>
-        </div>
+      {cities.map((city) => (
+        <Link
+          key={city.slug}
+          to={`/${city.slug}`}
+          className={`group flex flex-col justify-end p-5 lg:p-10 pt-24 md:pt-10 ${city.panel}`}
+        >
+          <span className="text-xl font-medium">{city.note}</span>
+          <span className="flex items-end justify-between gap-4">
+            <span className="text-[min(11rem,max(11vw,min(18.5vw,4.5rem)))] font-semibold leading-none tracking-tighter">
+              {city.name}
+            </span>
+            <ArrowRight className="mb-[0.6em] h-10 w-10 lg:h-14 lg:w-14 shrink-0 transition-transform duration-300 group-hover:translate-x-2" />
+          </span>
+        </Link>
+      ))}
 
-        {/* Sleek Selection List with increased padding/gap on desktop */}
-        <div className="w-full flex flex-col gap-3 sm:gap-4">
-          
-          <Link 
-            to="/uppsala"
-            className="group relative flex items-center p-4 sm:p-5 bg-white border border-stone-200 rounded-2xl sm:rounded-3xl hover:border-primary/40 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-300"
-          >
-            {/* Icon container gets slightly larger */}
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-stone-50 flex items-center justify-center mr-4 sm:mr-5 group-hover:bg-primary/5 transition-colors duration-300">
-              <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground group-hover:text-primary transition-colors duration-300" />
-            </div>
-            <div className="flex-1 text-left">
-              <h2 className="text-sm sm:text-base font-semibold text-foreground group-hover:text-primary transition-colors duration-300">
-                Uppsala
-              </h2>
-              <p className="text-xs sm:text-sm text-muted-foreground">Original location</p>
-            </div>
-            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all duration-300" />
-          </Link>
-
-          <Link 
-            to="/lund"
-            className="group relative flex items-center p-4 sm:p-5 bg-white border border-stone-200 rounded-2xl sm:rounded-3xl hover:border-primary/40 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-300"
-          >
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-stone-50 flex items-center justify-center mr-4 sm:mr-5 group-hover:bg-primary/5 transition-colors duration-300">
-              <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground group-hover:text-primary transition-colors duration-300" />
-            </div>
-            <div className="flex-1 text-left">
-              <h2 className="text-sm sm:text-base font-semibold text-foreground group-hover:text-primary transition-colors duration-300">
-                Lund
-              </h2>
-              <p className="text-xs sm:text-sm text-muted-foreground">New location</p>
-            </div>
-            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all duration-300" />
-          </Link>
-
-        </div>
+      <div className="absolute inset-x-0 top-0 flex items-center justify-between gap-4 p-5 lg:px-10 lg:py-8 pointer-events-none">
+        <span className="flex items-center gap-3 text-2xl font-semibold tracking-tight text-primary-foreground">
+          <img src={Logo} alt="" className="h-11 w-11" />
+          Swecircle
+        </span>
+        <span className="hidden md:block text-xl font-medium text-warm-foreground">Select your city to continue</span>
       </div>
-    </div>
+    </main>
   )
 }
 

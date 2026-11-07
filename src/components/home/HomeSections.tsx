@@ -1,214 +1,66 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Heart, Recycle, ShoppingBag, MapPin, Instagram, Bike, Home, Users, Gift, X, ChevronLeft, ChevronRight, Newspaper, Radio, Tv } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
-import { useState, useEffect, useRef, useCallback } from "react";
-import Logo from "@/assets/logo.png";
+import { ArrowRight, ArrowUpRight, Instagram, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useCity } from "@/lib/city";
 import uuInnovationLogo from "@/assets/uu-innovation.png";
 import uppsalahemLogo from "@/assets/uppsalahem.png";
-import pic1 from '@/assets/pic1.jpg';
-import pic2 from '@/assets/pic2.jpg';
-import pic3 from '@/assets/pic3.jpg';
-import pic4 from '@/assets/pic4.jpg';
-import pic5 from '@/assets/pic5.jpg';
 import rbuLogo from "@/assets/rbu.png";
 import världklassLogo from "@/assets/vku.png";
-
-// --- PHYSICS: Ease-Out-Quart (Stable, Smooth) ---
-const easeOutQuart = (t: number) => 1 - Math.pow(1 - t, 4);
-
-// Generate hearts on a jittered grid
-function generateJitteredHearts(
-  rows: number,
-  cols: number,
-  width = 100,
-  height = 100,
-  sizeRange: [number, number] = [16, 30]
-) {
-  const hearts: { x: number; y: number; size: number; delay: number }[] = [];
-
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++) {
-      const baseX = (c + 0.5) / cols * width;
-      const baseY = (r + 0.5) / rows * height;
-      const jitterX = (Math.random() - 0.5) * (width / cols);
-      const jitterY = (Math.random() - 0.5) * (height / rows);
-      const x = baseX + jitterX;
-      const y = baseY + jitterY;
-      const size = sizeRange[0] + Math.random() * (sizeRange[1] - sizeRange[0]);
-      const delay = Math.random() * 600;
-
-      hearts.push({ x, y, size, delay });
-    }
-  }
-
-  return hearts;
-}
+import heroImg from "@/assets/web/team2.jpg";
+import pic1 from "@/assets/web/pic1.jpg";
+import pic2 from "@/assets/web/pic2.jpg";
+import pic3 from "@/assets/web/pic3.jpg";
+import pic4 from "@/assets/web/pic4.jpg";
+import pic5 from "@/assets/web/pic5.jpg";
 
 export function HeroSection() {
-  const { location } = useParams()
-  const currentCity = location || "uppsala"
-  const isLund = currentCity.toLowerCase() === "lund"
+  const city = useCity();
 
-  const instaUrl = isLund
-    ? "https://www.instagram.com/swecirclelund/"
-    : "https://instagram.com/swecircle"
-
-  const [hearts, setHearts] = useState<{ x: number; y: number; size: number; delay: number }[]>([])
-
-  useEffect(() => {
-    const updateHearts = () => {
-      if (window.innerWidth < 768) {
-        setHearts(generateJitteredHearts(3, 5, 100, 100, [12, 20]))
-      } else {
-        setHearts(generateJitteredHearts(4, 7, 100, 100, [16, 30]))
-      }
-    }
-    updateHearts()
-    window.addEventListener("resize", updateHearts)
-    return () => window.removeEventListener("resize", updateHearts)
-  }, [])
+  const paths = [
+    { to: `/${city.slug}/buy`, lead: "Moving in?", action: "Shop second-hand" },
+    { to: `/${city.slug}/donate`, lead: "Moving out?", action: "Donate your things" },
+  ];
 
   return (
-    <section className="relative overflow-hidden bg-hero-gradient min-h-[85vh] flex items-center">
-      {/* BLOBS */}
-      <div className="absolute top-20 left-10 w-64 h-64 bg-primary/10 blob animate-float"></div>
-      <div className="absolute bottom-32 right-5 w-48 h-48 bg-warm/10 blob animate-float delay-200"></div>
-
-      {/* HEARTS */}
-      {hearts.map((h, i) => (
-        <Heart
-          key={i}
-          className="absolute text-warm/30 animate-float"
-          style={{
-            left: `${h.x}%`,
-            top: `${h.y}%`,
-            width: `${h.size}px`,
-            height: `${h.size}px`,
-            animationDelay: `${h.delay}ms`,
-          }}
-          fill="currentColor"
-        />
-      ))}
-
-      {/* MAIN CONTENT */}
-      <div className="container section-padding relative z-10">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-card/70 backdrop-blur border border-primary/10 text-secondary-foreground text-sm font-semibold mb-8 animate-fade-up shadow-soft">
-            <Heart className="h-4 w-4 text-warm fill-current" />
-            <span>By students, for students in {isLund ? "Lund" : "Uppsala"}</span>
-          </div>
-
-          <h1 className="font-display text-5xl sm:text-6xl md:text-7xl font-bold text-foreground leading-[1.1] mb-8 animate-fade-up delay-100">
-            Give items a <span className="hand-drawn-underline text-primary">second life</span><br />
-            and help children in need
-          </h1>
-
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-fade-up delay-200 leading-relaxed">
-            Donated items become affordable finds for fellow students <br />
-            all profit goes directly to <span className="font-semibold text-foreground">RBU</span>.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up delay-300">
-            <Button variant="hero" size="lg" asChild className="text-lg px-8">
-              <a href={instaUrl} target="_blank" rel="noopener noreferrer">
-                <Instagram className="mr-2 h-5 w-5" /> Follow us
-              </a>
-            </Button>
-            <Button variant="hero-outline" size="lg" asChild className="text-lg px-8">
-              <Link to={`/${currentCity}/about`}>
-                Learn more <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
-          </div>
-
-          {!isLund && (
-            <div className="mt-12 inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-card/60 backdrop-blur border border-border text-muted-foreground animate-fade-up delay-400">
-              <MapPin className="h-4 w-4 text-primary" />
-              <span className="text-sm font-medium">Find us at Rackarbergsgatan 32, Uppsala</span>
-            </div>
-          )}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-export function StatsCounterSection() {
-  const [customers, setCustomers] = useState(0);
-  const [donated, setDonated] = useState(0);
-  const [isFinished, setIsFinished] = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
-  const hasAnimated = useRef(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        // Only start if intersecting AND hasn't animated yet
-        if (entries[0].isIntersecting && !hasAnimated.current) {
-          hasAnimated.current = true;
-
-          const duration = 5000; // 5 seconds
-          const startTime = performance.now();
-
-          const animateCounters = (currentTime: number) => {
-            const elapsed = currentTime - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-
-            // easeOutExpo for fast start, slow end
-            const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
-
-            setCustomers(Math.floor(ease * 500));
-            setDonated(Math.floor(ease * 95000));
-
-            if (progress < 1) {
-              requestAnimationFrame(animateCounters);
-            } else {
-              setIsFinished(true);
-            }
-          };
-
-          requestAnimationFrame(animateCounters);
-        }
-      },
-      { threshold: 0.5 } // Wait until 50% visible
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
-  return (
-    <section ref={sectionRef} className="py-16 md:py-24 bg-section-alt border-y border-border/60">
-      <div className="container px-4">
-        <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
-          <span className="eyebrow eyebrow-center mb-4">Our impact so far</span>
-          <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">
-            Small items, real difference
-          </h2>
-        </div>
-
-        <div className="relative max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 surface-panel overflow-hidden">
-          {/* Center divider */}
-          <div className="hidden md:block absolute top-10 bottom-10 left-1/2 w-px -translate-x-1/2 bg-border" />
-
-          <div className="flex flex-col items-center justify-center text-center px-8 py-12 md:py-16 border-b md:border-b-0 border-border">
-            <h3 className="font-display text-5xl md:text-7xl font-bold text-primary tracking-tight tabular-nums whitespace-nowrap">
-              {customers}<span className={isFinished ? "" : "invisible"}>+</span>
-            </h3>
-            <p className="mt-4 text-sm md:text-base font-bold text-muted-foreground uppercase tracking-[0.18em]">
-              Customers Served
+    <section className="bg-primary text-primary-foreground">
+      <div className="grid lg:grid-cols-12 lg:min-h-[calc(100svh-4.5rem)]">
+        <div className="lg:col-span-7 pl-page pr-5 lg:pr-12 pt-12 md:pt-20 pb-8 lg:pb-10 flex flex-col justify-between gap-12">
+          <div>
+            <h1 className="display-1 animate-fade-up">
+              Give items a <span className="text-warm whitespace-nowrap">second life</span> and help children in need
+            </h1>
+            <p className="mt-7 max-w-xl text-lg md:text-xl leading-snug text-white/85 animate-fade-up delay-100">
+              Donated items become affordable finds for fellow students in {city.label}, and all profit goes directly to RBU.
             </p>
           </div>
 
-          <div className="flex flex-col items-center justify-center text-center px-8 py-12 md:py-16">
-            <h3 className="font-display text-4xl md:text-6xl font-bold text-primary tracking-tight tabular-nums whitespace-nowrap">
-              {donated.toLocaleString('sv-SE')} SEK<span className={isFinished ? "" : "invisible"}>+</span>
-            </h3>
-            <p className="mt-4 text-sm md:text-base font-bold text-muted-foreground uppercase tracking-[0.18em]">
-              Donated to Charity
+          <div className="border-b border-white/35 animate-fade-up delay-200">
+            {paths.map((path) => (
+              <Link
+                key={path.to}
+                to={path.to}
+                className="group flex items-center justify-between gap-4 border-t border-white/35 py-4 text-xl md:text-2xl tracking-tight transition-colors hover:text-warm"
+              >
+                <span>
+                  <span className="font-semibold">{path.lead}</span> {path.action}
+                </span>
+                <ArrowRight className="h-6 w-6 shrink-0 transition-transform duration-200 group-hover:translate-x-1" />
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        <div className="relative lg:col-span-5 min-h-[22rem] sm:min-h-[30rem]">
+          <img
+            src={heroImg}
+            alt="The Swecircle team in the snow, holding up donated pans, pillows and bags"
+            className="absolute inset-0 h-full w-full object-cover object-[46%_50%] animate-fade-in"
+          />
+          <div className="sticker absolute -top-10 right-5 lg:top-auto lg:right-auto lg:bottom-48 lg:-left-20 w-32 lg:w-44 -rotate-[8deg] animate-sticker">
+            <p className="font-semibold leading-none tracking-tight text-[0.95rem] lg:text-xl">
+              <span className="block text-[2rem] lg:text-5xl tracking-tighter mb-1">100%</span>
+              of profits<br />to RBU
             </p>
           </div>
         </div>
@@ -217,1195 +69,358 @@ export function StatsCounterSection() {
   );
 }
 
-
 export function HowItWorksSection() {
-  const [currentStep, setCurrentStep] = useState(0);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const cardWidthRef = useRef(0);
-  const visualCardWidthRef = useRef(0);
-  const paddingLeftRef = useRef(0); // Stores container padding
-  const isAnimatingRef = useRef(false);
-  const rafRef = useRef<number | null>(null);
-  const touchStartRef = useRef(0);
-  const touchStartTimeRef = useRef(0);
-  const { location } = useParams();
-  const currentCity = location || "uppsala";
-  const isLund = currentCity.toLowerCase() === "lund";
+  const city = useCity();
 
-  const steps = [
+  const steps: { title: string; description: string; to?: string; scrollTo?: string }[] = [
     {
-      icon: ShoppingBag,
-      title: "Moving In?",
-      // Dynamic description
-      description: `We've got you covered with affordable essentials for your first days in ${isLund ? "Lund" : "Uppsala"} and beyond.`,
-      color: "bg-green-100",
-      action: { type: "link", to: `/${currentCity}/buy` },
+      title: "Moving in?",
+      description: `We've got you covered with affordable essentials for your first days in ${city.label} and beyond.`,
+      to: `/${city.slug}/buy`,
     },
     {
-      icon: Heart,
-      title: "Give Back",
+      title: "Give back",
       description: "Feel good knowing 100% of our profits go directly to the RBU charity.",
-      color: "bg-warm/10 text-warm",
-      action: { type: "scroll", target: "charities" },
+      scrollTo: "charities",
     },
     {
-      icon: Gift,
-      title: "Moving Out?",
+      title: "Moving out?",
       description: "Give items a second life instead of throwing them away. We accept everything from bedding to bikes.",
-      color: "bg-primary/10 text-primary",
-      action: { type: "link", to: `/${location}/donate` },
+      to: `/${city.slug}/donate`,
     },
   ];
-
-  const scrollData = [steps[1], steps[2], ...steps, steps[0], steps[1]];
-  const START_INDEX = 2;
-
-  const scrollToSection = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
-  };
-
-  const getCenterOffset = (container: HTMLElement, visualWidth: number) => {
-    const containerWidth = container.clientWidth;
-    return (containerWidth - visualWidth) / 2;
-  };
-
-  /* ====================== DESKTOP GEOMETRY ====================== */
-  const containerWidth = 1200;
-  const containerHeight = 830;
-  const boxWidth = 350;
-  const box1Left = (containerWidth - boxWidth) / 2;
-  const box1Top = 30;
-  const box2Left = containerWidth - 80 - boxWidth;
-  const box2Top = 430;
-  const box3Left = 80;
-  const box3Top = 430;
-  const boxes = [{ x: box1Left, y: box1Top }, { x: box2Left, y: box2Top }, { x: box3Left, y: box3Top }];
-  const circleCX = 600;
-  const circleCY = 471;
-  const circleR = 347;
-
-  const getArrowOnCircle = (targetX: number, targetY: number, side: "left" | "top" | "right") => {
-    let x = targetX;
-    let y = targetY;
-    if (side === "left") {
-      const dx = targetX - circleCX;
-      y = circleCY - Math.sqrt(Math.pow(circleR, 2) - Math.pow(dx, 2));
-    } else if (side === "top") {
-      const dy = targetY - circleCY;
-      x = circleCX + Math.sqrt(Math.pow(circleR, 2) - Math.pow(dy, 2));
-    } else if (side === "right") {
-      const dx = targetX - circleCX;
-      y = circleCY + Math.sqrt(Math.pow(circleR, 2) - Math.pow(dx, 2));
-    }
-    const angleRad = Math.atan2(y - circleCY, x - circleCX);
-    const rotation = (angleRad * 180) / Math.PI + 90;
-    return { x, y, rotation };
-  };
-  const arrows = [
-    getArrowOnCircle(box1Left, 0, "left"),
-    getArrowOnCircle(0, box2Top, "top"),
-    getArrowOnCircle(box3Left + boxWidth, 0, "right"),
-  ];
-
-  // --- INIT SCROLL ---
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      const container = scrollContainerRef.current;
-      if (container && container.firstElementChild) {
-        const firstCard = container.firstElementChild as HTMLElement;
-        const style = window.getComputedStyle(container);
-        const gap = parseFloat(style.gap) || 16;
-
-        visualCardWidthRef.current = firstCard.offsetWidth;
-        cardWidthRef.current = firstCard.offsetWidth + gap;
-        paddingLeftRef.current = parseFloat(style.paddingLeft) || 0;
-
-        const offset = getCenterOffset(container, visualCardWidthRef.current);
-
-        // Formula: (Padding + Index*Stride) - CenterOffset
-        container.scrollLeft = (paddingLeftRef.current + (cardWidthRef.current * START_INDEX)) - offset;
-      }
-    }, 50);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const checkInfiniteLoop = (container: HTMLElement) => {
-    const totalWidth = cardWidthRef.current;
-    const visualWidth = visualCardWidthRef.current;
-    const paddingLeft = paddingLeftRef.current;
-    if (!totalWidth) return;
-
-    const offset = getCenterOffset(container, visualWidth);
-    // Reverse Formula: (Scroll + Offset - Padding) / Stride
-    const rawIndex = Math.round((container.scrollLeft + offset - paddingLeft) / totalWidth);
-
-    if (rawIndex >= scrollData.length - 2) {
-      container.scrollLeft = (paddingLeft + (totalWidth * (rawIndex - steps.length))) - offset;
-    } else if (rawIndex <= 1) {
-      container.scrollLeft = (paddingLeft + (totalWidth * (rawIndex + steps.length))) - offset;
-    }
-  };
-
-  const glideTo = (targetX: number) => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
-
-    const startX = container.scrollLeft;
-    const distance = targetX - startX;
-    const duration = 300;
-    const startTime = performance.now();
-
-    isAnimatingRef.current = true;
-    container.style.overflowX = 'hidden';
-    container.style.scrollSnapType = 'none';
-
-    const animate = (currentTime: number) => {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const ease = easeOutQuart(progress);
-
-      container.scrollLeft = startX + (distance * ease);
-
-      if (progress < 1) {
-        rafRef.current = requestAnimationFrame(animate);
-      } else {
-        container.style.overflowX = 'auto';
-        isAnimatingRef.current = false;
-        rafRef.current = null;
-        checkInfiniteLoop(container);
-      }
-    };
-    rafRef.current = requestAnimationFrame(animate);
-  };
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    if (rafRef.current) {
-      cancelAnimationFrame(rafRef.current);
-      rafRef.current = null;
-      isAnimatingRef.current = false;
-    }
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.style.overflowX = 'auto';
-      scrollContainerRef.current.style.scrollSnapType = 'none';
-      checkInfiniteLoop(scrollContainerRef.current);
-    }
-    touchStartRef.current = e.touches[0].clientX;
-    touchStartTimeRef.current = performance.now();
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-
-    const touchEnd = e.changedTouches[0].clientX;
-    const touchTime = performance.now() - touchStartTimeRef.current;
-    const diff = touchStartRef.current - touchEnd;
-
-    // Refresh measurements
-    if (container.firstElementChild) {
-      const firstCard = container.firstElementChild as HTMLElement;
-      const style = window.getComputedStyle(container);
-      const gap = parseFloat(style.gap) || 16;
-      visualCardWidthRef.current = firstCard.offsetWidth;
-      cardWidthRef.current = firstCard.offsetWidth + gap;
-      paddingLeftRef.current = parseFloat(style.paddingLeft) || 0;
-    }
-
-    const totalWidth = cardWidthRef.current;
-    const visualWidth = visualCardWidthRef.current;
-    const paddingLeft = paddingLeftRef.current;
-
-    const offset = getCenterOffset(container, visualWidth);
-    const rawIndex = Math.round((container.scrollLeft + offset - paddingLeft) / totalWidth);
-
-    const isFlick = touchTime < 250 && Math.abs(diff) > 20;
-    let targetIndex = rawIndex;
-
-    const exactIndex = (container.scrollLeft + offset - paddingLeft) / totalWidth;
-
-    if (isFlick) {
-      if (diff > 0) targetIndex = Math.floor(exactIndex) + 1;
-      else targetIndex = Math.ceil(exactIndex) - 1;
-    } else {
-      if (diff > 0 && exactIndex > rawIndex) targetIndex = rawIndex + 1;
-      else if (diff < 0 && exactIndex < rawIndex) targetIndex = rawIndex - 1;
-    }
-
-    targetIndex = Math.max(0, Math.min(targetIndex, scrollData.length - 1));
-    glideTo((paddingLeft + (targetIndex * totalWidth)) - offset);
-  };
-
-  const handleScroll = () => {
-    if (!scrollContainerRef.current) return;
-    if (!isAnimatingRef.current) checkInfiniteLoop(scrollContainerRef.current);
-
-    const totalWidth = cardWidthRef.current || 1;
-    const visualWidth = visualCardWidthRef.current || totalWidth;
-    const paddingLeft = paddingLeftRef.current;
-
-    const offset = getCenterOffset(scrollContainerRef.current, visualWidth);
-
-    const rawIndex = Math.round((scrollContainerRef.current.scrollLeft + offset - paddingLeft) / totalWidth);
-
-    let visualStep = (rawIndex - START_INDEX);
-    visualStep = ((visualStep % steps.length) + steps.length) % steps.length;
-
-    if (visualStep !== currentStep) setCurrentStep(visualStep);
-  };
 
   return (
-    <section className="section-padding relative overflow-hidden">
-      <div className="container relative z-10">
-        <div className="text-center max-w-2xl mx-auto mb-8 lg:mb-12">
-          <span className="eyebrow eyebrow-center mb-4">The Swecircle loop</span>
-          <h2 className="font-display text-3xl md:text-5xl font-bold mb-6">How it works</h2>
-          <p className="text-lg text-muted-foreground">
+    <section className="section-padding">
+      <div className="container grid lg:grid-cols-12 gap-x-8 gap-y-10">
+        <div className="lg:col-span-4">
+          <h2 className="display-2">How it works</h2>
+          <p className="mt-5 text-lg text-muted-foreground max-w-sm">
             A simple cycle that helps students, reduces waste, and supports a great cause.
           </p>
         </div>
 
-        {/* Desktop XL ... (unchanged) */}
-        <div className="hidden xl:block relative mx-auto" style={{ width: containerWidth, height: containerHeight }}>
-          <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 1 }}>
-            <circle cx={circleCX} cy={circleCY} r={circleR} stroke="#0024a8" strokeWidth="4" fill="none" opacity="0.2" />
-          </svg>
-          <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 4 }}>
-            {arrows.map((arrow, i) => (
-              <g key={i} transform={`translate(${arrow.x}, ${arrow.y}) rotate(${arrow.rotation})`}>
-                <path d="M-8,-11 L14,0 L-8,11 L-8,-11 Z" fill="#0024a8" />
-              </g>
-            ))}
-          </svg>
-          {boxes.map((b, i) => {
-            const Icon = steps[i].icon;
-            return (
-              <div key={i} className="absolute card-warm text-center flex flex-col" style={{ left: b.x, top: b.y, width: boxWidth, zIndex: 2 }}>
-                <div className={`w-16 h-16 rounded-2xl ${steps[i].color} mx-auto mb-6 flex items-center justify-center`}>
-                  <Icon className="h-8 w-8" />
-                </div>
-                <span className="text-sm font-bold text-muted-foreground/60 mb-2">Step {i + 1}</span>
-                <h3 className="text-2xl font-bold mb-3">{steps[i].title}</h3>
-                <p className="text-muted-foreground mb-6">{steps[i].description}</p>
-                {steps[i].action.type === "link" ? (
-                  <a href={steps[i].action.to} className="mt-auto px-5 py-2 rounded-xl bg-primary/10 text-primary font-semibold hover:bg-primary/20 transition">Learn more →</a>
-                ) : (
-                  <button onClick={() => scrollToSection(steps[i].action.target)} className="mt-auto px-5 py-2 rounded-xl bg-primary/10 text-primary font-semibold hover:bg-primary/20 transition">Learn more →</button>
-                )}
-              </div>
-            );
-          })}
-        </div>
-
-        {/* MD/LG Layout (unchanged) */}
-        <div className="hidden md:flex xl:hidden justify-center gap-6 px-4">
+        <ol className="lg:col-span-8 border-b border-foreground">
           {steps.map((step, i) => {
-            const Icon = step.icon;
+            const content = (
+              <>
+                <span className="flex h-11 w-11 items-center justify-center rounded-full border border-foreground text-lg font-medium transition-colors group-hover:bg-warm group-hover:border-warm">
+                  {i + 1}
+                </span>
+                <span>
+                  <span className="block text-3xl md:text-[2.5rem] md:leading-none font-semibold tracking-tight">
+                    {step.title}
+                  </span>
+                  <span className="block mt-3 max-w-xl text-muted-foreground">{step.description}</span>
+                </span>
+                <ArrowRight className="hidden sm:block h-6 w-6 mt-2 transition-transform duration-200 group-hover:translate-x-1" />
+              </>
+            );
+            const rowClass = "group grid grid-cols-[2.75rem_1fr] sm:grid-cols-[2.75rem_1fr_auto] gap-x-5 md:gap-x-8 py-7 md:py-9";
+
             return (
-              <div key={i} className="flex-1 max-w-[350px]">
-                <div className="card-warm text-center flex flex-col h-full shadow-md border border-stone-100/50">
-                  <div className={`w-16 h-16 rounded-2xl ${step.color} mx-auto mb-6 flex items-center justify-center`}>
-                    <Icon className="h-8 w-8" />
-                  </div>
-                  <span className="text-sm font-bold text-muted-foreground/60 mb-2">Step {i + 1}</span>
-                  <h3 className="text-2xl font-bold mb-3">{step.title}</h3>
-                  <p className="text-muted-foreground mb-6">{step.description}</p>
-                  {step.action.type === "link" ? (
-                    <a href={step.action.to} className="mt-auto px-5 py-3 rounded-xl bg-primary/10 text-primary font-semibold hover:bg-primary/20 transition w-full block">Learn more →</a>
-                  ) : (
-                    <button onClick={() => scrollToSection(step.action.target)} className="mt-auto px-5 py-3 rounded-xl bg-primary/10 text-primary font-semibold hover:bg-primary/20 transition w-full block">Learn more →</button>
-                  )}
-                </div>
-              </div>
+              <li key={step.title} className="border-t border-foreground">
+                {step.scrollTo ? (
+                  <button
+                    type="button"
+                    onClick={() => document.getElementById(step.scrollTo)?.scrollIntoView({ behavior: "smooth" })}
+                    className={`${rowClass} w-full text-left`}
+                  >
+                    {content}
+                  </button>
+                ) : (
+                  <Link to={step.to} className={rowClass}>{content}</Link>
+                )}
+              </li>
             );
           })}
-        </div>
-
-        {/* MOBILE (Fixed width to max-w-[300px]) */}
-        <div className="md:hidden relative">
-          <div
-            ref={scrollContainerRef}
-            onScroll={handleScroll}
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
-            className="flex overflow-x-auto pb-8 gap-4 px-4 scrollbar-hide select-none"
-            style={{
-              scrollSnapType: 'none',
-              scrollbarWidth: "none",
-              msOverflowStyle: "none",
-              overscrollBehaviorX: "contain",
-              WebkitTapHighlightColor: "transparent",
-            }}
-          >
-            {scrollData.map((step, i) => {
-              const realStepNumber = steps.indexOf(step) + 1;
-              return (
-                <div
-                  key={`${step.title}-${i}`}
-                  // CHANGED: max-w-[350px] -> max-w-[300px]
-                  className="shrink-0 w-[75vw] max-w-[300px] transform-gpu"
-                  style={{ WebkitTapHighlightColor: "transparent" }}
-                >
-                  <div className="card-warm text-center flex flex-col h-full shadow-md border border-stone-100/50">
-                    <div className={`w-16 h-16 rounded-2xl ${step.color} mx-auto mb-6 flex items-center justify-center`}>
-                      <step.icon className="h-8 w-8" />
-                    </div>
-                    <span className="text-sm font-bold text-muted-foreground/60 mb-2">Step {realStepNumber}</span>
-                    <h3 className="text-2xl font-bold mb-3">{step.title}</h3>
-                    <p className="text-muted-foreground mb-6">{step.description}</p>
-                    {step.action.type === "link" ? (
-                      <a href={step.action.to} className="mt-auto px-5 py-3 rounded-xl bg-primary/10 text-primary font-semibold hover:bg-primary/20 transition w-full block">Learn more →</a>
-                    ) : (
-                      <button onClick={() => scrollToSection(step.action.target)} className="mt-auto px-5 py-3 rounded-xl bg-primary/10 text-primary font-semibold hover:bg-primary/20 transition w-full block">Learn more →</button>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-            <div className="w-4 shrink-0" />
-          </div>
-          <div className="flex justify-center gap-2 mt-2">
-            {steps.map((_, i) => (
-              <div
-                key={i}
-                className={`h-2 rounded-full transition-all duration-300 ${currentStep === i ? "w-8 bg-primary" : "w-2 bg-primary/20"
-                  }`}
-              />
-            ))}
-          </div>
-        </div>
+        </ol>
       </div>
     </section>
   );
 }
 
 const posts = [
-  { id: 1, img: pic1, caption: "" },
-  { id: 2, img: pic2, caption: "" },
-  { id: 3, img: pic3, caption: "" },
-  { id: 4, img: pic4, caption: "" },
-  { id: 5, img: pic5, caption: "" },
+  { img: pic1, alt: "Five students in a car park carrying a mirror, bags and a bin", span: "col-span-2 lg:col-span-7", position: "50% 70%" },
+  { img: pic5, alt: "A volunteer smiling in a storage corridor holding a stack of mugs", span: "col-span-2 lg:col-span-5", position: "50% 30%" },
+  { img: pic3, alt: "A volunteer pushing a bicycle through deep snow with a blue bag and stacked buckets", span: "lg:col-span-4", position: "50% 45%" },
+  { img: pic2, alt: "A volunteer in a storage area with a framed print and a white shelf", span: "lg:col-span-4", position: "50% 55%" },
+  { img: pic4, alt: "Five people indoors, one of them holding up a certificate", span: "col-span-2 sm:col-span-1 lg:col-span-4", position: "50% 28%" },
 ];
 
-
 export function CommunitySection() {
-  const { location } = useParams()
-  const isLund = (location || "uppsala").toLowerCase() === "lund"
-  const instaUrl = isLund ? "https://www.instagram.com/swecirclelund/" : "https://www.instagram.com/swecircle"
-  const instaHandle = isLund ? "@swecirclelund" : "@swecircle"
+  const city = useCity();
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const isOpen = activeIndex !== null;
 
-  const [isDesktop, setIsDesktop] = useState(false)
-  const [isOpen, setIsOpen] = useState(false)
-  const [activeIndex, setActiveIndex] = useState(0)
+  const step = (delta: number) =>
+    setActiveIndex((i) => (i === null ? i : (i + delta + posts.length) % posts.length));
 
   useEffect(() => {
-    // Match your breakpoint: you switch to grid at lg.
-    const mql = window.matchMedia("(min-width: 1024px)")
-    const update = () => setIsDesktop(mql.matches)
-    update()
-    mql.addEventListener("change", update)
-    return () => mql.removeEventListener("change", update)
-  }, [])
-
-  useEffect(() => {
-    if (!isOpen) return
-    const prevOverflow = document.body.style.overflow
-    document.body.style.overflow = "hidden"
+    if (!isOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
 
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setIsOpen(false)
-      if (e.key === "ArrowLeft") setActiveIndex((i) => (i - 1 + posts.length) % posts.length)
-      if (e.key === "ArrowRight") setActiveIndex((i) => (i + 1) % posts.length)
-    }
-    window.addEventListener("keydown", onKeyDown)
+      if (e.key === "Escape") setActiveIndex(null);
+      if (e.key === "ArrowLeft") step(-1);
+      if (e.key === "ArrowRight") step(1);
+    };
+    window.addEventListener("keydown", onKeyDown);
     return () => {
-      window.removeEventListener("keydown", onKeyDown)
-      document.body.style.overflow = prevOverflow
-    }
-  }, [isOpen])
-
-  const openAt = (idx: number) => {
-    if (!isDesktop) return // desktop-only
-    setActiveIndex(idx)
-    setIsOpen(true)
-  }
-
-  const prev = () => setActiveIndex((i) => (i - 1 + posts.length) % posts.length)
-  const next = () => setActiveIndex((i) => (i + 1) % posts.length)
+      window.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [isOpen]);
 
   return (
-    <section className="py-16 md:py-24 bg-white overflow-hidden">
-      <div className="container px-4 md:px-6">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 md:mb-12 gap-6">
+    <section className="pb-20 md:pb-28">
+      <div className="container">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 mb-8 md:mb-10">
           <div className="max-w-2xl">
-            <span className="eyebrow mb-4">
-              Community
-            </span>
-            <h2 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-4">
-              Swecircle in Action
-            </h2>
-            <p className="text-lg text-muted-foreground">
-              See what we're up to behind the scenes from our busy sales to collecting donations.
+            <h2 className="display-2">Swecircle in action</h2>
+            <p className="mt-5 text-lg text-muted-foreground">
+              Behind the scenes, from our busy sales to collecting donations.
             </p>
           </div>
-          {/* Keep your Insta button: you only wanted picture links removed */}
           <a
-            href={instaUrl}
+            href={city.instagramUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden md:inline-flex items-center gap-2 px-6 py-3 rounded-full bg-stone-100 text-foreground font-semibold hover:bg-stone-200 transition-colors group"
+            className="link-rule inline-flex items-center gap-2 text-lg font-medium shrink-0"
           >
-            <Instagram className="w-5 h-5" />
-            <span>{instaHandle}</span>
-            <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+            <Instagram className="h-5 w-5" />
+            {city.instagramHandle}
           </a>
         </div>
 
-        {/* FEED (mobile scroll, desktop grid) */}
-        <div className="
-          flex gap-4 overflow-x-auto pb-8 -mx-4 px-4 scrollbar-hide
-          lg:grid lg:grid-cols-5 lg:gap-6 lg:overflow-visible lg:pb-0 lg:mx-0 lg:px-0
-        ">
-          {posts.map((post, idx) => (
-            <div
-              key={post.id}
-              role={isDesktop ? "button" : undefined}
-              tabIndex={isDesktop ? 0 : -1}
-              onClick={() => openAt(idx)}
-              onKeyDown={(e) => {
-                if (!isDesktop) return
-                if (e.key === "Enter" || e.key === " ") openAt(idx)
-              }}
-              className={[
-                "relative group block aspect-square rounded-3xl overflow-hidden bg-stone-100",
-                "shrink-0 w-[280px] lg:w-auto",
-                isDesktop ? "cursor-zoom-in" : "cursor-default",
-              ].join(" ")}
+        <div className="grid grid-cols-2 lg:grid-cols-12 lg:grid-rows-[33rem_28rem] gap-1.5">
+          {posts.map((post, i) => (
+            <button
+              key={post.img}
+              type="button"
+              onClick={() => setActiveIndex(i)}
+              aria-label={`Enlarge photo: ${post.alt}`}
+              className={`group relative overflow-hidden bg-secondary cursor-zoom-in aspect-[4/3] sm:aspect-[3/2] lg:aspect-auto ${post.span}`}
             >
-              {/* UPDATED IMAGE TAG */}
-              {idx === 3 ? (
-                <>
-                  {/* The blurred grey background matching your lightbox */}
-                  <div className="absolute inset-0 bg-black/20 backdrop-blur-md z-0" />
-                  {/* The uncropped image */}
-                  <img
-                    src={post.img}
-                    alt="Community photo"
-                    className="relative z-10 w-full h-full object-contain transition-transform duration-700 lg:group-hover:scale-105"
-                  />
-                </>
-              ) : (
-                <img
-                  src={post.img}
-                  alt="Community photo"
-                  className="w-full h-full object-cover transition-transform duration-700 lg:group-hover:scale-105"
-                />
-              )}
-
-              <div className="absolute inset-0 bg-black/0 transition-colors duration-300 lg:group-hover:bg-black/10" />
-
-              {/* Caption Tag kept */}
-              {post.caption && (
-                <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                  <div className="bg-white/95 backdrop-blur-sm p-3 rounded-xl text-sm font-medium text-foreground shadow-lg">
-                    <p className="line-clamp-2">{post.caption}</p>
-                  </div>
-                </div>
-              )}
-            </div>
+              <img
+                src={post.img}
+                alt=""
+                loading="lazy"
+                style={{ objectPosition: post.position }}
+                className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+              />
+            </button>
           ))}
-        </div>
-
-        {/* Mobile Button unchanged */}
-        <div className="mt-4 md:hidden">
-          <a
-            href={instaUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 w-full px-6 py-3 rounded-xl bg-stone-100 text-foreground font-semibold hover:bg-stone-200 transition-colors"
-          >
-            <Instagram className="w-5 h-5" />
-            <span>Follow {instaHandle}</span>
-          </a>
         </div>
       </div>
 
-      {/* Desktop Lightbox */}
-      {isOpen && isDesktop && (
+      {activeIndex !== null && (
         <div
-          className="fixed inset-0 z-[9999] bg-black/50 backdrop-blur-md flex items-center justify-center p-6"
-          onClick={() => setIsOpen(false)}
+          className="fixed inset-0 z-[9999] bg-foreground/95 flex items-center justify-center p-4 md:p-10 animate-fade-in"
+          onClick={() => setActiveIndex(null)}
           aria-modal="true"
           role="dialog"
-          style={{ backdropFilter: "blur(12px)" }}
         >
-          <div
-            className="relative w-full max-w-5xl"
+          <img
+            src={posts[activeIndex].img}
+            alt={posts[activeIndex].alt}
+            className="max-h-full max-w-full object-contain"
             onClick={(e) => e.stopPropagation()}
+            draggable={false}
+          />
+          <button type="button" aria-label="Close" onClick={() => setActiveIndex(null)} className="absolute top-4 right-4 p-2 text-white">
+            <X className="h-7 w-7" />
+          </button>
+          <button
+            type="button"
+            aria-label="Previous photo"
+            onClick={(e) => { e.stopPropagation(); step(-1); }}
+            className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 p-2 text-white"
           >
-            <button
-              type="button"
-              onClick={() => setIsOpen(false)}
-              className="absolute -top-3 -right-3 bg-white/90 hover:bg-white text-foreground rounded-full p-2 shadow aria-label='Close'"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <button
-              type="button"
-              onClick={prev}
-              className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-foreground rounded-full p-2 shadow aria-label='Previous'"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
-            <button
-              type="button"
-              onClick={next}
-              className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-foreground rounded-full p-2 shadow aria-label='Next'"
-            >
-              <ChevronRight className="w-6 h-6" />
-            </button>
-
-            <div className="rounded-3xl overflow-hidden bg-black/20 shadow-2xl">
-              <img
-                src={posts[activeIndex].img}
-                alt="Enlarged community photo"
-                className="w-full max-h-[78vh] object-contain bg-black/20"
-                draggable={false}
-              />
-            </div>
-          </div>
+            <ChevronLeft className="h-8 w-8" />
+          </button>
+          <button
+            type="button"
+            aria-label="Next photo"
+            onClick={(e) => { e.stopPropagation(); step(1); }}
+            className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 p-2 text-white"
+          >
+            <ChevronRight className="h-8 w-8" />
+          </button>
         </div>
       )}
     </section>
-  )
+  );
 }
 
-export function RecentMediaSection() {
-  const [currentStep, setCurrentStep] = useState(0)
-  const scrollContainerRef = useRef<HTMLDivElement>(null)
-  const cardWidthRef = useRef(0)
-  const visualCardWidthRef = useRef(0)
-  const paddingLeftRef = useRef(0)
-
-  const isAnimatingRef = useRef(false)
-  const rafRef = useRef<number | null>(null)
-  const touchStartRef = useRef(0)
-  const touchStartTimeRef = useRef(0)
-
-  const mediaItems = [
-    {
-      publisher: "Uppsala University",
-      date: "March 2026",
-      title: "Where student life meets sustainability and social impact",
-      url: "https://www.uu.se/en/news/2026/2026-03-24-where-student-life-meets-sustainability-and-social-impact",
-      icon: Newspaper,
-      iconColor: "text-[#990000]",
-      iconBg: "bg-[#990000]/10",
-      iconHoverBg: "group-hover:bg-[#990000]/20",
-      action: "Read article"
-    },
-    {
-      publisher: "Ergo",
-      date: "March 2026",
-      title: "Students turn abandoned items into charity",
-      url: "https://ergo.nu/reportage/20260320-students-turn-abandoned-items-into-charity",
-      icon: Newspaper,
-      iconColor: "text-primary",
-      iconBg: "bg-primary/10",
-      iconHoverBg: "group-hover:bg-primary/20",
-      action: "Read article"
-    },
-    {
-      publisher: "RBU Uppsala",
-      date: "March 2026",
-      title: "Årsmöte 2026 avklarat, nygammal styrelse och donation från Rackis för barn!",
-      url: "https://uppsala.rbu.se/2026/03/20/arsmote-2026-avklarat-nygammal-styrelse-och-donation-fran-rackis-for-barn/",
-      icon: Heart,
-      iconColor: "text-warm",
-      iconBg: "bg-warm/10",
-      iconHoverBg: "group-hover:bg-warm/20",
-      action: "Read article"
-    },
-    {
-      publisher: "SVT Nyheter Uppsala",
-      date: "February 2026",
-      title: "Här säljer de vidare studenternas gamla lakan",
-      url: "https://www.svt.se/nyheter/lokalt/uppsala/sa-loste-studenterna-flyttsvinnet",
-      icon: Tv,
-      iconColor: "text-[#E13241]",
-      iconBg: "bg-[#E13241]/10",
-      iconHoverBg: "group-hover:bg-[#E13241]/20",
-      action: "Watch video"
-    },
-    {
-      publisher: "Uppsala Nya Tidning",
-      date: "January 2026",
-      title: "Räckis för barn öppnar second hand-butik i Uppsala",
-      url: "https://www.unt.se/nyheter/uppsala/artikel/rackis-for-barn-oppnar-second-hand-butik-i-uppsala/jn11gonl",
-      icon: Newspaper,
-      iconColor: "text-primary",
-      iconBg: "bg-primary/10",
-      iconHoverBg: "group-hover:bg-primary/20",
-      action: "Read article"
-    },
-    {
-      publisher: "Sveriges Radio P4 Uppland",
-      date: "January 2026",
-      title: "Utbytesstudenter säljer prylar och skänker pengarna till barn",
-      url: "https://www.sverigesradio.se/artikel/utbytesstudenter-skanker-pengar-till-barncancerfonden",
-      icon: Radio,
-      iconColor: "text-warm",
-      iconBg: "bg-warm/10",
-      iconHoverBg: "group-hover:bg-warm/20",
-      action: "Listen now"
-    }
-  ]
-
-  const scrollData = [
-    mediaItems[mediaItems.length - 2],
-    mediaItems[mediaItems.length - 1],
-    ...mediaItems,
-    mediaItems[0],
-    mediaItems[1]
-  ]
-
-  const START_INDEX = 2
-
-  const getCenterOffset = (container: HTMLElement, visualWidth: number) => {
-    const containerWidth = container.clientWidth
-    return (containerWidth - visualWidth) / 2
-  }
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      const container = scrollContainerRef.current
-      if (container && container.firstElementChild) {
-        const firstCard = container.firstElementChild as HTMLElement
-        const style = window.getComputedStyle(container)
-        const gap = parseFloat(style.gap) || 16
-
-        visualCardWidthRef.current = firstCard.offsetWidth
-        cardWidthRef.current = firstCard.offsetWidth + gap
-        paddingLeftRef.current = parseFloat(style.paddingLeft) || 0
-
-        const offset = getCenterOffset(container, visualCardWidthRef.current)
-        container.scrollLeft = paddingLeftRef.current + (cardWidthRef.current * START_INDEX) - offset
-      }
-    }, 50)
-    return () => clearTimeout(timer)
-  }, [])
-
-  const checkInfiniteLoop = (container: HTMLElement) => {
-    const totalWidth = cardWidthRef.current
-    const visualWidth = visualCardWidthRef.current
-    const paddingLeft = paddingLeftRef.current
-
-    if (!totalWidth) return
-
-    const offset = getCenterOffset(container, visualWidth)
-    const rawIndex = Math.round((container.scrollLeft + offset - paddingLeft) / totalWidth)
-
-    if (rawIndex >= scrollData.length - 2) {
-      container.scrollLeft = paddingLeft + (totalWidth * (rawIndex - mediaItems.length)) - offset
-    } else if (rawIndex <= 1) {
-      container.scrollLeft = paddingLeft + (totalWidth * (rawIndex + mediaItems.length)) - offset
-    }
-  }
-
-  const glideTo = (targetX: number) => {
-    const container = scrollContainerRef.current
-    if (!container) return
-
-    if (rafRef.current) cancelAnimationFrame(rafRef.current)
-
-    const startX = container.scrollLeft
-    const distance = targetX - startX
-    const duration = 300
-    const startTime = performance.now()
-
-    isAnimatingRef.current = true
-    container.style.overflowX = "hidden"
-    container.style.scrollSnapType = "none"
-
-    const animate = (currentTime: number) => {
-      const elapsed = currentTime - startTime
-      const progress = Math.min(elapsed / duration, 1)
-      const ease = easeOutQuart(progress)
-
-      container.scrollLeft = startX + distance * ease
-
-      if (progress < 1) {
-        rafRef.current = requestAnimationFrame(animate)
-      } else {
-        container.style.overflowX = "auto"
-        isAnimatingRef.current = false
-        rafRef.current = null
-        checkInfiniteLoop(container)
-      }
-    }
-
-    rafRef.current = requestAnimationFrame(animate)
-  }
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    if (rafRef.current) {
-      cancelAnimationFrame(rafRef.current)
-      rafRef.current = null
-      isAnimatingRef.current = false
-    }
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.style.overflowX = "auto"
-      scrollContainerRef.current.style.scrollSnapType = "none"
-      checkInfiniteLoop(scrollContainerRef.current)
-    }
-    touchStartRef.current = e.touches[0].clientX
-    touchStartTimeRef.current = performance.now()
-  }
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    const container = scrollContainerRef.current
-    if (!container) return
-
-    const touchEnd = e.changedTouches[0].clientX
-    const touchTime = performance.now() - touchStartTimeRef.current
-    const diff = touchStartRef.current - touchEnd
-
-    if (container.firstElementChild) {
-      const firstCard = container.firstElementChild as HTMLElement
-      const style = window.getComputedStyle(container)
-      const gap = parseFloat(style.gap) || 16
-      visualCardWidthRef.current = firstCard.offsetWidth
-      cardWidthRef.current = firstCard.offsetWidth + gap
-      paddingLeftRef.current = parseFloat(style.paddingLeft) || 0
-    }
-
-    const totalWidth = cardWidthRef.current
-    const visualWidth = visualCardWidthRef.current
-    const paddingLeft = paddingLeftRef.current
-    const offset = getCenterOffset(container, visualWidth)
-
-    const exactIndex = (container.scrollLeft + offset - paddingLeft) / totalWidth
-    const rawIndex = Math.round(exactIndex)
-    const isFlick = touchTime < 250 && Math.abs(diff) > 20
-
-    let targetIndex = rawIndex
-
-    if (isFlick) {
-      if (diff > 0) targetIndex = Math.floor(exactIndex) + 1
-      else targetIndex = Math.ceil(exactIndex) - 1
-    } else {
-      if (diff > 0 && exactIndex > rawIndex) targetIndex = rawIndex + 1
-      else if (diff < 0 && exactIndex < rawIndex) targetIndex = rawIndex - 1
-    }
-
-    targetIndex = Math.max(0, Math.min(targetIndex, scrollData.length - 1))
-    glideTo(paddingLeft + (targetIndex * totalWidth) - offset)
-  }
-
-  const handleScroll = () => {
-    if (!scrollContainerRef.current) return
-    if (!isAnimatingRef.current) checkInfiniteLoop(scrollContainerRef.current)
-
-    const totalWidth = cardWidthRef.current || 1
-    const visualWidth = visualCardWidthRef.current || totalWidth
-    const paddingLeft = paddingLeftRef.current
-    const offset = getCenterOffset(scrollContainerRef.current, visualWidth)
-
-    const rawIndex = Math.round((scrollContainerRef.current.scrollLeft + offset - paddingLeft) / totalWidth)
-
-    let visualStep = rawIndex - START_INDEX
-    visualStep = ((visualStep % mediaItems.length) + mediaItems.length) % mediaItems.length
-
-    if (visualStep !== currentStep) {
-      setCurrentStep(visualStep)
-    }
-  }
-
+export function StatsCounterSection() {
   return (
-    <section className="py-12 md:py-16 bg-gradient-to-b from-stone-50 to-white relative overflow-hidden">
-      {/* Decorative blob */}
-      <div className="absolute top-0 right-10 w-32 h-32 bg-primary/5 blob"></div>
-
-      <div className="container px-4 relative z-10">
-        <div className="text-center mb-8">
-          <span className="eyebrow eyebrow-center mb-3">
-            In the news
-          </span>
-          <h2 className="font-display text-2xl md:text-4xl font-bold text-foreground">
-            Recent media coverage
-          </h2>
-        </div>
-
-        {/* MOBILE SLIDER */}
-        <div className="md:hidden relative">
-          <div
-            ref={scrollContainerRef}
-            onScroll={handleScroll}
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
-            className="flex overflow-x-auto pb-4 gap-4 px-4 scrollbar-hide select-none"
-            style={{
-              scrollSnapType: "none",
-              scrollbarWidth: "none",
-              msOverflowStyle: "none",
-              overscrollBehaviorX: "contain",
-              WebkitTapHighlightColor: "transparent",
-            }}
-          >
-            {scrollData.map((media, i) => {
-              const Icon = media.icon
-              return (
-                <div
-                  key={`${media.title}-${i}`}
-                  className="shrink-0 w-[85vw] max-w-[320px] transform-gpu"
-                  style={{ WebkitTapHighlightColor: "transparent" }}
-                >
-                  <a
-                    href={media.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group card-warm flex flex-col sm:flex-row items-start gap-4 hover:shadow-lg hover:border-primary/20 transition-all duration-300 h-full p-5"
-                  >
-                    <div className={`shrink-0 w-12 h-12 rounded-xl ${media.iconBg} flex items-center justify-center ${media.iconHoverBg} transition-colors`}>
-                      <Icon className={`h-6 w-6 ${media.iconColor}`} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-semibold text-muted-foreground mb-1">{media.date}</p>
-                      <h3 className="font-bold text-foreground mb-1 group-hover:text-primary transition-colors leading-tight">
-                        {media.publisher}
-                      </h3>
-                      <p className="text-sm text-muted-foreground line-clamp-2 mb-2">{media.title}</p>
-                      <span className="inline-flex items-center text-sm font-semibold text-primary group-hover:gap-1 transition-all">
-                        {media.action}
-                        <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                      </span>
-                    </div>
-                  </a>
-                </div>
-              )
-            })}
-          </div>
-
-          {/* Dots Indicator */}
-          <div className="flex justify-center gap-2 mt-4">
-            {mediaItems.map((_, i) => (
-              <div
-                key={i}
-                className={`h-2 rounded-full transition-all duration-300 ${currentStep === i ? "w-8 bg-primary" : "w-2 bg-primary/20"
-                  }`}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* DESKTOP GRID */}
-        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto">
-          {mediaItems.map((media, i) => {
-            const Icon = media.icon
-            return (
-              <a
-                key={i}
-                href={media.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group card-warm flex items-start gap-4 hover:shadow-lg hover:border-primary/20 transition-all duration-300 animate-fade-up p-5"
-                style={{ animationDelay: `${i * 100}ms` }}
-              >
-                <div className={`shrink-0 w-12 h-12 rounded-xl ${media.iconBg} flex items-center justify-center ${media.iconHoverBg} transition-colors`}>
-                  <Icon className={`h-6 w-6 ${media.iconColor}`} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs font-semibold text-muted-foreground mb-1">{media.date}</p>
-                  <h3 className="font-bold text-foreground mb-1 group-hover:text-primary transition-colors leading-tight">
-                    {media.publisher}
-                  </h3>
-                  <p className="text-sm text-muted-foreground line-clamp-2 mb-2">{media.title}</p>
-                  <span className="inline-flex items-center text-sm font-semibold text-primary group-hover:gap-1 transition-all">
-                    {media.action}
-                    <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                  </span>
-                </div>
-              </a>
-            )
-          })}
-        </div>
-
-      </div>
-    </section>
-  )
-}
-
-
-export function WhyChooseUsSection() {
-  const [currentStep, setCurrentStep] = useState(0);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const cardWidthRef = useRef(0);
-  const visualCardWidthRef = useRef(0);
-  const paddingLeftRef = useRef(0);
-  const isAnimatingRef = useRef(false);
-  const rafRef = useRef<number | null>(null);
-  const touchStartRef = useRef(0);
-  const touchStartTimeRef = useRef(0);
-
-  const benefits = [
-    {
-      icon: Home,
-      title: "Easy move-in",
-      description:
-        "Shop directly at student housing so you can get what you need without extra trips around town."
-    },
-    {
-      icon: Recycle,
-      title: "Better for the planet",
-      description:
-        "Donated items get used again instead of being thrown away, which means less waste and more value for everyone."
-    },
-    {
-      icon: Heart,
-      title: "Supports a good cause",
-      description:
-        "All profits go to RBU, so your essentials support children and families in need."
-    },
-    {
-      icon: ShoppingBag,
-      title: "Affordable for students",
-      description:
-        "Affordable basics and quality finds, so you can set up your room without spending a fortune."
-    },
-    {
-      icon: Users,
-      title: "Student-run",
-      description:
-        "We know the move-in stress and the move-out chaos, so we focus on what actually helps."
-    },
-    {
-      icon: Bike,
-      title: "A bit of everything",
-      description:
-        "From bedsheets to bikes, you can find practical essentials and a few great surprises too."
-    }
-  ];
-
-  const scrollData = [benefits[benefits.length - 2], benefits[benefits.length - 1], ...benefits, benefits[0], benefits[1]];
-  const START_INDEX = 2;
-
-  const getCenterOffset = (container: HTMLElement, visualWidth: number) => {
-    const containerWidth = container.clientWidth;
-    return (containerWidth - visualWidth) / 2;
-  };
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      const container = scrollContainerRef.current;
-      if (container && container.firstElementChild) {
-        const firstCard = container.firstElementChild as HTMLElement;
-        const style = window.getComputedStyle(container);
-        const gap = parseFloat(style.gap) || 16;
-
-        visualCardWidthRef.current = firstCard.offsetWidth;
-        cardWidthRef.current = firstCard.offsetWidth + gap;
-        paddingLeftRef.current = parseFloat(style.paddingLeft) || 0;
-
-        const offset = getCenterOffset(container, visualCardWidthRef.current);
-        // Padding fix applied
-        container.scrollLeft = (paddingLeftRef.current + (cardWidthRef.current * START_INDEX)) - offset;
-      }
-    }, 50);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const checkInfiniteLoop = (container: HTMLElement) => {
-    const totalWidth = cardWidthRef.current;
-    const visualWidth = visualCardWidthRef.current;
-    const paddingLeft = paddingLeftRef.current;
-    if (!totalWidth) return;
-
-    const offset = getCenterOffset(container, visualWidth);
-    const rawIndex = Math.round((container.scrollLeft + offset - paddingLeft) / totalWidth);
-
-    if (rawIndex >= scrollData.length - 2) {
-      container.scrollLeft = (paddingLeft + (totalWidth * (rawIndex - benefits.length))) - offset;
-    }
-    else if (rawIndex <= 1) {
-      container.scrollLeft = (paddingLeft + (totalWidth * (rawIndex + benefits.length))) - offset;
-    }
-  };
-
-  const glideTo = (targetX: number) => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
-
-    const startX = container.scrollLeft;
-    const distance = targetX - startX;
-    const duration = 300;
-    const startTime = performance.now();
-
-    isAnimatingRef.current = true;
-    container.style.overflowX = 'hidden';
-    container.style.scrollSnapType = 'none';
-
-    const animate = (currentTime: number) => {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const ease = easeOutQuart(progress);
-
-      container.scrollLeft = startX + (distance * ease);
-
-      if (progress < 1) {
-        rafRef.current = requestAnimationFrame(animate);
-      } else {
-        container.style.overflowX = 'auto';
-        isAnimatingRef.current = false;
-        rafRef.current = null;
-        checkInfiniteLoop(container);
-      }
-    };
-    rafRef.current = requestAnimationFrame(animate);
-  };
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    if (rafRef.current) {
-      cancelAnimationFrame(rafRef.current);
-      rafRef.current = null;
-      isAnimatingRef.current = false;
-    }
-
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.style.overflowX = 'auto';
-      scrollContainerRef.current.style.scrollSnapType = 'none';
-      checkInfiniteLoop(scrollContainerRef.current);
-    }
-
-    touchStartRef.current = e.touches[0].clientX;
-    touchStartTimeRef.current = performance.now();
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-
-    const touchEnd = e.changedTouches[0].clientX;
-    const touchTime = performance.now() - touchStartTimeRef.current;
-    const diff = touchStartRef.current - touchEnd;
-
-    if (container.firstElementChild) {
-      const firstCard = container.firstElementChild as HTMLElement;
-      const style = window.getComputedStyle(container);
-      const gap = parseFloat(style.gap) || 16;
-      visualCardWidthRef.current = firstCard.offsetWidth;
-      cardWidthRef.current = firstCard.offsetWidth + gap;
-      paddingLeftRef.current = parseFloat(style.paddingLeft) || 0;
-    }
-
-    const totalWidth = cardWidthRef.current;
-    const visualWidth = visualCardWidthRef.current;
-    const paddingLeft = paddingLeftRef.current;
-
-    const offset = getCenterOffset(container, visualWidth);
-    const exactIndex = (container.scrollLeft + offset - paddingLeft) / totalWidth;
-    const rawIndex = Math.round(exactIndex);
-
-    const isFlick = touchTime < 250 && Math.abs(diff) > 20;
-
-    let targetIndex = rawIndex;
-    if (isFlick) {
-      if (diff > 0) targetIndex = Math.floor(exactIndex) + 1;
-      else targetIndex = Math.ceil(exactIndex) - 1;
-    } else {
-      if (diff > 0 && exactIndex > rawIndex) targetIndex = rawIndex + 1;
-      else if (diff < 0 && exactIndex < rawIndex) targetIndex = rawIndex - 1;
-    }
-
-    targetIndex = Math.max(0, Math.min(targetIndex, scrollData.length - 1));
-    glideTo((paddingLeft + (targetIndex * totalWidth)) - offset);
-  };
-
-  const handleScroll = () => {
-    if (!scrollContainerRef.current) return;
-    if (!isAnimatingRef.current) checkInfiniteLoop(scrollContainerRef.current);
-
-    const totalWidth = cardWidthRef.current || 1;
-    const visualWidth = visualCardWidthRef.current || totalWidth;
-    const paddingLeft = paddingLeftRef.current;
-
-    const offset = getCenterOffset(scrollContainerRef.current, visualWidth);
-    const rawIndex = Math.round((scrollContainerRef.current.scrollLeft + offset - paddingLeft) / totalWidth);
-
-    let visualStep = (rawIndex - START_INDEX);
-    visualStep = ((visualStep % benefits.length) + benefits.length) % benefits.length;
-
-    if (visualStep !== currentStep) setCurrentStep(visualStep);
-  };
-
-  return (
-    <section className="section-padding bg-section-warm overflow-hidden">
-      <div className="container">
-        <div className="text-center max-w-2xl mx-auto mb-10 lg:mb-16">
-          <span className="eyebrow eyebrow-center mb-4">Why Swecircle</span>
-          <h2 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-6">
-            What makes Swecircle unique?
-          </h2>
-          <p className="text-lg text-muted-foreground">
-            More than just a second-hand store.
+    <section className="bg-primary text-primary-foreground overflow-hidden">
+      <div className="container grid lg:grid-cols-12 items-center gap-x-8 gap-y-10 pt-20 lg:py-0">
+        <div className="lg:col-span-5">
+          <p className="text-xl font-medium mb-4">Our impact so far</p>
+          <h2 className="display-1">Small items, real difference</h2>
+          <p className="mt-8 max-w-md border-t border-white/35 pt-4 text-lg leading-snug text-white/85">
+            <a
+              href="https://enlight-eu.org/university-about-us/news-events/158-news/1791-student-led-change-enlight-celebrating-ideas-that-make-a-difference"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link-rule block text-xl font-semibold tracking-tight text-warm"
+            >
+              Winner of the ENLIGHT Sustainability Award 2026
+            </a>
+            An award from ENLIGHT, a European university alliance that includes Uppsala University.
           </p>
         </div>
 
-        <div className="md:hidden relative">
-          <div
-            ref={scrollContainerRef}
-            onScroll={handleScroll}
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
-            className="flex overflow-x-auto pb-8 gap-4 px-4 scrollbar-hide select-none"
-            style={{
-              scrollSnapType: 'none',
-              scrollbarWidth: "none",
-              msOverflowStyle: "none",
-              overscrollBehaviorX: "contain",
-              WebkitTapHighlightColor: "transparent",
-            }}
-          >
-            {scrollData.map((benefit, i) => (
-              <div
-                key={`${benefit.title}-${i}`}
-                // CHANGED: max-w-[350px] -> max-w-[300px] to match About page style
-                className="shrink-0 w-[75vw] max-w-[300px] transform-gpu"
-                style={{ WebkitTapHighlightColor: "transparent" }}
-              >
-                <div className="h-full p-6 rounded-2xl bg-card/80 backdrop-blur border border-border flex flex-col items-center text-center shadow-sm">
-                  <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
-                    <benefit.icon className="h-7 w-7 text-primary" />
-                  </div>
-                  <h3 className="text-xl font-bold text-foreground mb-2">{benefit.title}</h3>
-                  <p className="text-muted-foreground">{benefit.description}</p>
-                </div>
-              </div>
-            ))}
-            <div className="w-4 shrink-0" />
+        <div className="lg:col-span-7 relative h-[30rem] sm:h-[36rem] lg:h-[42rem]">
+          <div className="sticker absolute -right-8 -bottom-16 min-[1400px]:-right-6 min-[1400px]:-bottom-20 w-[23rem] sm:w-[28rem] min-[1400px]:w-[34rem]">
+            <p>
+              <span className="block text-7xl sm:text-[5.5rem] min-[1400px]:text-[6.5rem] font-semibold tracking-tighter leading-none">150 000</span>
+              <span className="block mt-3 text-xl min-[1400px]:text-2xl font-medium leading-tight">SEK+ donated<br />to charity</span>
+            </p>
           </div>
-          <div className="flex justify-center gap-2 mt-2">
-            {benefits.map((_, i) => (
-              <div
-                key={i}
-                className={`h-2 rounded-full transition-all duration-300 ${currentStep === i ? "w-8 bg-primary" : "w-2 bg-primary/20"
-                  }`}
-              />
-            ))}
+          <div className="sticker absolute left-0 top-0 lg:top-8 min-[1400px]:left-[6.5rem] min-[1400px]:top-16 w-[47%] sm:w-44 min-[1400px]:w-56 bg-white text-foreground">
+            <p>
+              <span className="block text-3xl sm:text-4xl min-[1400px]:text-5xl font-semibold tracking-tighter leading-none">1 000+</span>
+              <span className="block mt-2 text-sm sm:text-base min-[1400px]:text-lg font-medium leading-tight">students<br />helped</span>
+            </p>
+          </div>
+          <div className="sticker absolute right-0 top-0 lg:top-8 min-[1400px]:right-auto min-[1400px]:left-0 min-[1400px]:top-auto min-[1400px]:bottom-8 w-[47%] sm:w-44 min-[1400px]:w-56 border border-white bg-primary text-primary-foreground">
+            <p>
+              <span className="block text-3xl sm:text-4xl min-[1400px]:text-5xl font-semibold tracking-tighter leading-none">200 000</span>
+              <span className="block mt-2 text-sm sm:text-base min-[1400px]:text-lg font-medium leading-tight">SEK+<br />in sales</span>
+            </p>
           </div>
         </div>
+      </div>
+    </section>
+  );
+}
 
-        <div className="hidden md:grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+const mediaItems = [
+  {
+    publisher: "Uppsala University",
+    date: "March 2026",
+    title: "Where student life meets sustainability and social impact",
+    url: "https://www.uu.se/en/news/2026/2026-03-24-where-student-life-meets-sustainability-and-social-impact",
+    action: "Read article",
+    lang: "en",
+  },
+  {
+    publisher: "Ergo",
+    date: "March 2026",
+    title: "Students turn abandoned items into charity",
+    url: "https://ergo.nu/reportage/20260320-students-turn-abandoned-items-into-charity",
+    action: "Read article",
+    lang: "en",
+  },
+  {
+    publisher: "RBU Uppsala",
+    date: "March 2026",
+    title: "Årsmöte 2026 avklarat, nygammal styrelse och donation från Rackis för barn!",
+    url: "https://uppsala.rbu.se/2026/03/20/arsmote-2026-avklarat-nygammal-styrelse-och-donation-fran-rackis-for-barn/",
+    action: "Read article",
+    lang: "sv",
+  },
+  {
+    publisher: "SVT Nyheter Uppsala",
+    date: "February 2026",
+    title: "Här säljer de vidare studenternas gamla lakan",
+    url: "https://www.svt.se/nyheter/lokalt/uppsala/sa-loste-studenterna-flyttsvinnet",
+    action: "Watch video",
+    lang: "sv",
+  },
+  {
+    publisher: "Uppsala Nya Tidning",
+    date: "January 2026",
+    title: "Räckis för barn öppnar second hand-butik i Uppsala",
+    url: "https://www.unt.se/nyheter/uppsala/artikel/rackis-for-barn-oppnar-second-hand-butik-i-uppsala/jn11gonl",
+    action: "Read article",
+    lang: "sv",
+  },
+  {
+    publisher: "Sveriges Radio P4 Uppland",
+    date: "January 2026",
+    title: "Utbytesstudenter säljer prylar och skänker pengarna till barn",
+    url: "https://www.sverigesradio.se/artikel/utbytesstudenter-skanker-pengar-till-barncancerfonden",
+    action: "Listen now",
+    lang: "sv",
+  },
+];
+
+export function RecentMediaSection() {
+  return (
+    <section className="section-padding">
+      <div className="container">
+        <h2 className="display-2 mb-10 md:mb-14">In the news</h2>
+
+        <ul className="border-b border-foreground">
+          {mediaItems.map((media) => (
+            <li key={media.url} className="border-t border-foreground">
+              <a
+                href={media.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${media.action}: ${media.title} (${media.publisher})`}
+                className="group grid md:grid-cols-12 gap-x-8 gap-y-1 py-5 md:py-6 md:items-center"
+              >
+                <span className="md:col-span-3 font-semibold">{media.publisher}</span>
+                <span lang={media.lang} className="md:col-span-6 text-xl tracking-tight leading-snug group-hover:text-primary transition-colors">
+                  {media.title}
+                </span>
+                <span className="md:col-span-2 text-muted-foreground">{media.date}</span>
+                <span className="hidden md:flex md:col-span-1 justify-end">
+                  <ArrowUpRight className="h-5 w-5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+export function WhyChooseUsSection() {
+  const benefits = [
+    {
+      title: "Easy move-in",
+      description: "Shop directly at student housing so you can get what you need without extra trips around town.",
+    },
+    {
+      title: "Better for the planet",
+      description: "Donated items get used again instead of being thrown away, which means less waste and more value for everyone.",
+    },
+    {
+      title: "Supports a good cause",
+      description: "All profits go to RBU, so your essentials support children and families in need.",
+    },
+    {
+      title: "Affordable for students",
+      description: "Affordable basics and quality finds, so you can set up your room without spending a fortune.",
+    },
+    {
+      title: "Student-run",
+      description: "We know the move-in stress and the move-out chaos, so we focus on what actually helps.",
+    },
+    {
+      title: "A bit of everything",
+      description: "From bedsheets to bikes, you can find practical essentials and a few great surprises too.",
+    },
+  ];
+
+  return (
+    <section className="pt-20 md:pt-28 pb-10 md:pb-16 bg-secondary">
+      <div className="container">
+        <h2 className="display-2 max-w-3xl mb-12 md:mb-16">Why students shop with us</h2>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8">
           {benefits.map((benefit) => (
-            <div key={benefit.title} className="group p-6 rounded-2xl bg-card/80 backdrop-blur border border-border hover:border-primary/30 transition-all duration-300">
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
-                <benefit.icon className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="text-xl font-bold text-foreground mb-2">{benefit.title}</h3>
-              <p className="text-muted-foreground">{benefit.description}</p>
+            <div key={benefit.title} className="border-t border-foreground pt-4 pb-10 md:pb-12">
+              <h3 className="text-2xl font-semibold tracking-tight">{benefit.title}</h3>
+              <p className="mt-2 text-muted-foreground">{benefit.description}</p>
             </div>
           ))}
         </div>
@@ -1414,71 +429,28 @@ export function WhyChooseUsSection() {
   );
 }
 
-const charities = [
-  {
-    name: "RBU",
-    logo: rbuLogo,
-    description:
-      "Riksförbundet för Rörelsehindrade Barn och Ungdomar works to improve the lives of children and young people with mobility impairments in Sweden through advocacy and support programs.",
-    url: "https://www.uppsala.rbu.se",
-    linkLabel: "rbu.se",
-  },
-];
-
 export function AboutCharitiesSection() {
   return (
-    <section id="charities" className="pt-20 pb-0 md:pt-20 md:pb-4">
-      <div className="container">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <span className="eyebrow eyebrow-center eyebrow-warm mb-4">
-              Our cause
-            </span>
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-6">
-              Supporting children in need
-            </h2>
-          </div>
+    <section id="charities" className="bg-warm text-warm-foreground scroll-mt-[4.5rem]">
+      <div className="container section-padding grid lg:grid-cols-12 gap-x-8 gap-y-10 items-end">
+        <div className="lg:col-span-7">
+          <p className="text-xl font-medium mb-5">Supporting children in need</p>
+          <h2 className="display-1">100% of profits go to RBU</h2>
+        </div>
 
-          <div className="grid gap-8 max-w-2xl mx-auto">
-            {charities.map((charity) => (
-              <div key={charity.name} className="card-warm flex flex-col relative overflow-hidden">
-                {/* Watermark */}
-                {charity.logo && (
-                  <img
-                    src={charity.logo}
-                    alt=""
-                    aria-hidden="true"
-                    className="absolute -bottom-2.5 -right-2.5 w-36 md:w-40 object-contain opacity-[0.09] pointer-events-none select-none"
-                  />
-                )}
-
-                {/* Content */}
-                <h3 className="text-xl font-bold text-foreground mb-4 relative">
-                  {charity.name}
-                </h3>
-                <p className="text-muted-foreground leading-relaxed mb-4 flex-1 relative">
-                  {charity.description}
-                </p>
-                <a
-                  href={charity.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center text-primary font-semibold hover:underline relative"
-                >
-                  Learn more at {charity.linkLabel}
-                </a>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-12 text-center">
-            <div className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-primary/10">
-              <Heart className="h-8 w-8 text-warm" fill="currentColor" />
-              <p className="font-display text-xl font-bold text-foreground">
-                100% of profits go to RBU
-              </p>
-            </div>
-          </div>
+        <div className="lg:col-span-5">
+          <img src={rbuLogo} alt="RBU logo" className="h-24 w-24 md:h-28 md:w-28 mb-6" />
+          <p className="text-lg leading-snug">
+            Riksförbundet för Rörelsehindrade Barn och Ungdomar works to improve the lives of children and young people with mobility impairments in Sweden through advocacy and support programs.
+          </p>
+          <a
+            href="https://www.uppsala.rbu.se"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="link-rule inline-block mt-4 text-lg font-semibold"
+          >
+            Learn more at rbu.se
+          </a>
         </div>
       </div>
     </section>
@@ -1486,245 +458,45 @@ export function AboutCharitiesSection() {
 }
 
 export function PartnersSection() {
-  const [currentStep, setCurrentStep] = useState(0);
-
-  // Refs
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const cardWidthRef = useRef(0);
-  const visualCardWidthRef = useRef(0);
-  const paddingLeftRef = useRef(0);
-
-  // Animation State
-  const isAnimatingRef = useRef(false);
-  const rafRef = useRef<number | null>(null);
-  const touchStartRef = useRef(0);
-  const touchStartTimeRef = useRef(0);
-
   const partners = [
     {
       name: "Uppsala University Innovation",
       logo: uuInnovationLogo,
-      // Added a custom scale for the square logo
-      customClass: "h-32 md:h-36 scale-125",
       description: "Uppsala University Innovation provides guidance and resources to help Swecircle expand its reach and positive impact.",
       url: "https://www.uuinnovation.uu.se",
     },
     {
       name: "Världsklass Uppsala",
       logo: världklassLogo,
-      // Added a custom scale for the square logo
-      customClass: "h-32 md:h-36 scale-125",
       description: "Världsklass Uppsala provides generous financial support to help Swecircle maximize its impact, scale operations, and accelerate sustainable growth.",
       url: "https://varldsklassuppsala.se/",
     },
     {
       name: "Uppsalahem",
       logo: uppsalahemLogo,
-      // Wide logos need less height to feel balanced
-      customClass: "h-20 md:h-24",
-      description: "Generously provides access to storage units, enabling us to collect and sell items directly at student housing locations.",
+      description: "Uppsalahem generously provides access to storage units, enabling us to collect and sell items directly at student housing locations.",
       url: "https://www.uppsalahem.se",
     },
   ];
 
-  // --- LOGIC SWITCH ---
-  const isSingle = partners.length === 1;
-
-  // --- DOUBLE BUFFERING (Only if > 1) ---
-  const len = partners.length;
-  const scrollData = isSingle
-    ? partners
-    : [
-      partners[(len - 2 + len) % len],
-      partners[(len - 1 + len) % len],
-      ...partners,
-      partners[0],
-      partners[1 % len]
-    ];
-
-  const START_INDEX = isSingle ? 0 : 2;
-
-  // --- CENTER OFFSET HELPER ---
-  const getCenterOffset = (container: HTMLElement, visualWidth: number) => {
-    const containerWidth = container.clientWidth;
-    return (containerWidth - visualWidth) / 2;
-  };
-
-  // --- INITIAL POSITION ---
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      const container = scrollContainerRef.current;
-      if (container && container.firstElementChild) {
-        const firstCard = container.firstElementChild as HTMLElement;
-        const style = window.getComputedStyle(container);
-        const gap = parseFloat(style.gap) || 16;
-
-        visualCardWidthRef.current = firstCard.offsetWidth;
-        cardWidthRef.current = firstCard.offsetWidth + gap;
-        paddingLeftRef.current = parseFloat(style.paddingLeft) || 0;
-
-        const offset = getCenterOffset(container, visualCardWidthRef.current);
-        const targetIndex = isSingle ? 0 : START_INDEX;
-
-        container.scrollLeft = (paddingLeftRef.current + (cardWidthRef.current * targetIndex)) - offset;
-      }
-    }, 50);
-    return () => clearTimeout(timer);
-  }, [partners.length, isSingle]);
-
-  // --- INFINITE LOOP LOGIC ---
-  const checkInfiniteLoop = (container: HTMLElement) => {
-    if (isSingle) return;
-    const totalWidth = cardWidthRef.current;
-    const visualWidth = visualCardWidthRef.current;
-    const paddingLeft = paddingLeftRef.current;
-    if (!totalWidth) return;
-    const offset = getCenterOffset(container, visualWidth);
-    const rawIndex = Math.round((container.scrollLeft + offset - paddingLeft) / totalWidth);
-    if (rawIndex >= scrollData.length - 2) {
-      container.scrollLeft = (paddingLeft + (totalWidth * (rawIndex - partners.length))) - offset;
-    } else if (rawIndex <= 1) {
-      container.scrollLeft = (paddingLeft + (totalWidth * (rawIndex + partners.length))) - offset;
-    }
-  };
-
-  // --- SMOOTH GLIDE ENGINE ---
-  const glideTo = (targetX: number) => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    const startX = container.scrollLeft;
-    const distance = targetX - startX;
-    const duration = 300;
-    const startTime = performance.now();
-    isAnimatingRef.current = true;
-    container.style.scrollSnapType = 'none';
-    container.style.overflowX = 'hidden';
-    const animate = (currentTime: number) => {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const ease = easeOutQuart(progress);
-      container.scrollLeft = startX + (distance * ease);
-      if (progress < 1) {
-        rafRef.current = requestAnimationFrame(animate);
-      } else {
-        container.style.overflowX = 'auto';
-        isAnimatingRef.current = false;
-        rafRef.current = null;
-        checkInfiniteLoop(container);
-      }
-    };
-    rafRef.current = requestAnimationFrame(animate);
-  };
-
-  // --- TOUCH HANDLERS ---
-  const handleTouchStart = (e: React.TouchEvent) => {
-    if (isSingle) return;
-    if (rafRef.current) { cancelAnimationFrame(rafRef.current); rafRef.current = null; isAnimatingRef.current = false; }
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.style.overflowX = 'auto';
-      scrollContainerRef.current.style.scrollSnapType = 'none';
-      checkInfiniteLoop(scrollContainerRef.current);
-    }
-    touchStartRef.current = e.touches[0].clientX;
-    touchStartTimeRef.current = performance.now();
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (isSingle) return;
-    const container = scrollContainerRef.current;
-    if (!container) return;
-    const touchEnd = e.changedTouches[0].clientX;
-    const touchTime = performance.now() - touchStartTimeRef.current;
-    const diff = touchStartRef.current - touchEnd;
-    if (container.firstElementChild) {
-      const firstCard = container.firstElementChild as HTMLElement;
-      const style = window.getComputedStyle(container);
-      const gap = parseFloat(style.gap) || 16;
-      visualCardWidthRef.current = firstCard.offsetWidth;
-      cardWidthRef.current = firstCard.offsetWidth + gap;
-      paddingLeftRef.current = parseFloat(style.paddingLeft) || 0;
-    }
-    const totalWidth = cardWidthRef.current;
-    const visualWidth = visualCardWidthRef.current;
-    const paddingLeft = paddingLeftRef.current;
-    const offset = getCenterOffset(container, visualWidth);
-    const exactIndex = (container.scrollLeft + offset - paddingLeft) / totalWidth;
-    const rawIndex = Math.round(exactIndex);
-    const isFlick = touchTime < 250 && Math.abs(diff) > 20;
-    let targetIndex = rawIndex;
-    if (isFlick) {
-      if (diff > 0) targetIndex = Math.floor(exactIndex) + 1;
-      else targetIndex = Math.ceil(exactIndex) - 1;
-    } else {
-      if (diff > 0 && exactIndex > rawIndex) targetIndex = rawIndex + 1;
-      else if (diff < 0 && exactIndex < rawIndex) targetIndex = rawIndex - 1;
-    }
-    targetIndex = Math.max(0, Math.min(targetIndex, scrollData.length - 1));
-    glideTo((paddingLeft + (targetIndex * totalWidth)) - offset);
-  };
-
-  const handleScroll = () => {
-    if (!scrollContainerRef.current || isSingle) return;
-    if (!isAnimatingRef.current) checkInfiniteLoop(scrollContainerRef.current);
-    const totalWidth = cardWidthRef.current || 1;
-    const visualWidth = visualCardWidthRef.current || totalWidth;
-    const paddingLeft = paddingLeftRef.current;
-    const offset = getCenterOffset(scrollContainerRef.current, visualWidth);
-    const rawIndex = Math.round((scrollContainerRef.current.scrollLeft + offset - paddingLeft) / totalWidth);
-    let visualStep = (rawIndex - START_INDEX);
-    visualStep = ((visualStep % partners.length) + partners.length) % partners.length;
-    if (visualStep !== currentStep) setCurrentStep(visualStep);
-  };
-
   return (
-    <section className="pt-20 pb-20 md:pt-32 md:pb-32 bg-section-light">
+    <section className="section-padding">
       <div className="container">
-        <div className="text-center mb-12">
-          <span className="eyebrow eyebrow-center mb-4">In collaboration with</span>
-          <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">Our supportive partners</h2>
-        </div>
+        <h2 className="display-2 mb-10 md:mb-14">With support from</h2>
 
-        {/* --- MOBILE (SCROLLING) --- */}
-        <div className="md:hidden relative w-full flex flex-col items-center">
-          <div
-            ref={scrollContainerRef}
-            onScroll={handleScroll}
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
-            className={`flex pb-8 gap-4 px-4 scrollbar-hide select-none w-full ${isSingle ? 'justify-center overflow-hidden' : 'overflow-x-auto justify-start'}`}
-            style={{ scrollSnapType: 'none', scrollbarWidth: "none", msOverflowStyle: "none", overscrollBehaviorX: "contain", WebkitTapHighlightColor: "transparent" }}
-          >
-            {scrollData.map((partner, i) => (
-              <div key={`${partner.name}-${i}`} className="shrink-0 w-[75vw] max-w-[300px] transform-gpu" style={{ WebkitTapHighlightColor: "transparent" }}>
-                <a href={partner.url} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center justify-center h-full p-6 rounded-2xl bg-white/50 backdrop-blur border border-transparent active:scale-95 transition-transform">
-                  <div className="flex items-center justify-center w-full h-40 mb-4">
-                    <img src={partner.logo} alt={`${partner.name} Logo`} className={`w-auto max-w-full object-contain ${partner.customClass}`} />
-                  </div>
-                  <p className="text-muted-foreground text-center text-sm">{partner.description}</p>
-                </a>
-              </div>
-            ))}
-            {!isSingle && <div className="w-4 shrink-0" />}
-          </div>
-
-          {!isSingle && (
-            <div className="flex justify-center gap-2 mt-2">
-              {partners.map((_, i) => (
-                <div key={i} className={`h-2 rounded-full transition-all duration-300 ${currentStep === i ? "w-8 bg-primary" : "w-2 bg-primary/20"}`} />
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* --- DESKTOP (GRID) --- */}
-        <div className="hidden md:flex flex-wrap justify-center gap-16 items-center">
+        <div className="grid md:grid-cols-3 gap-x-8">
           {partners.map((partner) => (
-            <a key={partner.name} href={partner.url} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center max-w-xs hover:scale-105 transition-transform">
-              <div className="flex items-center justify-center w-64 h-40 mb-4">
-                <img src={partner.logo} alt={`${partner.name} Logo`} className={`w-auto max-w-full object-contain ${partner.customClass}`} />
+            <a
+              key={partner.name}
+              href={partner.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group border-t border-foreground pt-6 pb-10 md:pb-0"
+            >
+              <div className="flex h-32 items-center mb-5">
+                <img src={partner.logo} alt={`${partner.name} logo`} className="max-h-full max-w-[14rem] object-contain object-left" />
               </div>
-              <p className="text-muted-foreground text-center">{partner.description}</p>
+              <p className="text-muted-foreground group-hover:text-foreground transition-colors">{partner.description}</p>
             </a>
           ))}
         </div>
@@ -1734,61 +506,30 @@ export function PartnersSection() {
 }
 
 export function CTASection() {
-  const { location } = useParams();
-  const currentCity = location || "uppsala";
-  const isLund = currentCity.toLowerCase() === "lund";
-
-  const instaUrl = isLund ? "https://www.instagram.com/swecirclelund/" : "https://instagram.com/swecircle";
-  const instaHandle = isLund ? "@swecirclelund" : "@swecircle";
+  const city = useCity();
 
   return (
-    <section className="section-padding relative overflow-hidden bg-primary">
-      {/* Layered monochrome-blue depth: deepen edges + soft top glow */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(120% 120% at 50% -10%, hsl(227 100% 42%) 0%, hsl(227 100% 33%) 45%, hsl(227 100% 24%) 100%)",
-        }}
-      />
-      {/* Fine grid texture */}
-      <div
-        className="absolute inset-0 opacity-[0.07]"
-        style={{
-          backgroundImage:
-            "linear-gradient(hsl(0 0% 100%) 1px, transparent 1px), linear-gradient(90deg, hsl(0 0% 100%) 1px, transparent 1px)",
-          backgroundSize: "56px 56px",
-          maskImage: "radial-gradient(120% 80% at 50% 0%, black 30%, transparent 80%)",
-          WebkitMaskImage: "radial-gradient(120% 80% at 50% 0%, black 30%, transparent 80%)",
-        }}
-      />
-
-      <div className="container relative z-10">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="font-display text-3xl md:text-5xl font-bold text-primary-foreground mb-6">
-            Ready to find your next treasure?
+    <section className="bg-primary text-primary-foreground">
+      <div className="container section-padding grid lg:grid-cols-12 gap-x-8 gap-y-8 items-end">
+        <div className="lg:col-span-8">
+          <h2 className="display-1">
+            {city.isLund ? "Opening times are on Instagram" : "Find us at Rackarbergsgatan 32"}
           </h2>
+          {!city.isLund && (
+            <p className="mt-5 text-xl text-white/85">Opening times vary, so check our Instagram before you come.</p>
+          )}
+        </div>
 
-          {/* Single intentional brand accent */}
-          <div className="mx-auto mb-8 h-1 w-16 rounded-full bg-warm" />
-
-          {/* Only show address for Uppsala, hide for Lund */}
-          <p className="text-xl text-primary-foreground/80 mb-10 leading-relaxed">
-            {!isLund && "Visit us at Rackarbergsgatan 32 in Uppsala. "}
-            Check our Instagram for opening times!
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button size="lg" asChild className="bg-white text-primary hover:bg-white/90 shadow-lg hover:-translate-y-0.5 text-lg px-8">
-              <a href={instaUrl} target="_blank" rel="noopener noreferrer">
-                <Instagram className="mr-2 h-5 w-5" />
-                Follow {instaHandle}
-              </a>
-            </Button>
-            <Button variant="outline" size="lg" asChild className="bg-transparent border-2 border-white/40 text-white hover:bg-white hover:text-primary hover:border-white text-lg px-8">
-              <Link to={`/${currentCity}/contact`}>Get in touch</Link>
-            </Button>
-          </div>
+        <div className="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-2 lg:items-stretch">
+          <Button variant="accent" size="lg" asChild>
+            <a href={city.instagramUrl} target="_blank" rel="noopener noreferrer">
+              <Instagram />
+              Follow {city.instagramHandle}
+            </a>
+          </Button>
+          <Button variant="outline-inverse" size="lg" asChild>
+            <Link to={`/${city.slug}/contact`}>Get in touch</Link>
+          </Button>
         </div>
       </div>
     </section>

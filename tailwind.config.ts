@@ -7,15 +7,14 @@ export default {
   theme: {
     container: {
       center: true,
-      padding: "1.5rem",
+      padding: "1.25rem",
       screens: {
-        "2xl": "1280px",
+        "2xl": "1440px",
       },
     },
     extend: {
       fontFamily: {
-        sans: ['"Nunito"', 'system-ui', 'sans-serif'],
-        display: ['"Playfair Display"', 'Georgia', 'serif'],
+        sans: ['"Familjen Grotesk Variable"', 'system-ui', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -55,9 +54,6 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        "section-alt": "hsl(var(--section-alt))",
-        "section-warm": "hsl(var(--section-warm))",
-        "section-light": "hsl(var(--section-light))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -73,14 +69,6 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
-      },
-      boxShadow: {
-        soft: "var(--shadow-soft)",
-        elevated: "var(--shadow-elevated)",
-        warm: "var(--shadow-warm)",
-      },
-      backgroundImage: {
-        "hero-gradient": "var(--hero-gradient)",
       },
       keyframes: {
         "accordion-down": {

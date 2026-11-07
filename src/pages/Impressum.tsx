@@ -1,17 +1,15 @@
 import { Layout } from "@/components/layout/Layout";
+import { PageHeader } from "@/components/PageHeader";
 
 const Impressum = () => {
   return (
     <Layout>
+      <PageHeader title="Impressum" />
       <section className="section-padding">
-        <div className="container-narrow">
-          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-8">
-            Impressum
-          </h1>
-          
-          <div className="prose prose-lg max-w-none space-y-6 text-muted-foreground">
+        <div className="container">
+          <div className="max-w-3xl space-y-10 text-foreground/80">
             <section>
-              <h2 className="text-xl font-semibold text-foreground mb-3">
+              <h2 className="text-2xl font-semibold tracking-tight text-foreground mb-3">
                 Website Operator
               </h2>
               <p>
@@ -24,16 +22,16 @@ const Impressum = () => {
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold text-foreground mb-3">
+              <h2 className="text-2xl font-semibold tracking-tight text-foreground mb-3">
                 Contact Information
               </h2>
               <p>
-                Email: <a href="mailto:uppsala@swecircle.com" className="text-foreground hover:underline font-medium">uppsala@swecircle.com</a>
+                Email: <a href="mailto:uppsala@swecircle.com" className="link-rule text-primary">uppsala@swecircle.com</a>
               </p>
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold text-foreground mb-3">
+              <h2 className="text-2xl font-semibold tracking-tight text-foreground mb-3">
                 Board Members
               </h2>
               <p>
@@ -44,7 +42,7 @@ const Impressum = () => {
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold text-foreground mb-3">
+              <h2 className="text-2xl font-semibold tracking-tight text-foreground mb-3">
                 Organization Type
               </h2>
               <p>
@@ -58,7 +56,7 @@ const Impressum = () => {
 
             {/* New Section for Stadgar */}
             <section>
-              <h2 className="text-xl font-semibold text-foreground mb-3">
+              <h2 className="text-2xl font-semibold tracking-tight text-foreground mb-3">
                 Stadgar (Bylaws)
               </h2>
               <p>
@@ -69,7 +67,7 @@ const Impressum = () => {
                   href="/stadgar.pdf" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md text-primary-foreground bg-primary hover:bg-primary/90 transition-colors"
+                  className="inline-flex items-center justify-center h-11 px-5 font-semibold text-primary-foreground bg-primary hover:bg-foreground transition-colors"
                 >
                   View Official Stadgar (PDF)
                 </a>
