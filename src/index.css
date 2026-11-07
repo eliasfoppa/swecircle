@@ -120,6 +120,16 @@
     color: hsl(var(--warm-foreground));
   }
 
+  /* The default highlight is the same yellow, so it would vanish on yellow fields.
+     Attribute selectors, because @apply bg-warm would copy a .bg-warm rule onto every sticker */
+  [class~="bg-warm"]::selection,
+  [class~="bg-warm"] ::selection,
+  .sticker:not(.bg-white, .bg-primary)::selection,
+  .sticker:not(.bg-white, .bg-primary) ::selection {
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+  }
+
   /* currentColor keeps the ring visible on blue, yellow and white fields alike */
   a:focus-visible,
   button:focus-visible,

@@ -23,7 +23,8 @@ export function PageHeader({ title, intro, image, imageAlt = "", imagePosition =
           {action && <div className="mt-8 animate-fade-up delay-200">{action}</div>}
         </div>
         {image && (
-          <div className="relative h-72 sm:h-96 lg:col-span-5 lg:h-auto lg:min-h-[30rem]">
+          /* Height follows the column width (5/12 of the page, 11:10 frame) so wider screens don't crop more of the photo */
+          <div className="relative aspect-square lg:aspect-auto lg:col-span-5 lg:min-h-[max(36rem,38vw)]">
             <img
               src={image}
               alt={imageAlt}

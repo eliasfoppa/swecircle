@@ -57,7 +57,7 @@ const About = () => {
       <img
         src={team1Img}
         alt="The Swecircle team holding donated items in front of a snow-covered picnic table"
-        className="w-full h-[55vh] min-h-[20rem] object-cover object-[50%_42%]"
+        className="w-full aspect-[3/2] md:aspect-[2/1] object-cover object-[50%_80%]"
       />
 
       {/* Who we are */}
@@ -147,7 +147,7 @@ const About = () => {
           src={team3Img}
           alt="Volunteers walking through deep snow outside student housing while one films them"
           loading="lazy"
-          className="w-full h-[60vh] min-h-[20rem] object-cover"
+          className="w-full aspect-[3/2] md:aspect-[2/1] object-cover object-[50%_80%]"
         />
         <figcaption className="container py-4 text-muted-foreground">
           We have many amazing volunteers who contribute their time and effort to make Swecircle possible.

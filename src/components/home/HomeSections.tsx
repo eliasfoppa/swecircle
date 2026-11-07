@@ -140,12 +140,13 @@ export function HowItWorksSection() {
   );
 }
 
+// Every frame matches its photo's shape, so nobody gets cropped
 const posts = [
-  { img: pic1, alt: "Five students in a car park carrying a mirror, bags and a bin", span: "col-span-2 lg:col-span-7", position: "50% 70%" },
-  { img: pic5, alt: "A volunteer smiling in a storage corridor holding a stack of mugs", span: "col-span-2 lg:col-span-5", position: "50% 30%" },
-  { img: pic3, alt: "A volunteer pushing a bicycle through deep snow with a blue bag and stacked buckets", span: "lg:col-span-4", position: "50% 45%" },
-  { img: pic2, alt: "A volunteer in a storage area with a framed print and a white shelf", span: "lg:col-span-4", position: "50% 55%" },
-  { img: pic4, alt: "Five people indoors, one of them holding up a certificate", span: "col-span-2 sm:col-span-1 lg:col-span-4", position: "50% 28%" },
+  { img: pic1, alt: "Five students in a car park carrying a mirror, bags and a bin", frame: "col-span-2 lg:col-span-1 aspect-[4/3]" },
+  { img: pic5, alt: "A volunteer smiling in a storage corridor holding a stack of mugs", frame: "aspect-[3/4]" },
+  { img: pic3, alt: "A volunteer pushing a bicycle through deep snow with a blue bag and stacked buckets", frame: "aspect-[3/4]" },
+  { img: pic2, alt: "A volunteer in a storage area with a framed print and a white shelf", frame: "aspect-[3/4]" },
+  { img: pic4, alt: "Five people indoors, one of them holding up a certificate", frame: "aspect-[3/4]" },
 ];
 
 export function CommunitySection() {
@@ -194,23 +195,30 @@ export function CommunitySection() {
           </a>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-12 lg:grid-rows-[33rem_28rem] gap-1.5">
-          {posts.map((post, i) => (
-            <button
-              key={post.img}
-              type="button"
-              onClick={() => setActiveIndex(i)}
-              aria-label={`Enlarge photo: ${post.alt}`}
-              className={`group relative overflow-hidden bg-secondary cursor-zoom-in aspect-[4/3] sm:aspect-[3/2] lg:aspect-auto ${post.span}`}
-            >
-              <img
-                src={post.img}
-                alt=""
-                loading="lazy"
-                style={{ objectPosition: post.position }}
-                className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-              />
-            </button>
+        <div className="grid grid-cols-2 gap-1.5 lg:block">
+          {/* 16fr:9fr gives a 4:3 and a 3:4 photo the same height */}
+          {[
+            { start: 0, end: 2, row: "lg:grid-cols-[16fr_9fr]" },
+            { start: 2, end: 5, row: "lg:grid-cols-3 lg:mt-1.5" },
+          ].map(({ start, end, row }) => (
+            <div key={start} className={`contents lg:grid lg:gap-1.5 ${row}`}>
+              {posts.slice(start, end).map((post, i) => (
+                <button
+                  key={post.img}
+                  type="button"
+                  onClick={() => setActiveIndex(start + i)}
+                  aria-label={`Enlarge photo: ${post.alt}`}
+                  className={`group relative overflow-hidden bg-secondary cursor-zoom-in ${post.frame}`}
+                >
+                  <img
+                    src={post.img}
+                    alt=""
+                    loading="lazy"
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                  />
+                </button>
+              ))}
+            </div>
           ))}
         </div>
       </div>

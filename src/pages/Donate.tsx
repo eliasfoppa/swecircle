@@ -46,7 +46,7 @@ export function Donate() {
         intro="We are collecting donations from now until the end of the semester. Items can be dropped off at the locations below during our collection hours."
         image={facadeImg}
         imageAlt="Five volunteers outside a student housing block with donated items"
-        imagePosition="50% 75%"
+        imagePosition="50% 80%"
         action={
           <Button variant="accent" size="lg" className="w-full sm:w-auto px-4 sm:px-7 text-base sm:text-lg" asChild>
             <a href={city.instagramUrl} target="_blank" rel="noopener noreferrer">
